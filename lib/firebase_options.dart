@@ -59,11 +59,11 @@ class DefaultFirebaseOptions {
 
   static const FirebaseOptions ios = FirebaseOptions(
     apiKey: 'AIzaSyDv9EKCOWNOaw7y2J6MAVpLu8f4NcTaipE',
-    appId: '1:544476757020:ios:1a17fe2611cfc92b7133d9',
+    appId: '1:544476757020:ios:7445335b38036e8e7133d9',
     messagingSenderId: '544476757020',
     projectId: 'kids-cdc7d',
     storageBucket: 'kids-cdc7d.appspot.com',
-    iosClientId: '544476757020-bm526vv2gs49q6vufqbpuivsa84ntbfv.apps.googleusercontent.com',
-    iosBundleId: 'com.lammasu.secondhome2',
+    iosClientId: '544476757020-rv6r973q4vncs4d410bp0b21kc4t4p7o.apps.googleusercontent.com',
+    iosBundleId: 'com.lammasu.kinderandnursery',
   );
 }

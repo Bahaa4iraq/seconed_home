@@ -383,7 +383,7 @@ class _AddAnswerState extends State<AddAnswer> {
     );
   }
 
-  _imageListView(_img) {
+  _imageListView(XFile _img) {
     return Container(
       height: 150,
       width: Get.width / 4,
@@ -396,7 +396,8 @@ class _AddAnswerState extends State<AddAnswer> {
       ),
       child: ClipRRect(
           borderRadius: BorderRadius.circular(10),
-          child: Image.file(_img, fit: BoxFit.cover)),
+          child: Image.file(            File(_img.path),
+               fit: BoxFit.cover)),
     );
   }
 }

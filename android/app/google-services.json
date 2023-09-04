@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:544476757020:android:dd8c7b616a2817227133d9",
+        "android_client_info": {
+          "package_name": "com.lamassu.learning_together"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "544476757020-r18cke1qrs8mudhmor4nb65tb6lgvkhq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAUvTiGp0ZErP7sFv4WcGD01-VZYulyLus"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "544476757020-r18cke1qrs8mudhmor4nb65tb6lgvkhq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "544476757020-bm526vv2gs49q6vufqbpuivsa84ntbfv.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.lammasu.secondhome2"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:544476757020:android:f39665c6bcd0a5487133d9",
         "android_client_info": {
           "package_name": "com.lammasu.secondhome2"

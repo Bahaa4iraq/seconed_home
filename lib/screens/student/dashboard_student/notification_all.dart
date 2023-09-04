@@ -307,8 +307,7 @@ class _NotificationAllState extends State<NotificationAll> {
                                     itemCount: val.data.length,
                                     itemBuilder: animationItemBuilder(
                                       (indexes) {
-                                        print("ink welllllllll");
-                                        print(val.data[indexes]);
+                                        print(val.data[indexes]['notifications_type']);
                                         return TimelineTile(
                                           alignment: TimelineAlign.manual,
                                           lineXY: .2,

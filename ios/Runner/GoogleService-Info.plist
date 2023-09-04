@@ -3,9 +3,9 @@
 <plist version="1.0">
 <dict>
 	<key>CLIENT_ID</key>
-	<string>544476757020-bm526vv2gs49q6vufqbpuivsa84ntbfv.apps.googleusercontent.com</string>
+	<string>544476757020-rv6r973q4vncs4d410bp0b21kc4t4p7o.apps.googleusercontent.com</string>
 	<key>REVERSED_CLIENT_ID</key>
-	<string>com.googleusercontent.apps.544476757020-bm526vv2gs49q6vufqbpuivsa84ntbfv</string>
+	<string>com.googleusercontent.apps.544476757020-rv6r973q4vncs4d410bp0b21kc4t4p7o</string>
 	<key>API_KEY</key>
 	<string>AIzaSyDv9EKCOWNOaw7y2J6MAVpLu8f4NcTaipE</string>
 	<key>GCM_SENDER_ID</key>
@@ -13,7 +13,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.lammasu.secondhome2</string>
+	<string>com.lammasu.kinderandnursery</string>
 	<key>PROJECT_ID</key>
 	<string>kids-cdc7d</string>
 	<key>STORAGE_BUCKET</key>
@@ -29,6 +29,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:544476757020:ios:1a17fe2611cfc92b7133d9</string>
+	<string>1:544476757020:ios:7445335b38036e8e7133d9</string>
 </dict>
 </plist>
