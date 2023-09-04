@@ -14,6 +14,7 @@ import 'package:get/get.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:path/path.dart' as p;
+import 'package:secondhome2/screens/auth/connect_us.dart';
 
 import '../../../api_connection/auth_connection.dart';
 import '../../../api_connection/student/api_profile.dart';
@@ -439,7 +440,7 @@ class _StudentProfileState extends State<StudentProfile>
                     const SizedBox(
                       height: 30,
                     ),
-                    Row(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         ///AttachDocuments()
@@ -447,7 +448,7 @@ class _StudentProfileState extends State<StudentProfile>
                             LineIcons.upload, true),
 
                         ///ConnectUs()
-                        // _buttons("call the school", ConnectUs(), LineIcons.buildingAlt,true),
+                        _buttons("اتصل بنا", const ConnectUs(color: MyColor.turquoise,), LineIcons.phone,true),
                         // ///Reports()
                         // _buttons("reports", Reports(), LineIcons.fileInvoice,true),
                       ],
