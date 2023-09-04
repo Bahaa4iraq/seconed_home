@@ -388,7 +388,8 @@ class _NotificationAllState extends State<NotificationAll> {
       "واجب بيتي",
       "ملخص",
       "تقرير",
-      "الميلاد"
+      "الميلاد",
+      "دروس",
     ];
     if (_data['notifications_type'] == "اشعار") {
       Get.to(() => ShowNewsNotification(

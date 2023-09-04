@@ -83,7 +83,7 @@ class _ShowMessageState extends State<ShowMessage> {
             InkWell(
               onTap: () => _launchURL(widget.data['notifications_link']),
               child: Container(
-                margin: const EdgeInsets.only(right: 20, left: 20),
+                margin: const EdgeInsets.only(right: 20, left: 20,top:20),
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(color: MyColor.pink.withOpacity(.17), borderRadius: BorderRadius.circular(10)),
                 child: Center(

@@ -101,7 +101,7 @@ class _ShowMessageState extends State<ShowMessage> {
               onTap: () => _launchSocial(widget.data['notifications_link'],'www.google.com'),
              // onTap: () => _launchURL(widget.data['notifications_link']),
               child: Container(
-                margin: const EdgeInsets.only(right: 20, left: 20),
+                margin: const EdgeInsets.only(right: 20, left: 20,top:20),
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                     color: MyColor.turquoise.withOpacity(.17),
