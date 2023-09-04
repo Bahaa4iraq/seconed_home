@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:logger/logger.dart';
+import 'package:secondhome2/screens/nursery/dashboard_nursery/show/show_news_notification.dart';
 import 'package:secondhome2/screens/nursery/review/daily_review_date.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
@@ -253,6 +255,7 @@ class _NotificationAllState extends State<NotificationAll> {
   }
 
   _navPage(Map data, String contentUrl) {
+    Logger().i(data['notifications_type']);
     List pageNotifications = [
       "رسالة",
       "ملابس",
@@ -263,10 +266,17 @@ class _NotificationAllState extends State<NotificationAll> {
       "هل تعلم",
       "الحفاض",
       "الميلاد"
-      "اشعار"
     ];
-
-    if (pageNotifications.contains(data['notifications_type'])) {
+    if (data['notifications_type'] == "اشعار") {
+      Get.to(() => ShowNewsNotification(
+        data: data,
+        contentUrl: contentUrl,
+        notificationsType: data['notifications_type'],
+      ));
+      setState(() {
+        Get.put(NotificationsAPI()).updateReadNotifications(data["_id"]);
+      });
+    }else if (pageNotifications.contains(data['notifications_type'])) {
       Get.to(() => ShowMessage(
             data: data,
             contentUrl: contentUrl,

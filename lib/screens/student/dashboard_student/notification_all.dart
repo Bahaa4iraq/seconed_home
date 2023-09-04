@@ -7,7 +7,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:logger/logger.dart';
 import 'package:secondhome2/screens/student/dashboard_student/daily_exams.dart';
+import 'package:secondhome2/screens/student/dashboard_student/show/show_latest_news.dart';
+import 'package:secondhome2/screens/student/dashboard_student/show/show_news_notification.dart';
 import 'package:secondhome2/screens/student/dashboard_student/student_salary/student_salary_details.dart';
 import 'package:secondhome2/screens/student/dashboard_student/test_home_work.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -374,6 +377,8 @@ class _NotificationAllState extends State<NotificationAll> {
   _navPage(Map _data, String _contentUrl) {
     print("my id =====================");
     print(_data["_id"]);
+    Logger().i(_data['notifications_type']);
+
     setState(() {
       Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
     });
@@ -383,11 +388,18 @@ class _NotificationAllState extends State<NotificationAll> {
       "واجب بيتي",
       "ملخص",
       "تقرير",
-      "الميلاد",
-      "اشعار"
-
+      "الميلاد"
     ];
-    if (_data['notifications_type'] == "امتحان يومي") {
+    if (_data['notifications_type'] == "اشعار") {
+      Get.to(() => ShowNewsNotification(
+        data: _data,
+        contentUrl: _contentUrl,
+        notificationsType: _data['notifications_type'],
+      ));
+      setState(() {
+        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
+      });
+    }else if (_data['notifications_type'] == "امتحان يومي") {
       Get.to(() => const DailyExams());
       setState(() {
         Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);

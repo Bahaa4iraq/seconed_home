@@ -22,10 +22,6 @@ class _ShowLatestNewsState extends State<ShowLatestNews> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MyColor.pink,
-        title: Text(
-          widget.data['latest_news_title'].toString(),
-          style: const TextStyle(color: MyColor.white0),
-        ),
         centerTitle: true,
         elevation: 0,
       ),
@@ -49,12 +45,19 @@ class _ShowLatestNewsState extends State<ShowLatestNews> {
                 ),
               ),
             ),
+          Container(
+            margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+            child: Text(
+              widget.data['latest_news_title'].toString(),
+              style: const TextStyle(fontSize: 18, color: MyColor.black,fontWeight: FontWeight.w600),
+            ),
+          ),
           if (widget.data['latest_news_description'] != null)
             Container(
-              margin: const EdgeInsets.all(20),
+              margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
               child: Text(
                 widget.data['latest_news_description'].toString(),
-                style: const TextStyle(fontSize: 18, color: MyColor.pink),
+                style: const TextStyle(fontSize: 18, color: MyColor.grayDark),
               ),
             ),
         ],

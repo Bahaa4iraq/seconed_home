@@ -8,6 +8,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:secondhome2/screens/kindergarten_teacher/pages/notifications/show/show_news_notification.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../../api_connection/teacher/api_notification.dart';
@@ -321,11 +322,19 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
       "تدريب",
       "هل تعلم",
       "الميلاد",
-      'اشعار'
     ];
     print(_data['notifications_type']);
 
-    if (_pageNotifications.contains(_data['notifications_type'])) {
+    if (_data['notifications_type'] == "اشعار") {
+      Get.to(() => ShowNewsNotification(
+        data: _data,
+        contentUrl: _contentUrl,
+        notificationsType: _data['notifications_type'],
+      ));
+      setState(() {
+        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
+      });
+    }else if (_pageNotifications.contains(_data['notifications_type'])) {
       Get.to(() => ShowMessage(
           data: _data,
           contentUrl: _contentUrl,
