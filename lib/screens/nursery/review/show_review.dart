@@ -57,7 +57,7 @@ class _ShowReviewState extends State<ShowReview> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(toDateOnly(widget.data['created_at']),MyColor.turquoise),
+      appBar: myAppBar(toDateOnly(widget.data['created_at']),MyColor.pink),
       body: Container(
         color: Colors.grey[100],
         child: GetBuilder<ReviewDateProvider>(
@@ -168,7 +168,7 @@ class _ShowReviewState extends State<ShowReview> {
                       color: Colors.green,
                     ));
               },
-              backgroundColor: MyColor.turquoise.withOpacity(0.9),
+              backgroundColor: MyColor.pink.withOpacity(0.9),
             );
           }),
     );

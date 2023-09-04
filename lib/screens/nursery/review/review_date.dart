@@ -31,7 +31,7 @@ class _ReviewDateState extends State<ReviewDate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar("تقييم الطالب",MyColor.turquoise),
+      appBar: myAppBar("تقييم الطالب",MyColor.pink),
       body: GetBuilder<ReviewDateProvider>(
           builder: (val) => val.isLoading
               ? loading()
@@ -68,7 +68,7 @@ class _ReviewDateState extends State<ReviewDate> {
                             title: Text(
                               val.data[indexes]['review_date'],
                               style: const TextStyle(
-                                  color: MyColor.turquoise,
+                                  color: MyColor.pink,
                                   fontWeight: FontWeight.bold),
                             ),
                             onTap: () {

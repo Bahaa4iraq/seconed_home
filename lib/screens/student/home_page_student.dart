@@ -54,7 +54,7 @@ class _HomePageStudentState extends State<HomePageStudent>
   void initWidgetList() {
     List<Widget> _widget = <Widget>[
       Dashboard(userData: widget.userData),
-      const ConnectUs(color: MyColor.turquoise),
+      const ReviewDate(),
       const DailyExams(),
       StudentProfile(userData: widget.userData),
     ];
@@ -95,8 +95,8 @@ class _HomePageStudentState extends State<HomePageStudent>
               label: "الرئيسية",
             ),
             BottomNavigationBarItem(
-              icon: Icon(CommunityMaterialIcons.contacts_outline),
-              label: "اتصل بنا",
+              icon: Icon(CommunityMaterialIcons.diamond_outline),
+              label: "تقييم الطالب",
             ),
             BottomNavigationBarItem(
               icon: Icon(CommunityMaterialIcons.file_outline),

@@ -10,6 +10,7 @@ import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:secondhome2/screens/student/dashboard_student/subjects.dart';
 import 'package:secondhome2/screens/student/dashboard_student/weekly_schedule.dart';
+import 'package:secondhome2/screens/student/review/daily_review_date.dart';
 import 'package:secondhome2/screens/student/widgets/item_main_menu.dart';
 
 import '../../../api_connection/student/api_dashboard_data.dart';
@@ -378,7 +379,7 @@ class _DashboardState extends State<Dashboard>
                             children: [
                               ItemMainMenu(
                                   img: "assets/img/my_day.png",
-                                  nav: ReviewDate(),
+                                  nav: DailyReviewDate(),
                                   features: val.mainData['account']['school']
                                           ['school_features']
                                       ['features_notifications']),

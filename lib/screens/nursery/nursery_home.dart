@@ -2,6 +2,7 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:secondhome2/screens/nursery/review/review_date.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../api_connection/auth_connection.dart';
@@ -13,7 +14,6 @@ import '../../provider/student/student_provider.dart';
 import '../../static_files/my_color.dart';
 import '../../static_files/my_loading.dart';
 import '../../static_files/my_url.dart';
-import '../auth/connect_us.dart';
 import 'dashboard_nursery/dashboard.dart';
 import 'dashboard_nursery/nursery_salary/nursery_salary.dart';
 import 'profile/nursery_profile.dart';
@@ -51,7 +51,7 @@ class HomePageNurseryState extends State<HomePageNursery> with AutomaticKeepAliv
   void initWidgetList() {
     List<Widget> _widget = <Widget>[
       Dashboard(userData: widget.userData),
-      const ConnectUs(color: MyColor.pink),
+      const ReviewDate(),
       const StudentSalary(),
       StudentProfile(userData: widget.userData),
     ];
@@ -92,8 +92,8 @@ class HomePageNurseryState extends State<HomePageNursery> with AutomaticKeepAliv
               label: "الرئيسية",
             ),
             BottomNavigationBarItem(
-              icon: Icon(CommunityMaterialIcons.contacts_outline),
-              label: "اتصل بنا",
+              icon: Icon(CommunityMaterialIcons.diamond_outline),
+              label: "تقييم الطالب",
             ),
             BottomNavigationBarItem(
               icon: Icon(CommunityMaterialIcons.file_outline),
