@@ -215,6 +215,8 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
                                       endChild: Container(
                                         margin: const EdgeInsets.only(
                                             right: 10, left: 10, top: 10),
+                                       padding: const EdgeInsets.only(
+                                             top: 4,bottom: 4),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
@@ -237,7 +239,7 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
                                                   null
                                               ? Text(val.data[indexes][
                                                       "notifications_description"]
-                                                  .toString())
+                                                  .toString(),maxLines: 3,)
                                               : null,
                                           trailing: _star(val.data[indexes]
                                                       ['notifications_sender']
