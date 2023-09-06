@@ -23,7 +23,7 @@ import '../../../static_files/my_loading.dart';
 import '../../../static_files/my_package_info.dart';
 import '../../../static_files/my_random.dart';
 import '../../../static_files/my_times.dart';
-import '../student/profile/attach_documents.dart';
+import '../kindergarten_teacher/attach_documents.dart';
 
 class TeacherProfile extends StatefulWidget {
   final Map userData;
