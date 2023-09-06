@@ -239,7 +239,7 @@ class _AttachDocumentsState extends State<AttachDocuments> {
                         ),
                       ],
                     ))
-                : _buttons("البطاقة الموحدة", pickImage1, LineIcons.plus, true),
+                : _buttons("هوية المخول", pickImage1, LineIcons.plus, true),
             const SizedBox(
               height: 20,
             ),

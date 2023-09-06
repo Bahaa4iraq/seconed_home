@@ -30,7 +30,7 @@ class ShowDocument extends StatelessWidget {
                     children: [
                       const Padding(
                         padding: EdgeInsets.all(8.0),
-                        child: Text("البطاقة الوطنية"),
+                        child: Text("هوية المخول"),
                       ),
                       _imgShow(url + data['certificate_national_id']),
                       const Divider()
