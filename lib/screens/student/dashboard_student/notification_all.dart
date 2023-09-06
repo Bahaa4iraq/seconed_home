@@ -343,7 +343,7 @@ class _NotificationAllState extends State<NotificationAll> {
                                           startChild: _dateTimeLine(
                                               val.data[indexes]["created_at"]),
                                           endChild: Container(
-                                            padding: const EdgeInsets.only(bottom: 5),
+                                            padding: const EdgeInsets.only(bottom: 10),
                                             margin: const EdgeInsets.only(right: 10, left: 10, top: 10),
                                             decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.circular(10),

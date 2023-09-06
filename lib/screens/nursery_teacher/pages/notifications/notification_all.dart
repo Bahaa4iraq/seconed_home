@@ -215,6 +215,8 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
                                       endChild: Container(
                                         margin: const EdgeInsets.only(
                                             right: 10, left: 10, top: 10),
+                                        padding: const EdgeInsets.only(
+                                            bottom: 16),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
