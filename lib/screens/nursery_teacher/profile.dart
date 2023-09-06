@@ -79,81 +79,6 @@ class _TeacherProfileState extends State<TeacherProfile>
     return result;
   }
 
-  _showAddZoom() {
-    Get.defaultDialog(
-      title: "الاسم في تطبيق زووم",
-      content: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: _formCheck,
-            child: TextFormField(
-              controller: _zoomName,
-              style: const TextStyle(
-                color: MyColor.grayDark,
-              ),
-              decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
-                  //hintText: tr("name"),
-                  errorStyle: const TextStyle(color: MyColor.red),
-                  fillColor: Colors.transparent,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    borderSide: const BorderSide(
-                      color: MyColor.grayDark,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(
-                      color: MyColor.grayDark,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    borderSide: const BorderSide(
-                      color: MyColor.grayDark,
-                    ),
-                  ),
-                  prefixIcon: const Icon(LineIcons.video),
-                  filled: true
-                  //fillColor: Colors.green
-                  ),
-              // validator: (value) {
-              //   var result = value.length < 3 ? tr("fillText") : null;
-              //   return result;
-              // },
-            ),
-          )),
-      // onCancel: ()=>print("fv"),
-      // onConfirm: ()=>print("fv"),
-      // textCancel: "الغاء",
-      // textConfirm: "تأكيد",
-      // cancelTextColor: MyColor.c5,
-      // confirmTextColor: MyColor.c5,
-
-      confirm: MaterialButton(
-        color: MyColor.red,
-        onPressed: () {
-          Map _data = {"account_zoom": _zoomName.text};
-          if (_formCheck.currentState!.validate()) {
-            // StudentAPI().addZoomName(_data).then((res) async {
-            //   if (res['error'] == false) {
-            //     await StudentAPI().getStudentInfo();
-            //     Get.back();
-            //     EasyLoading.showSuccess(res['results'].toString());
-            //   } else {
-            //     EasyLoading.showError(res['results'].toString());
-            //   }
-            // });
-          }
-        },
-        child: const Text(
-          "تأكيد",
-          style: TextStyle(color: MyColor.white1),
-        ),
-      ),
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -343,46 +268,7 @@ class _TeacherProfileState extends State<TeacherProfile>
                         null)
                     _text("الحضانة",
                         _.mainData['account']['school']['school_name']),
-                    if (_.mainData['account']['account_zoom'] != null)
-                      _text("حساب تطبيق زووم",
-                          _.mainData['account']['account_zoom'].toString()),
-                    if (_.mainData['account']['account_zoom'] == null)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 200,
-                            child: MaterialButton(
-                                color: MyColor.pink,
-                                elevation: 0,
-                                onPressed: () {
-                                  _showAddZoom();
-                                  // Get.to(() => _nav);
-                                },
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5.0)),
-                                child: Row(
-                                  children: const [
-                                    AutoSizeText(
-                                      "اضافة حساب الزوم",
-                                      maxFontSize: 14,
-                                      minFontSize: 11,
-                                      maxLines: 1,
-                                      style: TextStyle(color: MyColor.white0),
-                                    ),
-                                    Spacer(),
-                                    Icon(
-                                      LineIcons.video,
-                                      color: MyColor.white0,
-                                    )
-                                  ],
-                                )),
-                          ),
-                        ],
-                      ),
-                    const SizedBox(
-                      height: 10,
-                    ),
+
                     if (widget.userData['account_birthday'] != null)
                       _text("الميلاد",
                           fromISOToDate(widget.userData['account_birthday'])),

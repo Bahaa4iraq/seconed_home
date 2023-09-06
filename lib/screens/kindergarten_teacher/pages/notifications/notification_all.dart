@@ -318,6 +318,7 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
   _navPage(Map _data, String _contentUrl) {
     List _pageNotifications = [
       "ملابس",
+      "رسالة",
       "غذاء",
       "دروس",
       "تبليغ",

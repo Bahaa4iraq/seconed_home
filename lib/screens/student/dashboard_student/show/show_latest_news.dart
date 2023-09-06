@@ -3,6 +3,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:secondhome2/static_files/my_times.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../provider/student/student_provider.dart';
@@ -83,6 +84,10 @@ class _ShowLatestNewsState extends State<ShowLatestNews> {
                 style: const TextStyle(fontSize: 18, color: MyColor.grayDark),
               ),
             ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
+            child: Text(toDateTime(widget.data['createdAt'])),
+          ),
         ],
       ),
     );

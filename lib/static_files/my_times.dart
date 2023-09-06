@@ -5,6 +5,13 @@ String toDateOnly(int millis) {
   var dt = DateTime.fromMillisecondsSinceEpoch(millis);
   return DateFormat('dd-MM-yyyy').format(dt);
 }
+String toDateTime(String datetime){
+  DateTime dateTime = DateTime.parse(datetime);
+
+  String formattedDateTime = DateFormat("dd-MM-yyyy\n hh:mm a").format(dateTime);
+
+  return formattedDateTime;
+}
 
 String toDateAndTime(int millis, int format) {
   var dt = DateTime.fromMillisecondsSinceEpoch(millis);

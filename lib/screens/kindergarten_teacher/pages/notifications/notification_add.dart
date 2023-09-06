@@ -573,7 +573,7 @@ class _NotificationAddState extends State<NotificationAdd> {
                                               MainAxisAlignment.spaceAround,
                                           children: [
                                             for (var img in _pic)
-                                              _imageListView(img),
+                                              _imageListView(File(img.path)),
                                           ],
                                         ),
                                       ),
@@ -704,7 +704,7 @@ class _NotificationAddState extends State<NotificationAdd> {
     );
   }
 
-  _imageListView(_img) {
+  _imageListView(File _img) {
     return Container(
       height: 150,
       width: Get.width / 4,

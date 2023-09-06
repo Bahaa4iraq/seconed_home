@@ -8,6 +8,7 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:modal_bottom_sheet/modal_bottom_sheet.dart';
 import 'package:path/path.dart' as p;
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -63,22 +64,22 @@ class _ShowMessageState extends State<ShowMessage> {
               ],
             ),
           ),
-          // if (widget.notificationsType == "واجب بيتي")
-          //   Padding(
-          //     padding: const EdgeInsets.only(right: 20, left: 20),
-          //     child: MaterialButton(
-          //       onPressed: () => showMaterialModalBottomSheet(
-          //         context: context,
-          //         expand: true,
-          //         builder: (context) => AddAnswer(data: widget.data),
-          //       ),
-          //       child: const Text(
-          //         "اضافة اجابة",
-          //         style: TextStyle(color: MyColor.pink),
-          //       ),
-          //       color: MyColor.pink,
-          //     ),
-          //   ),
+          if (widget.notificationsType == "واجب بيتي")
+            Padding(
+              padding: const EdgeInsets.only(right: 20, left: 20),
+              child: MaterialButton(
+                onPressed: () => showMaterialModalBottomSheet(
+                  context: context,
+                  expand: true,
+                  builder: (context) => AddAnswer(data: widget.data),
+                ),
+                child: const Text(
+                  "اضافة اجابة",
+                  style: TextStyle(color: MyColor.pink),
+                ),
+                color: MyColor.pink,
+              ),
+            ),
           if (widget.data['notifications_link'] != "" && widget.data['notifications_link'] != null)
             InkWell(
               onTap: () => _launchURL(widget.data['notifications_link']),
