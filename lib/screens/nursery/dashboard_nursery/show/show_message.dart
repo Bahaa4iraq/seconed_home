@@ -52,18 +52,19 @@ class _ShowMessageState extends State<ShowMessage> {
         children: [
           Padding(padding: const EdgeInsets.all(10), child: imageGrid(widget.contentUrl, widget.data['notifications_imgs'],MyColor.pink)),
           Text(toDateAndTime(widget.data['created_at'], 12)),
-          Padding(
-            padding: const EdgeInsets.only(right: 8, left: 8),
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                const Text("المرسل: "),
-                Text(widget.data['notifications_sender']['account_name'].toString()),
-              ],
+          if(widget.data['notifications_sender'] !=null)
+            Padding(
+              padding: const EdgeInsets.only(right: 8, left: 8),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  const Text("المرسل: "),
+                  Text(widget.data['notifications_sender']['account_name'].toString()),
+                ],
+              ),
             ),
-          ),
           if (widget.notificationsType == "واجب بيتي")
             Padding(
               padding: const EdgeInsets.only(right: 20, left: 20),

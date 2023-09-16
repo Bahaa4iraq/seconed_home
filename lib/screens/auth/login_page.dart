@@ -9,6 +9,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
@@ -66,12 +67,10 @@ class _LoginPageState extends State<LoginPage> {
       "auth_lon": authData!['lon'].toString(),
       "auth_lat": authData!['lat'].toString(),
       "auth_phone_details": await getDeviceInfo(),
-      //"auth_phone_id": await getPhoneId(),
+      "auth_phone_id": await getPhoneId(),
       "auth_firebase": await FirebaseMessaging.instance.getToken()
     };
-    // if (storage.read("isNursery") == null) {
-    //   EasyLoading.showError("اختر روضة او حضانة");
-    // }
+
     if (_formCheck.currentState!.validate() && authData != null) {
       Auth().login(_data).then((res) async {
         if (!res['error']) {
@@ -143,8 +142,8 @@ class _LoginPageState extends State<LoginPage> {
   }
 
   getPhoneId() async {
-    //String? deviceId = await PlatformDeviceId.getDeviceId;
-    //return deviceId;
+    String? deviceId = await PlatformDeviceId.getDeviceId;
+    return deviceId;
   }
 
   getIp() async {

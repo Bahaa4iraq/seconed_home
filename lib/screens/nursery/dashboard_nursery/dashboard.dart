@@ -245,7 +245,7 @@ class DashboardState extends State<Dashboard> with AutomaticKeepAliveClientMixin
                     _gridContainer("غفوة", "assets/img/dashboard/k_sleep.svg", const Sleep(),
                         val.mainData['account']['school']['school_features']['features_notifications']),
 
-                    _gridContainer("الحفاض", "assets/img/dashboard/k_nappy.svg", const Nappy(),
+                    _gridContainer("العناية بالطفل", "assets/img/dashboard/k_nappy.svg", const Nappy(),
                         val.mainData['account']['school']['school_features']['features_notifications']),
 
                     _gridContainer("الحضور", "assets/img/dashboard/k_attend.svg", StudentAttend(userData: widget.userData), //ExamDegree(),

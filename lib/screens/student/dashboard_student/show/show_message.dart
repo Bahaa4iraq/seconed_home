@@ -77,7 +77,8 @@ class _ShowMessageState extends State<ShowMessage> {
               child: imageGrid(
                   widget.contentUrl, widget.data['notifications_imgs'],MyColor.turquoise)),
           Text(toDateAndTime(widget.data['created_at'], 12)),
-          Padding(
+          if(widget.data['notifications_sender'] !=null)
+            Padding(
             padding: const EdgeInsets.only(right: 8, left: 8),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,

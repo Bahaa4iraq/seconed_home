@@ -13,6 +13,9 @@ import 'package:secondhome2/screens/student/dashboard_student/show/show_latest_n
 import 'package:secondhome2/screens/student/dashboard_student/show/show_news_notification.dart';
 import 'package:secondhome2/screens/student/dashboard_student/student_salary/student_salary_details.dart';
 import 'package:secondhome2/screens/student/dashboard_student/test_home_work.dart';
+import 'package:secondhome2/screens/student/dashboard_student/weekly_schedule.dart';
+import 'package:secondhome2/screens/student/review/daily_review_date.dart';
+import 'package:secondhome2/screens/student/review/review_date.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../api_connection/student/api_notification.dart';
@@ -44,11 +47,13 @@ class _NotificationAllState extends State<NotificationAll> {
   String? type;
   dynamic typeList = [
     "رسالة",
-    "ملخص",
-    "واجب بيتي",
-    "امتحان يومي",
-    "هل تعلم",
+    "ملابس",
+    "غذاء",
+    "دروس",
     "اقساط",
+    "تدريب",
+    "غفوة",
+    "العناية بالطفل",
     "الميلاد"
   ];
   initFunction() {
@@ -374,65 +379,70 @@ class _NotificationAllState extends State<NotificationAll> {
     );
   }
 
-  _navPage(Map _data, String _contentUrl) {
-    print("my id =====================");
-    print(_data["_id"]);
-    Logger().i(_data['notifications_type']);
-
-    setState(() {
-      Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
-    });
-    Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
-    List _pageNotifications = [
+  _navPage(Map data, String contentUrl) {
+    List pageNotifications = [
       "رسالة",
-      "واجب بيتي",
-      "ملخص",
-      "تقرير",
-      "الميلاد",
+      "ملابس",
+      "غذاء",
       "دروس",
+      "اشعار" /*, "تبليغ"*/,
+      "تدريب",
+      "واجب بيتي",
+      "غفوة",
+      "اقساط",
+      "هل تعلم",
+      "الحفاض",
     ];
-    if (_data['notifications_type'] == "اشعار") {
-      Get.to(() => ShowNewsNotification(
-        data: _data,
-        contentUrl: _contentUrl,
-        notificationsType: _data['notifications_type'],
-      ));
+    print(data['notifications_title']);
+    if (data['notifications_title'] == "الجدول الاسبوعي") {
       setState(() {
-        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
+        NotificationsAPI().updateReadNotifications(data['_id']);
       });
-    }else if (_data['notifications_type'] == "امتحان يومي") {
-      Get.to(() => const DailyExams());
+      Get.to(() => const WeeklySchedule());
+    } else if (data['notifications_title'] == "جدول الطعام الاسبوعي") {
       setState(() {
-        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
+        NotificationsAPI().updateReadNotifications(data['_id']);
       });
-    } else if (_data['notifications_type'] == "الحضور") {
+      // Get.to(() => const FoodSchedule()); //TODo
+    } else if (data['notifications_title'] == "تم اضافة تقييم جديد") {
       setState(() {
-        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
+        NotificationsAPI().updateReadNotifications(data['_id']);
       });
-      Get.to(() => StudentAttend(
-            userData: widget.userData,
-          ));
-    } else if (_data['notifications_type'] == "اقساط") {
+      Get.to(() => const ReviewDate());
+    }else if (data['notifications_title'] == "تم اضافة تقييم يومي جديد") {
       setState(() {
-        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
+        NotificationsAPI().updateReadNotifications(data['_id']);
       });
-      Get.to(() => const StudentSalary());
-    } else if (_data['notifications_type'] == "الميلاد") {
-      // Get.to(() => Installments())
-    } else if (_pageNotifications.contains(_data['notifications_type'])) {
-      print(_data['notifications_type']);
-      Get.to(() => ShowMessage(
-          data: _data,
-          contentUrl: _contentUrl,
-          notificationsType: _data['notifications_type'],
-      onUpdate: (){
-       NotificationsAPI().updateReadNotifications(_data['_id']);
-      },));
+      Get.to(() => const DailyReviewDate());
+    }
+    else if (data['notifications_title'] == "تم اضافة حضور / غياب / اجازة") {
+      setState(() {
+        NotificationsAPI().updateReadNotifications(data['_id']);
+      });
+      Get.to(() =>  StudentAttend(userData: widget.userData));
     }
 
-    // else if (_data['notifications_type'] == "البصمة") {
-    //   // Get.to(() => Installments())
-    // }
+    else if (pageNotifications.contains(data['notifications_type'])) {
+      Get.to(() => ShowMessage(
+        data: data,
+        contentUrl: contentUrl,
+        notificationsType: data['notifications_type'],
+        onUpdate: () {
+          NotificationsAPI().updateReadNotifications(data['_id']);
+        },
+      ));
+    } else if (data['notifications_type'] == "الحضور") {
+      setState(() {
+        NotificationsAPI().updateReadNotifications(data['_id']);
+      });
+      Get.to(() => StudentAttend(
+        userData: widget.userData,
+      ));
+    } else if (data['notifications_type'] == "الميلاد") {
+      setState(() {
+        NotificationsAPI().updateReadNotifications(data['_id']);
+      });
+    }
   }
 
   String isSummery = "";
@@ -443,7 +453,7 @@ class _NotificationAllState extends State<NotificationAll> {
         onPressed: () {
           page = 0;
 
-          type = _type;
+          type = _type == 'العناية بالطفل' ? 'الحفاض': _type;
           Get.put(NotificationProvider()).remove();
           EasyLoading.show(status: "جار جلب البيانات");
           initFunction();

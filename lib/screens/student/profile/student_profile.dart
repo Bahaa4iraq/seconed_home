@@ -371,48 +371,6 @@ class _StudentProfileState extends State<StudentProfile>
                         "الشعبة",
                         _.mainData['account']["account_division_current"]
                             ['leader']),
-                    _text("الروضة",
-                        _.mainData['account']['school']['school_name']),
-                    if (_.mainData['account']['account_zoom'] != null)
-                      _text("حساب تطبيق زووم",
-                          _.mainData['account']['account_zoom'].toString()),
-                    if (_.mainData['account']['account_zoom'] == null)
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
-                            width: 200,
-                            child: MaterialButton(
-                                color: MyColor.turquoise2,
-                                elevation: 0,
-                                onPressed: () {
-                                  _showAddZoom();
-                                  // Get.to(() => _nav);
-                                },
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(5.0)),
-                                child: const Row(
-                                  children: [
-                                    AutoSizeText(
-                                      "اضافة حساب الزوم",
-                                      maxFontSize: 14,
-                                      minFontSize: 11,
-                                      maxLines: 1,
-                                      style: TextStyle(color: MyColor.white0),
-                                    ),
-                                    Spacer(),
-                                    Icon(
-                                      LineIcons.video,
-                                      color: MyColor.white0,
-                                    )
-                                  ],
-                                )),
-                          ),
-                        ],
-                      ),
-                    const SizedBox(
-                      height: 10,
-                    ),
                     if (widget.userData['account_birthday'] != null)
                       _text("الميلاد",
                           fromISOToDate(widget.userData['account_birthday'])),
