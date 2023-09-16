@@ -348,7 +348,7 @@ class _NotificationAllState extends State<NotificationAll> {
                                           startChild: _dateTimeLine(
                                               val.data[indexes]["created_at"]),
                                           endChild: Container(
-                                            padding: const EdgeInsets.only(bottom: 10),
+                                            padding: const EdgeInsets.only(bottom: 24),
                                             margin: const EdgeInsets.only(right: 10, left: 10, top: 10),
                                             decoration: BoxDecoration(
                                                 borderRadius: BorderRadius.circular(10),
@@ -360,7 +360,7 @@ class _NotificationAllState extends State<NotificationAll> {
                                             child: ListTile(
                                               trailing: val.data[indexes]["isRead"] ? const Text("") : const Icon(Icons.mark_as_unread, color: MyColor.red),
                                               title: Text(val.data[indexes]["notifications_title"].toString(), style: const TextStyle(color: MyColor.turquoise, fontWeight: FontWeight.bold)),
-                                              subtitle: val.data[indexes]["notifications_description"] != null ? Text('${val.data[indexes]["notifications_description"]}\n') : null,
+                                              subtitle: val.data[indexes]["notifications_description"] != null ? Text('${val.data[indexes]["notifications_description"]}') : null,
                                               leading: _notificationsType(val.data[indexes]['notifications_type']),
                                               onTap: () {
                                                 val.data[indexes]["isRead"] =
@@ -399,12 +399,7 @@ class _NotificationAllState extends State<NotificationAll> {
         NotificationsAPI().updateReadNotifications(data['_id']);
       });
       Get.to(() => const WeeklySchedule());
-    } else if (data['notifications_title'] == "جدول الطعام الاسبوعي") {
-      setState(() {
-        NotificationsAPI().updateReadNotifications(data['_id']);
-      });
-      // Get.to(() => const FoodSchedule()); //TODo
-    } else if (data['notifications_title'] == "تم اضافة تقييم جديد") {
+    }  else if (data['notifications_title'] == "تم اضافة تقييم جديد") {
       setState(() {
         NotificationsAPI().updateReadNotifications(data['_id']);
       });

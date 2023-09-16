@@ -69,7 +69,7 @@ class _NappyState extends State<Nappy> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar("العناية بالطفل",MyColor.pink),
+      appBar: myAppBar("الحفاض",MyColor.pink),
       body: GetBuilder<NappyNotificationProvider>(
           builder: (val) => val.isLoading
               ? loading()

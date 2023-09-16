@@ -55,8 +55,6 @@ class _HomePageStudentOldState extends State<HomePageStudentOld>
   void initWidgetList() {
     List<Widget> _widget = <Widget>[
       Dashboard(userData: widget.userData),
-
-      ///contactuss
       const ConnectUs(color: MyColor.turquoise),
       const DailyExams(),
       StudentProfile(userData: widget.userData),

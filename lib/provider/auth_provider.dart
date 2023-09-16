@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:secondhome2/local_database/sql_database.dart';
 
 // class Auth extends GetxController{
 //
@@ -12,6 +13,10 @@ class TokenProvider extends GetxController {
 
   void removeToken() {
     userData = null;
+  }
+
+  addAccountToDatabase(Map<String,dynamic> account) async {
+    await SqlDatabase.db.insertAccountAsMap(account);
   }
 }
 

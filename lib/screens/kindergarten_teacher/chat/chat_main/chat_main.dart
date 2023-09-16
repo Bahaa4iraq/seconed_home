@@ -21,7 +21,7 @@ class _ChatMainState extends State<ChatMain> {
                 (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 const SliverAppBar(
-                  backgroundColor: MyColor.pink,
+                  backgroundColor: MyColor.turquoise,
                   foregroundColor: MyColor.white0,
                   title: Text('CHAT'),
                   pinned: true,

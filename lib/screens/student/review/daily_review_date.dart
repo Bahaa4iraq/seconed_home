@@ -25,7 +25,7 @@ class _DailyReviewDateState extends State<DailyReviewDate> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar("MY DAY",MyColor.turquoise),
+      appBar: myAppBar("يومي",MyColor.turquoise),
       body: GetBuilder<ReviewDailyDateProvider>(
           builder: (val) => val.isLoading
               ? loading()

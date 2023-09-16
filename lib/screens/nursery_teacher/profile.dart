@@ -14,6 +14,8 @@ import 'package:get/get.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:path/path.dart' as p;
+import 'package:secondhome2/provider/teacher/provider_teacher_dashboard.dart';
+import 'package:secondhome2/screens/auth/login_page.dart';
 
 import '../../../api_connection/auth_connection.dart';
 import '../../../api_connection/student/api_profile.dart';
@@ -117,6 +119,9 @@ class _TeacherProfileState extends State<TeacherProfile>
                     onPressed: () {
                       Auth().loginOut().then((res) {
                         if (res['error'] == false) {
+
+                          Get.offAll(() => const LoginPage());
+                          Get.delete<TeacherDashboardProvider>();
                           FlutterAppBadger.removeBadge();
                           EasyLoading.showSuccess(res['message'].toString());
                         } else {

@@ -274,12 +274,7 @@ class _NotificationAllState extends State<NotificationAll> {
         NotificationsAPI().updateReadNotifications(data['_id']);
       });
       Get.to(() => const WeeklySchedule());
-    } else if (data['notifications_title'] == "جدول الطعام الاسبوعي") {
-      setState(() {
-        NotificationsAPI().updateReadNotifications(data['_id']);
-      });
-      Get.to(() => const FoodSchedule());
-    } else if (data['notifications_title'] == "تم اضافة تقييم جديد") {
+    }  else if (data['notifications_title'] == "تم اضافة تقييم جديد") {
       setState(() {
         NotificationsAPI().updateReadNotifications(data['_id']);
       });

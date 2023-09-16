@@ -13,8 +13,15 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:logger/logger.dart';
 import 'package:path/path.dart' as p;
+import 'package:secondhome2/provider/accounts_provider.dart';
+import 'package:secondhome2/provider/student/provider_student_dashboard.dart';
+import 'package:secondhome2/screens/auth/accounts_screen.dart';
 import 'package:secondhome2/screens/auth/connect_us.dart';
+import 'package:secondhome2/screens/auth/login_page.dart';
+import 'package:secondhome2/screens/nursery/nursery_home.dart';
+import 'package:secondhome2/screens/student/home_page_student.dart';
 
 import '../../../api_connection/auth_connection.dart';
 import '../../../api_connection/student/api_profile.dart';
@@ -36,8 +43,8 @@ class StudentProfile extends StatefulWidget {
 
 class _StudentProfileState extends State<StudentProfile>
     with AutomaticKeepAliveClientMixin {
-  final TextEditingController _zoomName = TextEditingController();
-  final _formCheck = GlobalKey<FormState>();
+  final AccountProvider accountProvider = Get.put(AccountProvider());
+  TokenProvider get tokenProvider => Get.put(TokenProvider());
 
   @override
   bool get wantKeepAlive => true;
@@ -80,81 +87,20 @@ class _StudentProfileState extends State<StudentProfile>
     return result;
   }
 
-  _showAddZoom() {
-    Get.defaultDialog(
-      title: "الاسم في تطبيق زووم",
-      content: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Form(
-            key: _formCheck,
-            child: TextFormField(
-              controller: _zoomName,
-              style: const TextStyle(
-                color: MyColor.grayDark,
-              ),
-              decoration: InputDecoration(
-                  contentPadding: const EdgeInsets.symmetric(vertical: 12.0),
-                  //hintText: tr("name"),
-                  errorStyle: const TextStyle(color: MyColor.red),
-                  fillColor: Colors.transparent,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    borderSide: const BorderSide(
-                      color: MyColor.grayDark,
-                    ),
-                  ),
-                  enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    borderSide: const BorderSide(
-                      color: MyColor.grayDark,
-                    ),
-                  ),
-                  focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(15.0),
-                    borderSide: const BorderSide(
-                      color: MyColor.grayDark,
-                    ),
-                  ),
-                  prefixIcon: const Icon(LineIcons.video),
-                  filled: true
-                  //fillColor: Colors.green
-                  ),
-              // validator: (value) {
-              //   var result = value.length < 3 ? tr("fillText") : null;
-              //   return result;
-              // },
-            ),
-          )),
-      // onCancel: ()=>print("fv"),
-      // onConfirm: ()=>print("fv"),
-      // textCancel: "الغاء",
-      // textConfirm: "تأكيد",
-      // cancelTextColor: MyColor.c5,
-      // confirmTextColor: MyColor.c5,
 
-      confirm: MaterialButton(
-        color: MyColor.turquoise,
-        onPressed: () {
-          Map _data = {"account_zoom": _zoomName.text};
-          if (_formCheck.currentState!.validate()) {
-            // StudentAPI().addZoomName(_data).then((res) async {
-            //   if (res['error'] == false) {
-            //     await StudentAPI().getStudentInfo();
-            //     Get.back();
-            //     EasyLoading.showSuccess(res['results'].toString());
-            //   } else {
-            //     EasyLoading.showError(res['results'].toString());
-            //   }
-            // });
-          }
-        },
-        child: const Text(
-          "تأكيد",
-          style: TextStyle(color: MyColor.white0),
-        ),
-      ),
-    );
+  onOtherAccountFound(Map<String, dynamic> account) async {
+    await accountProvider.onClickAccount(account);
+    tokenProvider.addToken(account);
+    Get.delete<StudentDashboardProvider>();
+    if (account["is_kindergarten"]) {
+      Logger().i('to student');
+      Get.offAll(() => HomePageStudent(userData: account));
+    }else{
+      Logger().i('to nursery');
+      Get.offAll(() => HomePageNursery(userData: account));
+    }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -191,10 +137,17 @@ class _StudentProfileState extends State<StudentProfile>
                   confirm: MaterialButton(
                     color: MyColor.turquoise,
                     onPressed: () {
-                      Auth().loginOut().then((res) {
+                      Auth().loginOut().then((res) async{
                         if (res['error'] == false) {
-                          FlutterAppBadger.removeBadge();
-                          EasyLoading.showSuccess(res['message'].toString());
+                          await accountProvider.deleteAccount(widget.userData['account_email']);
+                          if(accountProvider.accounts.firstOrNull !=null){
+                            onOtherAccountFound(accountProvider.accounts.first.toMap());
+                          }else{
+                            Get.offAll(() => const LoginPage());
+                            Get.delete<StudentDashboardProvider>();
+                            FlutterAppBadger.removeBadge();
+                            EasyLoading.showSuccess(res['message'].toString());
+                          }
                         } else {
                           EasyLoading.showError(res['message'].toString());
                         }
@@ -404,6 +357,7 @@ class _StudentProfileState extends State<StudentProfile>
                         ///AttachDocuments()
                         _buttons("المستمسكات", const AttachDocuments(),
                             LineIcons.upload, true),
+                        _buttons("الحسابات", AccountsScreen(backgroundColor: MyColor.turquoise,foregroundColor: MyColor.white0,), LineIcons.fileInvoice,true),
 
                         ///ConnectUs()
                         _buttons("اتصل بنا", const ConnectUs(color: MyColor.turquoise,), LineIcons.phone,true),

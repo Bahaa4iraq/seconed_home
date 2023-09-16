@@ -40,8 +40,6 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
   int page = 0;
   String? type;
   List typeList = [
-    "ملابس",
-    "غذاء",
     "دروس",
     "اقساط",
     // "الحضور",
@@ -216,7 +214,7 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
                                         margin: const EdgeInsets.only(
                                             right: 10, left: 10, top: 10),
                                         padding: const EdgeInsets.only(
-                                            bottom: 16),
+                                            bottom: 24),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
@@ -317,55 +315,32 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
 
   _navPage(Map _data, String _contentUrl) {
     List _pageNotifications = [
-      "ملابس",
-      "غذاء",
-      "دروس",
-      "تبليغ",
-      "رسالة",
-      "تدريب",
-      "هل تعلم",
-      "الميلاد",
-    ];
-    if (_data['notifications_type'] == "اشعار") {
-      Get.to(() => ShowNewsNotification(
-        data: _data,
-        contentUrl: _contentUrl,
-        notificationsType: _data['notifications_type'],
-      ));
-      setState(() {
-        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
-      });
-    }else  if (_pageNotifications.contains(_data['notifications_type'])) {
-      Get.to(() => ShowMessage(
-          data: _data,
-          contentUrl: _contentUrl,
-          notificationsType: _data['notifications_type'],
-      onUpdate: (){
-            NotificationsAPI().updateReadNotifications(_data['_id']);
-      },));
-    } else if (_data['notifications_type'] == "الحضور") {
-      setState(() {
-        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
-      });
-      Get.to(() => TeacherAttend(
-            userData: widget.userData,
-          ));
-    } else if (_data['notifications_type'] == "اقساط") {
-      setState(() {
-        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
-      });
-      // Get.to(() => Installments())
-    } else if (_data['notifications_type'] == "الميلاد") {
-      setState(() {
-        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
-      });
-      // Get.to(() => Installments())
-    } else if (_data['notifications_type'] == "البصمة") {
-      setState(() {
-        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
-      });
-      //Get.to(() => Installments());
-    }
+    "رسالة",
+    "ملابس",
+    "غذاء",
+    "دروس",
+    "تدريب",
+    "غفوة",
+    "هل تعلم",
+    "الحفاض",
+    "واجب بيتي",
+    "امتحان يومي",
+    "تقرير",
+    "تبليغ",
+    "اقساط",
+    "ملخص",
+    "البصمة",
+    'اشعار'
+  ];
+
+  if (_pageNotifications.contains(_data['notifications_type'])) {
+    Get.to(() => ShowMessage(
+        data: _data, contentUrl: _contentUrl, notificationsType: _data['notifications_type']));
+  } else if (_data['notifications_type'] == "الحضور") {
+    Get.to(() => TeacherAttend(
+      userData: widget.userData,
+    ));
+  }
   }
 
   _button(String? _type) {

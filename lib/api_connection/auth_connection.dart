@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:secondhome2/local_database/sql_database.dart';
 import 'package:secondhome2/provider/student/provider_student_dashboard.dart';
 import '../provider/auth_provider.dart';
 import '../provider/teacher/provider_teacher_dashboard.dart';
@@ -24,10 +25,7 @@ class Auth extends GetConnect {
       return {"error": true};
     } else {
       final box = GetStorage();
-      Get.delete<TeacherDashboardProvider>();
-      Get.delete<StudentDashboardProvider>();
       box.erase();
-      Get.offAll(() => const LoginPage());
       return response.body;
     }
   }
@@ -55,6 +53,10 @@ class Auth extends GetConnect {
 
   redirect() {
     final box = GetStorage();
+    Map? userData = box.read('_userData');
+    if (userData?["account_type"] == "student" &&userData?['account_email'].toString() != null) {
+      SqlDatabase.db.deleteAccount(userData!['account_email'].toString());
+    }
     box.erase();
     Get.delete<TeacherDashboardProvider>();
     Get.delete<StudentDashboardProvider>();

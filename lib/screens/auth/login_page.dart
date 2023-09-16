@@ -34,6 +34,7 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  TokenProvider get tokenProvider => Get.put(TokenProvider());
 
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -78,6 +79,7 @@ class _LoginPageState extends State<LoginPage> {
           await box.write('_userData', res['results']);
           Get.put(TokenProvider()).addToken(res['results']);
           if (res['results']["account_type"] == "student") {
+            tokenProvider.addAccountToDatabase(res['results']);
 
             if (res['results']["is_kindergarten"]) {
               Get.offAll(() => HomePageStudent(userData: res['results']));
