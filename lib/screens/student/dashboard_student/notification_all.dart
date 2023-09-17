@@ -31,6 +31,7 @@ import 'student_salary/student_salary.dart';
 
 class NotificationAll extends StatefulWidget {
   final Map userData;
+
   const NotificationAll({Key? key, required this.userData}) : super(key: key);
 
   @override
@@ -47,22 +48,26 @@ class _NotificationAllState extends State<NotificationAll> {
   String? type;
   dynamic typeList = [
     "رسالة",
-    "ملابس",
-    "غذاء",
-    "دروس",
+    "واجب بيتي",
+    "امتحان يومي",
+    "يوميات",
+    "هل تعلم",
     "اقساط",
-    "تدريب",
-    "غفوة",
-    "العناية بالطفل",
+    "ملخص",
     "الميلاد"
   ];
+
   initFunction() {
     Map _data = {
       "study_year": _mainDataGetProvider.mainData['setting'][0]['setting_year'],
       "page": page,
       "class_school": _mainDataGetProvider.mainData['account']
           ['account_division_current']['_id'],
-      "type": type == "هل تعلم" ? "تقرير" : type,
+      "type": type == "هل تعلم"
+          ? "تقرير"
+          : type == "يوميات"
+              ? "دروس"
+              : type,
       "isRead": _notificationProvider.isRead
     };
     NotificationsAPI().getNotifications(_data);
@@ -84,6 +89,7 @@ class _NotificationAllState extends State<NotificationAll> {
     // To get the effect as in a showcase for ListView, set true
     reAnimateOnVisibility: true,
   );
+
   @override
   void dispose() {
     _notificationProvider.remove();
@@ -122,7 +128,7 @@ class _NotificationAllState extends State<NotificationAll> {
         actions: [
           GetBuilder<NotificationProvider>(builder: (val) {
             print("all data===============");
-            print('isRead'+ '${val.isRead}');
+            print('isRead' + '${val.isRead}');
             return IconButton(
               onPressed: () {
                 if (val.isRead == null) {
@@ -235,13 +241,13 @@ class _NotificationAllState extends State<NotificationAll> {
                                                             bottom: 5,
                                                             top: 5),
                                                     padding: const EdgeInsets
-                                                        .symmetric(
+                                                            .symmetric(
                                                         horizontal: 10,
                                                         vertical: 15),
                                                     decoration: BoxDecoration(
                                                       borderRadius:
                                                           const BorderRadius
-                                                              .all(
+                                                                  .all(
                                                               Radius.circular(
                                                                   20)),
                                                       color: MyColor.white0,
@@ -257,9 +263,25 @@ class _NotificationAllState extends State<NotificationAll> {
                                                           MainAxisAlignment
                                                               .spaceBetween,
                                                       children: [
-                                                        const Icon(
-                                                          Icons.link_rounded,
-                                                          color: Colors.grey,
+                                                        Container(
+                                                          padding:
+                                                              const EdgeInsets
+                                                                      .only(
+                                                                  left: 5),
+                                                          decoration: const BoxDecoration(
+                                                              border: Border(
+                                                                  left: BorderSide(
+                                                                      color: MyColor
+                                                                          .green))),
+                                                          child: Text(
+                                                            val.data[ind][
+                                                                    "notifications_title"]
+                                                                .toString(),
+                                                            style:
+                                                                const TextStyle(
+                                                                    color: Colors
+                                                                        .grey),
+                                                          ),
                                                         ),
                                                         Expanded(
                                                           child: Text(
@@ -273,25 +295,9 @@ class _NotificationAllState extends State<NotificationAll> {
                                                                 .center,
                                                           ),
                                                         ),
-                                                        Container(
-                                                          padding:
-                                                              const EdgeInsets
-                                                                  .only(
-                                                                  right: 5),
-                                                          decoration: const BoxDecoration(
-                                                              border: Border(
-                                                                  right: BorderSide(
-                                                                      color: MyColor
-                                                                          .green))),
-                                                          child: Text(
-                                                            val.data[ind][
-                                                                    "notifications_title"]
-                                                                .toString(),
-                                                            style:
-                                                                const TextStyle(
-                                                                    color: Colors
-                                                                        .grey),
-                                                          ),
+                                                        const Icon(
+                                                          Icons.link_rounded,
+                                                          color: Colors.grey,
                                                         ),
                                                       ],
                                                     ),
@@ -315,7 +321,8 @@ class _NotificationAllState extends State<NotificationAll> {
                                     itemCount: val.data.length,
                                     itemBuilder: animationItemBuilder(
                                       (indexes) {
-                                        print(val.data[indexes]['notifications_type']);
+                                        print(val.data[indexes]
+                                            ['notifications_type']);
                                         return TimelineTile(
                                           alignment: TimelineAlign.manual,
                                           lineXY: .2,
@@ -325,11 +332,13 @@ class _NotificationAllState extends State<NotificationAll> {
                                                 ? MyColor.turquoise
                                                 : MyColor.red,
                                             indicator: Container(
-                                                decoration:  BoxDecoration(
+                                                decoration: BoxDecoration(
                                                   shape: BoxShape.circle,
-                                                  color: val.data[indexes]["isRead"]
+                                                  color: val.data[indexes]
+                                                          ["isRead"]
                                                       ? MyColor.turquoise
-                                                      : MyColor.red,                                                 ),
+                                                      : MyColor.red,
+                                                ),
                                                 child: Icon(
                                                   _icon(val.data[indexes]
                                                       ["notifications_type"]),
@@ -348,24 +357,49 @@ class _NotificationAllState extends State<NotificationAll> {
                                           startChild: _dateTimeLine(
                                               val.data[indexes]["created_at"]),
                                           endChild: Container(
-                                            padding: const EdgeInsets.only(bottom: 24),
-                                            margin: const EdgeInsets.only(right: 10, left: 10, top: 10),
+                                            padding: const EdgeInsets.only(
+                                                bottom: 24),
+                                            margin: const EdgeInsets.only(
+                                                right: 10, left: 10, top: 10),
                                             decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(10),
-                                                border: Border.all(
-                                                  color: val.data[indexes]["isRead"]
-                                                      ? MyColor.turquoise
-                                                      : MyColor.red,                                                 ),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: val.data[indexes]
+                                                        ["isRead"]
+                                                    ? MyColor.turquoise
+                                                    : MyColor.red,
+                                              ),
                                             ),
                                             child: ListTile(
-                                              trailing: val.data[indexes]["isRead"] ? const Text("") : const Icon(Icons.mark_as_unread, color: MyColor.red),
-                                              title: Text(val.data[indexes]["notifications_title"].toString(), style: const TextStyle(color: MyColor.turquoise, fontWeight: FontWeight.bold)),
-                                              subtitle: val.data[indexes]["notifications_description"] != null ? Text('${val.data[indexes]["notifications_description"]}') : null,
-                                              leading: _notificationsType(val.data[indexes]['notifications_type']),
+                                              trailing: val.data[indexes]
+                                                      ["isRead"]
+                                                  ? const Text("")
+                                                  : const Icon(
+                                                      Icons.mark_as_unread,
+                                                      color: MyColor.red),
+                                              title: Text(
+                                                  val.data[indexes][
+                                                          "notifications_title"]
+                                                      .toString(),
+                                                  style: const TextStyle(
+                                                      color: MyColor.turquoise,
+                                                      fontWeight:
+                                                          FontWeight.bold)),
+                                              subtitle: val.data[indexes][
+                                                          "notifications_description"] !=
+                                                      null
+                                                  ? Text(
+                                                      '${val.data[indexes]["notifications_description"]}')
+                                                  : null,
+                                              leading: _notificationsType(
+                                                  val.data[indexes]
+                                                      ['notifications_type']),
                                               onTap: () {
                                                 val.data[indexes]["isRead"] =
                                                     true;
-                                                _navPage(val.data[indexes], val.contentUrl);
+                                                _navPage(val.data[indexes],
+                                                    val.contentUrl);
                                               },
                                             ),
                                           ),
@@ -379,68 +413,72 @@ class _NotificationAllState extends State<NotificationAll> {
     );
   }
 
-  _navPage(Map data, String contentUrl) {
+  _navPage(Map _data, String _contentUrl) {
     List pageNotifications = [
       "رسالة",
-      "ملابس",
-      "غذاء",
+      "واجب بيتي",
+      "ملخص",
+      "تقرير",
+      "الميلاد",
       "دروس",
       "اشعار" /*, "تبليغ"*/,
       "تدريب",
-      "واجب بيتي",
-      "غفوة",
       "اقساط",
       "هل تعلم",
-      "الحفاض",
+      "ملخص",
     ];
-    print(data['notifications_title']);
-    if (data['notifications_title'] == "الجدول الاسبوعي") {
+    if (_data['notifications_title'] == "تم اضافة تقييم يومي جديد") {
       setState(() {
-        NotificationsAPI().updateReadNotifications(data['_id']);
-      });
-      Get.to(() => const WeeklySchedule());
-    }  else if (data['notifications_title'] == "تم اضافة تقييم جديد") {
-      setState(() {
-        NotificationsAPI().updateReadNotifications(data['_id']);
-      });
-      Get.to(() => const ReviewDate());
-    }else if (data['notifications_title'] == "تم اضافة تقييم يومي جديد") {
-      setState(() {
-        NotificationsAPI().updateReadNotifications(data['_id']);
+        NotificationsAPI().updateReadNotifications(_data['_id']);
       });
       Get.to(() => const DailyReviewDate());
-    }
-    else if (data['notifications_title'] == "تم اضافة حضور / غياب / اجازة") {
+    } else if (_data['notifications_title'] == "تم اضافة حضور / غياب / اجازة") {
       setState(() {
-        NotificationsAPI().updateReadNotifications(data['_id']);
+        NotificationsAPI().updateReadNotifications(_data['_id']);
       });
-      Get.to(() =>  StudentAttend(userData: widget.userData));
-    }
-
-    else if (pageNotifications.contains(data['notifications_type'])) {
-      Get.to(() => ShowMessage(
-        data: data,
-        contentUrl: contentUrl,
-        notificationsType: data['notifications_type'],
-        onUpdate: () {
-          NotificationsAPI().updateReadNotifications(data['_id']);
-        },
-      ));
-    } else if (data['notifications_type'] == "الحضور") {
+      Get.to(() => StudentAttend(userData: widget.userData));
+    } else if (_data['notifications_type'] == "امتحان يومي") {
+      Get.to(() => const DailyExams());
       setState(() {
-        NotificationsAPI().updateReadNotifications(data['_id']);
+        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
+      });
+    } else if (_data['notifications_type'] == "الحضور") {
+      setState(() {
+        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
       });
       Get.to(() => StudentAttend(
-        userData: widget.userData,
-      ));
-    } else if (data['notifications_type'] == "الميلاد") {
+            userData: widget.userData,
+          ));
+    } else if (_data['notifications_type'] == "اقساط") {
       setState(() {
-        NotificationsAPI().updateReadNotifications(data['_id']);
+        Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
       });
-    }
+      Get.to(() => const StudentSalary());
+    } else if (_data['notifications_type'] == "الميلاد") {
+      // Get.to(() => Installments())
+    } else if (pageNotifications.contains(_data['notifications_type'])) {
+      Logger().i('yest');
+
+      Get.to(() => ShowMessage(
+            data: _data,
+            contentUrl: _contentUrl,
+            notificationsType: _data['notifications_type'],
+            onUpdate: () {
+              Logger().i(_data);
+            },
+          ));
+      setState(() {
+        NotificationsAPI().updateReadNotifications(_data['_id']);
+      });
+    } else {}
+
+    // else if (_data['notifications_type'] == "البصمة") {
+    //   // Get.to(() => Installments())
+    // }
   }
 
   String isSummery = "";
+
   _button(String? _type) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
@@ -448,7 +486,7 @@ class _NotificationAllState extends State<NotificationAll> {
         onPressed: () {
           page = 0;
 
-          type = _type == 'العناية بالطفل' ? 'الحفاض': _type;
+          type = _type;
           Get.put(NotificationProvider()).remove();
           EasyLoading.show(status: "جار جلب البيانات");
           initFunction();

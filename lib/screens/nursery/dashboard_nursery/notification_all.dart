@@ -46,7 +46,8 @@ class _NotificationAllState extends State<NotificationAll> {
     "اقساط",
     "تدريب",
     "غفوة",
-    "العناية بالطفل",
+    "هل تعلم",
+    "الحفاض",
     "الميلاد"
   ];
 
@@ -265,53 +266,60 @@ class _NotificationAllState extends State<NotificationAll> {
       "واجب بيتي",
       "غفوة",
       "اقساط",
+      'اشعار',
       "هل تعلم",
       "الحفاض",
     ];
-    print(data['notifications_title']);
-    if (data['notifications_title'] == "الجدول الاسبوعي") {
-      setState(() {
-        NotificationsAPI().updateReadNotifications(data['_id']);
-      });
-      Get.to(() => const WeeklySchedule());
-    }  else if (data['notifications_title'] == "تم اضافة تقييم جديد") {
-      setState(() {
-        NotificationsAPI().updateReadNotifications(data['_id']);
-      });
-      Get.to(() => const ReviewDate());
-    }else if (data['notifications_title'] == "تم اضافة تقييم يومي جديد") {
+    if (data['notifications_title'] == "تم اضافة تقييم يومي جديد") {
       setState(() {
         NotificationsAPI().updateReadNotifications(data['_id']);
       });
       Get.to(() => const DailyReviewDate());
-    }
-    else if (data['notifications_title'] == "تم اضافة حضور / غياب / اجازة") {
+    } else if (data['notifications_title'] == "تم اضافة حضور / غياب / اجازة") {
       setState(() {
         NotificationsAPI().updateReadNotifications(data['_id']);
       });
-      Get.to(() =>  StudentAttend(userData: widget.userData));
-    }
-
-    else if (pageNotifications.contains(data['notifications_type'])) {
+      Get.to(() => StudentAttend(userData: widget.userData));
+    }else if (pageNotifications.contains(data['notifications_type'])) {
+      setState(() {
+        Get.put(NotificationsAPI()).updateReadNotifications(data["_id"]);
+      });
       Get.to(() => ShowMessage(
-        data: data,
-        contentUrl: contentUrl,
-        notificationsType: data['notifications_type'],
-        onUpdate: () {
-          NotificationsAPI().updateReadNotifications(data['_id']);
-        },
-      ));
+            data: data,
+            contentUrl: contentUrl,
+            notificationsType: data['notifications_type'],
+            onUpdate: () {
+              // NotificationsAPI().updateReadNotifications(data['_id']);
+            },
+          ));
     } else if (data['notifications_type'] == "الحضور") {
       setState(() {
-        NotificationsAPI().updateReadNotifications(data['_id']);
+        Get.put(NotificationsAPI()).updateReadNotifications(data["_id"]);
       });
       Get.to(() => StudentAttend(
-        userData: widget.userData,
-      ));
+            userData: widget.userData,
+          ));
+    } else if (data['notifications_type'] == "اقساط") {
+      setState(() {
+        Get.put(NotificationsAPI()).updateReadNotifications(data["_id"]);
+      });
+      Get.to(() => const StudentSalary());
     } else if (data['notifications_type'] == "الميلاد") {
       setState(() {
-        NotificationsAPI().updateReadNotifications(data['_id']);
+        Get.put(NotificationsAPI()).updateReadNotifications(data["_id"]);
       });
+      // Get.to(() => Installments())
+    } else {
+      setState(() {
+        Get.put(NotificationsAPI()).updateReadNotifications(data["_id"]);
+      });
+      if (data['notifications_title'] == "الجدول الاسبوعي") {
+        Get.to(() => const WeeklySchedule());
+      } else if (data['notifications_title'] == "جدول الطعام الاسبوعي") {
+        Get.to(() => const FoodSchedule());
+      } else if (data['notifications_title'] == "تم اضافة تقييم جديد") {
+        Get.to(() => const DailyReviewDate());
+      }
     }
   }
 
@@ -321,7 +329,7 @@ class _NotificationAllState extends State<NotificationAll> {
       child: MaterialButton(
         onPressed: () {
           page = 0;
-          type = _type == 'العناية بالطفل' ? 'الحفاض': _type;
+          type = _type;
           Get.put(NotificationProvider()).remove();
           EasyLoading.show(status: "جار جلب البيانات");
           initFunction();
