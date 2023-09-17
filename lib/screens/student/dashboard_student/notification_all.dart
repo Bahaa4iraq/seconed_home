@@ -48,28 +48,38 @@ class _NotificationAllState extends State<NotificationAll> {
   String? type;
   dynamic typeList = [
     "رسالة",
-    "واجب بيتي",
+    "ملخص الدروس اليومية",
+    "واجب اسبوعي",
     "امتحان يومي",
     "يوميات",
     "هل تعلم",
     "اقساط",
-    "ملخص",
     "الميلاد"
   ];
 
+  String? getType(){
+    if(type== "هل تعلم") {
+      return "تقرير";
+    }else if(type == "يوميات"){
+      return "دروس";
+    }else if(type == "واجب اسبوعي"){
+      return "واجب بيتي";
+    }else if(type == "ملخص الدروس اليومية"){
+      return "ملخص";
+    }else{
+      return type;
+    }
+  }
   initFunction() {
     Map _data = {
       "study_year": _mainDataGetProvider.mainData['setting'][0]['setting_year'],
       "page": page,
       "class_school": _mainDataGetProvider.mainData['account']
           ['account_division_current']['_id'],
-      "type": type == "هل تعلم"
-          ? "تقرير"
-          : type == "يوميات"
-              ? "دروس"
-              : type,
+      "type": getType(),
       "isRead": _notificationProvider.isRead
     };
+    Logger().i(_data);
     NotificationsAPI().getNotifications(_data);
   }
 
@@ -358,7 +368,7 @@ class _NotificationAllState extends State<NotificationAll> {
                                               val.data[indexes]["created_at"]),
                                           endChild: Container(
                                             padding: const EdgeInsets.only(
-                                                bottom: 24),
+                                                bottom: 16),
                                             margin: const EdgeInsets.only(
                                                 right: 10, left: 10, top: 10),
                                             decoration: BoxDecoration(
@@ -390,7 +400,7 @@ class _NotificationAllState extends State<NotificationAll> {
                                                           "notifications_description"] !=
                                                       null
                                                   ? Text(
-                                                      '${val.data[indexes]["notifications_description"]}')
+                                                      '${val.data[indexes]["notifications_description"]}',maxLines: 4,overflow: TextOverflow.ellipsis,)
                                                   : null,
                                               leading: _notificationsType(
                                                   val.data[indexes]
@@ -491,7 +501,7 @@ class _NotificationAllState extends State<NotificationAll> {
           EasyLoading.show(status: "جار جلب البيانات");
           initFunction();
 
-          if (type == "ملخص") {
+          if (type == "ملخص الدروس اليومية") {
             isSummery = "ملخص";
           } else {
             isSummery = "";

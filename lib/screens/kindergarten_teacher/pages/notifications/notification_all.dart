@@ -238,7 +238,7 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
                                                   null
                                               ? Text(val.data[indexes][
                                                       "notifications_description"]
-                                                  .toString())
+                                                  .toString(),maxLines: 4,overflow: TextOverflow.ellipsis,)
                                               : null,
                                           trailing: _star(val.data[indexes]
                                                       ['notifications_sender']

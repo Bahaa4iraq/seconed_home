@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
+import 'package:logger/logger.dart';
 import 'package:secondhome2/screens/nursery/review/daily_review_date.dart';
 import 'package:secondhome2/screens/nursery/review/review_date.dart';
 import 'package:timeline_tile/timeline_tile.dart';
@@ -42,24 +43,38 @@ class _NotificationAllState extends State<NotificationAll> {
     "رسالة",
     "ملابس",
     "غذاء",
-    "دروس",
+    "يوميات",
+    "العناية بالطفل",
     "اقساط",
     "تدريب",
     "غفوة",
     "هل تعلم",
-    "الحفاض",
     "الميلاد"
   ];
+  String? getType(){
+    Logger().i(type);
 
+    if(type== "هل تعلم") {
+      return "تقرير";
+    }else if(type == "يوميات"){
+      return "دروس";
+    }else if(type == "العناية بالطفل"){
+      return "الحفاض";
+    }else{
+      return type;
+    }
+  }
   initFunction() {
     Map _data = {
       "study_year": _mainDataGetProvider.mainData['setting'][0]['setting_year'],
       "page": page,
       "class_school": _mainDataGetProvider.mainData['account']
           ['account_division_current']['_id'],
-      "type": type,
+      "type": getType(),
       "isRead": _notificationProvider.isRead
     };
+    Logger().i(_data);
+
     NotificationsAPI().getNotifications(_data);
   }
 
@@ -236,7 +251,7 @@ class _NotificationAllState extends State<NotificationAll> {
                                                   null
                                               ? Text(val.data[indexes][
                                                       "notifications_description"]
-                                                  .toString())
+                                                  .toString(),maxLines: 4,overflow: TextOverflow.ellipsis,)
                                               : null,
 
                                           onTap: () {

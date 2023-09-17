@@ -76,10 +76,13 @@ class _ShowMessageState extends State<ShowMessage> {
               padding: const EdgeInsets.all(10),
               child: imageGrid(
                   widget.contentUrl, widget.data['notifications_imgs'],MyColor.turquoise)),
-          Text(toDateAndTime(widget.data['created_at'], 12)),
+          Padding(
+            padding: const EdgeInsets.only(right: 20.0),
+            child: Text(toDateAndTime(widget.data['created_at'], 12)),
+          ),
           if(widget.data['notifications_sender'] !=null)
             Padding(
-            padding: const EdgeInsets.only(right: 8, left: 8),
+            padding: const EdgeInsets.only(right: 20, left: 20),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
