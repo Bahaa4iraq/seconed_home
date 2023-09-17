@@ -33,7 +33,23 @@ class _StudentAttendState extends State<StudentAttend> {
       locale: const Locale("en", "US"),
       firstDate: DateTime.now().add(const Duration(days: -365)),
       lastDate: DateTime.now(),
-    );
+        builder: (context, child) {
+          return Theme(
+            data: Theme.of(context).copyWith(
+              colorScheme: const ColorScheme.light(
+                primary: MyColor.pink, // <-- SEE HERE
+                onPrimary: MyColor.white0, // <-- SEE HERE
+                onSurface: MyColor.white0, // <-- SEE HERE
+              ),
+              textButtonTheme: TextButtonThemeData(
+                style: TextButton.styleFrom(
+                  foregroundColor: MyColor.white0, // button text color
+                ),
+              ),
+            ),
+            child: child!,
+          );
+        });
     if (picked != null) {
       final _formattedDateFirst =
           intl.DateFormat('yyyy-MM-dd').format(picked.start);
