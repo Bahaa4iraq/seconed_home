@@ -10,6 +10,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:intl/intl.dart';
 import 'package:path/path.dart' as p;
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 
@@ -24,6 +25,7 @@ import '../../../static_files/my_loading.dart';
 import '../../../static_files/my_random.dart';
 import '../../../static_files/my_times.dart';
 import 'chat_main/chat_page_group.dart';
+import 'dart:ui' as ui;
 
 class ChatGroupList extends StatefulWidget {
   const ChatGroupList({Key? key}) : super(key: key);
@@ -211,7 +213,7 @@ class _ChatGroupListState extends State<ChatGroupList> {
 
   Text _timeText(int _time) {
     return Text(
-      toTimeOnly(_time, 12),
+      toTimeAndDayAndMonth(_time, 12),
       style: const TextStyle(fontSize: 10),
     );
   }

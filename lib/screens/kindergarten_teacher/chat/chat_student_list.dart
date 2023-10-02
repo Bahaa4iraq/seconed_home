@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
+import 'package:path/path.dart';
 import '../../../api_connection/teacher/chat/api_chat_student_list.dart';
 import '../../../provider/auth_provider.dart';
 import '../../../provider/teacher/chat/chat_all_list_items.dart';
@@ -118,6 +120,8 @@ class _ChatStudentListState extends State<ChatStudentList> {
                 hintText: 'ابحث',
               ),
               onChanged: (keyword) {
+                page ++;
+                _getStudentList();
                 _debouncer(() {
                   chatStudentProvider.filter(keyword.toLowerCase());
                 });
@@ -199,11 +203,10 @@ class _ChatStudentListState extends State<ChatStudentList> {
 
 Text _timeText(int _time) {
   return Text(
-    toTimeOnly(_time, 12),
+    toTimeAndDayAndMonth(_time, 12),
     style: const TextStyle(fontSize: 10),
   );
 }
-
 Widget _messageUnRead(int _count) {
   return Container(
     decoration: BoxDecoration(

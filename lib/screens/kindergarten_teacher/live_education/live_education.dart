@@ -97,7 +97,7 @@ class _NotificationTeacherLiveEducationState extends State<NotificationTeacherLi
       appBar: AppBar(
         backgroundColor: MyColor.turquoise,
         title: const Text(
-          "الحضور الالكتروني",
+          "التعليم الالكتروني",
           style: TextStyle(color: MyColor.white0),
         ),
         centerTitle: true,

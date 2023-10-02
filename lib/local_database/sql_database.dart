@@ -1,8 +1,9 @@
 import 'dart:io';
 
-import 'package:path_provider/path_provider.dart';
+// import 'package:path_provider/path_provider.dart';
 import 'package:secondhome2/local_database/base_database.dart';
 import 'package:sqflite/sqflite.dart';
+import 'package:path/path.dart' as p;
 
 import 'models/account.dart';
 
@@ -26,8 +27,8 @@ class SqlDatabase extends BaseDatabase {
   }
 
   Future<Database> initializeDatabase() async {
-    Directory directory = await getApplicationDocumentsDirectory();
-    String path = '${directory.path}secondhome.db';
+    var directory = await getDatabasesPath();
+    String path = p.join(directory, 'secondhome.db');
     var myDatabase = await openDatabase(path, version: 1, onCreate: _createDb);
     return myDatabase;
   }

@@ -195,7 +195,7 @@ class _ChatStudentListState extends State<ChatStudentList> {
 
 Text _timeText(int _time) {
   return Text(
-    toTimeOnly(_time, 12),
+    toTimeAndDayAndMonth(_time, 12),
     style: const TextStyle(fontSize: 10),
   );
 }

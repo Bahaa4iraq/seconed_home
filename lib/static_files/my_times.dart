@@ -25,6 +25,23 @@ String toDateAndTime(int millis, int format) {
   }
 }
 
+String toTimeAndDayAndMonth(int millis, int format) {
+  var dt = DateTime.fromMillisecondsSinceEpoch(millis);
+  final String monthEnglish = DateFormat('MMM').format(dt);
+  final String day = DateFormat('dd').format(dt);
+  final String time = DateFormat('hh:mm a').format(dt);
+  final String formattedDateTime = ''' $monthEnglish - $day   $time''';
+
+
+  if (format == 12) {
+    /// 12 Hour format:
+    return formattedDateTime;
+  } else {
+    /// 24 Hour format:
+    return formattedDateTime;
+  }
+}
+
 String toTimeOnly(int millis, int format) {
   var dt = DateTime.fromMillisecondsSinceEpoch(millis);
 

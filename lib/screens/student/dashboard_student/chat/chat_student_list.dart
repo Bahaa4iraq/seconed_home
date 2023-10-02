@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import '../../../../api_connection/student/chat/api_chat_student_list.dart';
 import '../../../../provider/auth_provider.dart';
 import '../../../../provider/student/chat/chat_all_list_items.dart';
@@ -11,6 +12,7 @@ import '../../../../static_files/my_color.dart';
 import '../../../../static_files/my_loading.dart';
 import '../../../../static_files/my_times.dart';
 import 'chat_main/chat_page.dart';
+import 'dart:ui' as ui;
 
 class ChatTeacherList extends StatefulWidget {
   const ChatTeacherList({Key? key}) : super(key: key);
@@ -135,12 +137,16 @@ class _ChatTeacherListState extends State<ChatTeacherList> {
   }
 }
 
-Text _timeText(int _time) {
-  return Text(
-    toTimeOnly(_time, 12),
-    style: const TextStyle(fontSize: 10),
+Widget _timeText(int _time) {
+  return Directionality(
+    textDirection: ui.TextDirection.ltr,
+    child: Text(
+      toTimeAndDayAndMonth(_time, 12),
+      style:  TextStyle(fontSize: 10),
+    ),
   );
 }
+
 
 Widget _messageUnRead(int _count) {
   return Container(

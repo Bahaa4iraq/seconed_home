@@ -212,7 +212,7 @@ class _ChatGroupListState extends State<ChatGroupList> {
 
   Text _timeText(int time) {
     return Text(
-      toTimeOnly(time, 12),
+      toTimeAndDayAndMonth(time, 12),
       style: const TextStyle(fontSize: 10),
     );
   }

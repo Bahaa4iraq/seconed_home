@@ -37,7 +37,7 @@ class _TeacherSalaryDetailsState extends State<TeacherSalaryDetails> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar("تفاصيل الاقساط" ,MyColor.turquoise),
+      appBar: myAppBar("تفاصيل الراتب" ,MyColor.turquoise),
       body: GetBuilder<TeacherFullSalaryProvider>(builder: (val) {
         return val.isLoading
             ? loading()
