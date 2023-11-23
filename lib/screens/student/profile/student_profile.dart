@@ -26,11 +26,14 @@ import 'package:secondhome2/screens/student/home_page_student.dart';
 import '../../../api_connection/auth_connection.dart';
 import '../../../api_connection/student/api_profile.dart';
 import '../../../provider/auth_provider.dart';
+import '../../../provider/teacher/provider_teacher_dashboard.dart';
 import '../../../static_files/my_color.dart';
 import '../../../static_files/my_loading.dart';
 import '../../../static_files/my_package_info.dart';
 import '../../../static_files/my_random.dart';
 import '../../../static_files/my_times.dart';
+import '../../kindergarten_teacher/teacher_kindergarten_home.dart';
+import '../../nursery_teacher/teacher_nursery_home.dart';
 import 'attach_documents.dart';
 
 class StudentProfile extends StatefulWidget {
@@ -45,6 +48,7 @@ class _StudentProfileState extends State<StudentProfile>
     with AutomaticKeepAliveClientMixin {
   final AccountProvider accountProvider = Get.put(AccountProvider());
   TokenProvider get tokenProvider => Get.put(TokenProvider());
+
 
   @override
   bool get wantKeepAlive => true;
@@ -91,13 +95,26 @@ class _StudentProfileState extends State<StudentProfile>
   onOtherAccountFound(Map<String, dynamic> account) async {
     await accountProvider.onClickAccount(account);
     tokenProvider.addToken(account);
-    Get.delete<StudentDashboardProvider>();
-    if (account["is_kindergarten"]) {
-      Logger().i('to student');
-      Get.offAll(() => HomePageStudent(userData: account));
-    }else{
-      Logger().i('to nursery');
-      Get.offAll(() => HomePageNursery(userData: account));
+
+
+    if (account['account_type'] == 'student') {
+      Get.delete<StudentDashboardProvider>();
+
+      if(account["is_kindergarten"]) {
+        Get.offAll(() => HomePageStudent(userData: account));
+      }else{
+        Get.offAll(() => HomePageNursery(userData: account));
+      }
+    } else if (account['account_type'] == 'teacher') {
+      Get.delete<TeacherDashboardProvider>();
+      if(account["is_kindergarten"]){
+        Get.offAll(() => HomePageKindergartenTeacher(userData: account));
+      }
+      else{
+        Get.offAll(() => HomePageNurseryTeacher(userData: account));
+
+      }
+
     }
   }
 
@@ -357,7 +374,7 @@ class _StudentProfileState extends State<StudentProfile>
                         ///AttachDocuments()
                         _buttons("المستمسكات", const AttachDocuments(),
                             LineIcons.upload, true),
-                        _buttons("الحسابات", AccountsScreen(backgroundColor: MyColor.turquoise,foregroundColor: MyColor.white0,), LineIcons.fileInvoice,true),
+                        _buttons("الحسابات", AccountsScreen(), LineIcons.fileInvoice,true),
 
                         ///ConnectUs()
                         _buttons("اتصل بنا", const ConnectUs(color: MyColor.turquoise,), LineIcons.phone,true),

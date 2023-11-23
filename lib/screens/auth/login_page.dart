@@ -8,11 +8,13 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
+import 'package:secondhome2/screens/auth/accounts_screen.dart';
 import 'package:secondhome2/screens/kindergarten_teacher/teacher_kindergarten_home.dart';
 import 'package:secondhome2/screens/nursery_teacher/teacher_nursery_home.dart';
 
@@ -89,6 +91,8 @@ class _LoginPageState extends State<LoginPage> {
 
 
           } else if (res['results']["account_type"] == "teacher") {
+            tokenProvider.addAccountToDatabase(res['results']);
+
             if (res['results']["is_kindergarten"]) {
               Get.offAll(() => HomePageKindergartenTeacher(userData: res['results']));
             }else{
@@ -187,10 +191,10 @@ class _LoginPageState extends State<LoginPage> {
               children: [
 
                 Padding(
-                  padding:  EdgeInsets.only(top: Get.height* .06),
+                  padding:  EdgeInsets.only(top: Get.height* .05),
                   child: Image.asset(
-                      "assets/img/main.png",
-                    height: Get.height * 0.4,
+                    "assets/img/main.png",
+                    height: Get.height * 0.3,
 
                   ),
                 ),
@@ -202,7 +206,7 @@ class _LoginPageState extends State<LoginPage> {
                       // Text(storage.read("isNursery").toString()),
                       const Icon(
                         LineIcons.userAlt,
-                        size: 50,
+                        size: 40,
                         color: MyColor.turquoise,
                       ),
                       const Text(
@@ -222,7 +226,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           decoration: InputDecoration(
                               contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 24.0, horizontal: 24),
+                                  vertical: 18.0, horizontal: 18),
                               //hintText: "الايميل",
                               errorStyle: const TextStyle(color: MyColor.grayDark),
                               fillColor: Colors.transparent,
@@ -276,7 +280,7 @@ class _LoginPageState extends State<LoginPage> {
                           ),
                           decoration: InputDecoration(
                               contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 24.0, horizontal: 24),
+                                  vertical: 18.0, horizontal: 18),
                               errorStyle: const TextStyle(color: MyColor.grayDark),
                               fillColor: Colors.transparent,
                               border: OutlineInputBorder(
@@ -311,9 +315,9 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                 ),
-                const Spacer(),
+
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 40),
+                  padding: const EdgeInsets.only(top: 20),
                   child: SizedBox(
                     width: width / 2,
                     child: RoundedLoadingButton(
@@ -334,6 +338,9 @@ class _LoginPageState extends State<LoginPage> {
                     ),
                   ),
                 ),
+                SizedBox(height: Get.height * 0.06),
+                _buttons("حساباتي",  AccountsScreen(),'assets/img/dashboard/group.svg',),
+
                 // Container(
                 //   padding:
                 //       const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
@@ -364,23 +371,30 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _buttons(_t, _width, Widget _nav) {
+  _buttons(_t, Widget _nav,String icon) {
     return SizedBox(
-      width: _width / 2.5,
+      height: 50 ,
       child: MaterialButton(
           color: MyColor.turquoise,
-          elevation: 0,
+          elevation: 8,
           onPressed: () {
             Get.to(() => _nav);
           },
-          shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-          child: AutoSizeText(
-            _t,
-            maxFontSize: 14,
-            minFontSize: 11,
-            maxLines: 1,
-            style: const TextStyle(color: MyColor.red),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              AutoSizeText(
+                _t,
+                maxFontSize: 15,
+                minFontSize: 12,
+                maxLines: 1,
+                style: const TextStyle(color: MyColor.white0,fontWeight: FontWeight.bold),
+              ),
+              SizedBox(width: 10,),
+
+              SvgPicture.asset(icon,height: 20,color: Colors.white,),
+            ],
           )),
     );
   }

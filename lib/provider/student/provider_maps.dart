@@ -19,7 +19,7 @@ class MapStudentProvider extends GetxController{
   }
 }
 class SocketDataProvider extends GetxController{
-  late final IO.Socket socket;
+  late  IO.Socket socket;
   bool isLocationServiceEnabled = false;
   bool permission =false;
   void changeSocket(IO.Socket socket) {

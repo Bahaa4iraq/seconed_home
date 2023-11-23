@@ -7,7 +7,6 @@ import 'package:dio/dio.dart' as dio;
 import '../../static_files/my_color.dart';
 import '../../static_files/my_url.dart';
 import '../auth_connection.dart';
-import 'package:logger/logger.dart';
 
 class StudentProfileAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
@@ -32,7 +31,6 @@ class StudentProfileAPI extends GetConnect {
       );
       return response.data;
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -57,12 +55,11 @@ class StudentProfileAPI extends GetConnect {
         },
       );
       if (response.statusCode == 401) {
-        
-Logger().i("redirect");Auth().redirect();      } else {
+        Auth().redirect();
+      } else {
         return response.data;
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -74,12 +71,11 @@ Logger().i("redirect");Auth().redirect();      } else {
       final response =
           await get(mainApi + 'student/certificate', headers: _headers);
       if (response.statusCode == 401) {
-        
-Logger().i("redirect");Auth().redirect();      } else {
+        Auth().redirect();
+      } else {
         return response.body;
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }

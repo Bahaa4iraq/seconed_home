@@ -6,9 +6,8 @@ String toDateOnly(int millis) {
   return DateFormat('dd-MM-yyyy').format(dt);
 }
 String toDateTime(String datetime){
-  DateTime dateTime = DateTime.parse(datetime);
-
-  String formattedDateTime = DateFormat("dd-MM-yyyy\n hh:mm a").format(dateTime);
+  DateTime dateTime = DateTime.parse(datetime).toLocal();
+  String formattedDateTime = DateFormat("dd-MM-yyyy\nhh:mm a").format(dateTime);
 
   return formattedDateTime;
 }
@@ -25,20 +24,15 @@ String toDateAndTime(int millis, int format) {
   }
 }
 
-String toTimeAndDayAndMonth(int millis, int format) {
+String getChatDate(int millis, int format) {
   var dt = DateTime.fromMillisecondsSinceEpoch(millis);
-  final String monthEnglish = DateFormat('MMM').format(dt);
-  final String day = DateFormat('dd').format(dt);
-  final String time = DateFormat('hh:mm a').format(dt);
-  final String formattedDateTime = ''' $monthEnglish - $day   $time''';
-
 
   if (format == 12) {
     /// 12 Hour format:
-    return formattedDateTime;
+    return DateFormat('dd-MM, hh:mm a').format(dt);
   } else {
     /// 24 Hour format:
-    return formattedDateTime;
+    return DateFormat('dd-MM, HH:mm').format(dt);
   }
 }
 

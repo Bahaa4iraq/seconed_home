@@ -6,7 +6,6 @@ import 'package:dio/dio.dart' as dio;
 import '../../../provider/auth_provider.dart';
 import '../../../static_files/my_color.dart';
 import '../../../static_files/my_url.dart';
-import 'package:logger/logger.dart';
 
 class AddChatFilesAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
@@ -34,7 +33,6 @@ class AddChatFilesAPI extends GetConnect {
       }
       return response.data;
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -63,7 +61,6 @@ class AddChatFilesAPI extends GetConnect {
       }
       return response.data;
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }

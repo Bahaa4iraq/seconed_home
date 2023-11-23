@@ -1,20 +1,20 @@
-import 'package:logger/logger.dart';
 import 'package:secondhome2/provider/accounts_provider.dart';
 import 'package:secondhome2/provider/auth_provider.dart';
 import 'package:secondhome2/screens/auth/login_page.dart';
-import 'package:secondhome2/screens/nursery/nursery_home.dart';
-import 'package:secondhome2/screens/student/home_page_student.dart';
 import 'package:secondhome2/screens/student/student_home.dart';
 import 'package:secondhome2/static_files/my_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../provider/student/provider_student_dashboard.dart';
+import '../kindergarten_teacher/teacher_kindergarten_home.dart';
+import '../nursery/nursery_home.dart';
+import '../nursery_teacher/teacher_nursery_home.dart';
+import '../student/home_page_student.dart';
+
 
 class AccountsScreen extends StatefulWidget {
-  AccountsScreen({Key? key, required this.backgroundColor, required this.foregroundColor}) : super(key: key);
-  final Color backgroundColor;
-  final Color foregroundColor;
+  AccountsScreen({Key? key}) : super(key: key);
 
   @override
   State<AccountsScreen> createState() => _AccountsScreenState();
@@ -27,17 +27,29 @@ class _AccountsScreenState extends State<AccountsScreen> {
 
 
   onCLickAccount(Map<String, dynamic> account) async {
-    if(tokenProvider.userData?['account_email'] != account['account_email']){
+    if (tokenProvider.userData?['account_email'] != account['account_email']) {
       await accountProvider.onClickAccount(account);
       tokenProvider.addToken(account);
       Get.delete<StudentDashboardProvider>();
-      if (account["is_kindergarten"]) {
-        Get.offAll(() => HomePageStudent(userData: account));
-      } else {
-        Get.offAll(() => HomePageNursery(userData: account));
+
+      if (account['account_type'] == 'student') {
+        if(account["is_kindergarten"]) {
+          Get.offAll(() => HomePageStudent(userData: account));
+        }else{
+          Get.offAll(() => HomePageNursery(userData: account));
+        }
+      } else if (account['account_type'] == 'teacher') {
+        if(account["is_kindergarten"]){
+          Get.offAll(() => HomePageKindergartenTeacher(userData: account));
+        }
+        else{
+          Get.offAll(() => HomePageNurseryTeacher(userData: account));
+
+        }
+
       }
     }
-   }
+  }
 
   @override
   void initState() {
@@ -49,14 +61,14 @@ class _AccountsScreenState extends State<AccountsScreen> {
     return SafeArea(
       child: Scaffold(
           appBar: AppBar(
-            backgroundColor: widget.backgroundColor,
-            title:  Text(
+            backgroundColor: MyColor.pink,
+            title: const Text(
               'الحسابات',
-              style: TextStyle(color: widget.foregroundColor),
+              style: TextStyle(color: MyColor.white0),
             ),
             centerTitle: true,
-            iconTheme:  IconThemeData(
-              color: widget.foregroundColor,
+            iconTheme: const IconThemeData(
+              color: MyColor.white0,
             ),
             elevation: 0,
             actions: [
@@ -108,8 +120,8 @@ class _AccountsScreenState extends State<AccountsScreen> {
                               ),
                               if(tokenProvider.userData?['account_email'] != account.accountEmail) GestureDetector(
                                 onTap: () => accountProvider.deleteAccount(account.accountEmail),
-                                child: const Icon(Icons.delete),
-                              )
+                                child: const Icon(Icons.delete), ),
+                              if(tokenProvider.userData?['account_email'] == account.accountEmail) const Icon(Icons.star,color: MyColor.pink)
                             ],
                           ),
                         ));

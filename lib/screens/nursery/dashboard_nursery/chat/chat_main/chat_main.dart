@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../../../../../static_files/my_color.dart';
+import '../chat_group_list_student.dart';
 import '../chat_student_list.dart';
 
 class ChatMain extends StatefulWidget {
@@ -17,19 +18,40 @@ class _ChatMainState extends State<ChatMain> {
       length: 1,
       child: Scaffold(
         body: NestedScrollView(
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
+            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 const SliverAppBar(
                   backgroundColor: MyColor.pink,
                   foregroundColor: MyColor.white0,
                   title: Text('CHAT'),
+                  centerTitle: true,
                   pinned: true,
                   floating: true,
+                  // bottom: TabBar(
+                  //   indicatorColor: MyColor.white0,
+                  //   indicatorWeight: 3,
+                  //   tabs: [
+                  //     Tab(
+                  //       text: "الاساتذة",
+                  //     ),
+                  //     // Tab(
+                  //     //   text: "الصفوف",
+                  //     // ),
+                  //     // Tab(
+                  //     //   text: "المجموعات",
+                  //     // ),
+                  //   ],
+                  // ),
                 ),
               ];
             },
-            body:const ChatTeacherList(),),
+            body: const TabBarView(
+              children: [
+                ChatTeacherList(),
+                //ChatClassGroupList(),
+                // ChatGroupList(),
+              ],
+            )),
       ),
     );
   }

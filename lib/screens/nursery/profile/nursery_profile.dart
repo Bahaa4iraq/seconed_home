@@ -22,11 +22,14 @@ import 'package:secondhome2/screens/student/home_page_student.dart';
 import '../../../api_connection/auth_connection.dart';
 import '../../../api_connection/student/api_profile.dart';
 import '../../../provider/auth_provider.dart';
+import '../../../provider/teacher/provider_teacher_dashboard.dart';
 import '../../../static_files/my_color.dart';
 import '../../../static_files/my_loading.dart';
 import '../../../static_files/my_package_info.dart';
 import '../../../static_files/my_random.dart';
 import '../../../static_files/my_times.dart';
+import '../../kindergarten_teacher/teacher_kindergarten_home.dart';
+import '../../nursery_teacher/teacher_nursery_home.dart';
 import 'attach_documents.dart';
 
 class StudentProfile extends StatefulWidget {
@@ -49,11 +52,26 @@ class _StudentProfileState extends State<StudentProfile>
   onOtherAccountFound(Map<String, dynamic> account) async {
     await accountProvider.onClickAccount(account);
     tokenProvider.addToken(account);
-    Get.delete<StudentDashboardProvider>();
-    if (account["is_kindergarten"]) {
-      Get.offAll(() => HomePageStudent(userData: account));
-    } else {
-      Get.offAll(() => HomePageNursery(userData: account));
+
+
+    if (account['account_type'] == 'student') {
+      Get.delete<StudentDashboardProvider>();
+
+      if(account["is_kindergarten"]) {
+        Get.offAll(() => HomePageStudent(userData: account));
+      }else{
+        Get.offAll(() => HomePageNursery(userData: account));
+      }
+    } else if (account['account_type'] == 'teacher') {
+      Get.delete<TeacherDashboardProvider>();
+      if(account["is_kindergarten"]){
+        Get.offAll(() => HomePageKindergartenTeacher(userData: account));
+      }
+      else{
+        Get.offAll(() => HomePageNurseryTeacher(userData: account));
+
+      }
+
     }
   }
 
@@ -135,12 +153,10 @@ class _StudentProfileState extends State<StudentProfile>
                     onPressed: () {
                       Auth().loginOut().then((res) async{
                         if (res['error'] == false) {
-                          await accountProvider
-                              .deleteAccount(widget.userData['account_email']);
-                          if (accountProvider.accounts.firstOrNull != null) {
-                            onOtherAccountFound(
-                                accountProvider.accounts.first.toMap());
-                          } else {
+                          await accountProvider.deleteAccount(widget.userData['account_email']);
+                          if(accountProvider.accounts.firstOrNull !=null){
+                            onOtherAccountFound(accountProvider.accounts.first.toMap());
+                          }else{
                             Get.offAll(() => const LoginPage());
                             Get.delete<StudentDashboardProvider>();
                             FlutterAppBadger.removeBadge();
@@ -355,10 +371,9 @@ class _StudentProfileState extends State<StudentProfile>
                         _buttons("المستمسكات", const AttachDocuments(),
                             LineIcons.upload, true),
                         _buttons(
-                            "الحسابات",
+                            "اضافة حساب",
                             AccountsScreen(
-                              backgroundColor: MyColor.pink,
-                              foregroundColor: MyColor.white0,
+
                             ),
                             LineIcons.fileInvoice,
                             true),

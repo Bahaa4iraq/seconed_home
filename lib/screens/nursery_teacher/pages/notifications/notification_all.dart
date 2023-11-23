@@ -321,7 +321,6 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
     "دروس",
     "تدريب",
     "غفوة",
-    "هل تعلم",
     "الحفاض",
     "واجب بيتي",
     "امتحان يومي",

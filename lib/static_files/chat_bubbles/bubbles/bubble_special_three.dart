@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:logger/logger.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 ///iMessage's chat bubble type
 ///
@@ -94,8 +97,12 @@ class BubbleSpecialThree extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: [
-                      Text(
-                        text,
+                      Linkify(
+                        onOpen: (link){
+                          Logger().i(link);
+                          launchUrl(Uri.parse(link.url));
+                        },
+                        text:text,
                         style: textStyle,
                         textAlign: TextAlign.start,
                       ),

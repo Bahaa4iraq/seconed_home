@@ -33,11 +33,11 @@ class NotificationFirebase {
   initializeCloudMessage() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
-        FlutterLocalNotificationsPlugin();
+    FlutterLocalNotificationsPlugin();
     await messaging.subscribeToTopic('all');
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
+        AndroidFlutterLocalNotificationsPlugin>()
         ?.createNotificationChannel(channel);
     await messaging.setForegroundNotificationPresentationOptions(
       alert: true, // Required to display a heads up notification
@@ -141,7 +141,7 @@ receivedMessages(RemoteMessage message) {
         Get.to(() => const teacherKindergartion.TeacherWeeklySchedule());
       } else if (message.data['type'] == 'notification') {
         Get.to(() => teacherKindergartion.NotificationTeacherAll(userData: _userData));
-        } else if (message.data['type'] == 'installments') {
+      } else if (message.data['type'] == 'installments') {
         Get.to(() => const teacherKindergartion.TeacherSalary());
       }
     }
@@ -196,7 +196,7 @@ _redirectToNurseryScreens(RemoteMessage message,Map<dynamic, dynamic> userData){
         Get.to(() => nursery.NotificationAll(userData: userData));
         break;
       }
-  }
+    }
   }
 }
 _redirectToStudentScreens(RemoteMessage message,Map<dynamic, dynamic> userData){

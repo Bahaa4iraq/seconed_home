@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logger/logger.dart';
 import '../provider/auth_provider.dart';
 import '../provider/teacher/chat/chat_all_list_items.dart';
 import '../provider/teacher/chat/chat_socket.dart';
@@ -20,12 +21,14 @@ const EdgeInsets _margin2 = EdgeInsets.only(bottom: 10,left: 15,right: 15);
 Widget profileImg(String _contentUrl, String? _img) {
   if (_img == null) {
     return CircleAvatar(
-      child: SizedBox(width:26,child: Image.asset("assets/img/icon_512.png", fit: BoxFit.fill)),
+      backgroundColor: Colors.white,
+      child: SizedBox(width:26,child: Image.asset("assets/img/logo.jpg", fit: BoxFit.fill)),
     );
   } else {
     return CircleAvatar(
+      //radius: 30,
       backgroundImage: CachedNetworkImageProvider(
-        _contentUrl + _img
+        _contentUrl + _img,
         // fit: BoxFit.cover,
         // placeholder: (context, url) => Row(
         //   mainAxisSize: MainAxisSize.min,
@@ -63,12 +66,47 @@ Widget chatMessageBubbles(Map _data,int index,AudioPlayer player) {
     if(_data['chat_message_type'] == 'text'){
       return _textChatMessage(_data,index);
     }else if(_data['chat_message_type'] == 'image'){
-      return _imgChatMessage(_data);
+      return _imgChatMessage(_data,index);
     }else if(_data['chat_message_type'] == 'video'){
       return const Text("video");
     }else if(_data['chat_message_type'] == 'audio'){
       String urlAudio = Get.put(ChatStudentListProvider()).contentUrl + _data['chat_url'];
-      return MyAudioPlayer(data: _data,index:index,player:player,urlAudio: urlAudio);
+      final Map? dataProvider = Get.put(TokenProvider()).userData;
+      bool isSender = _data['chat_from']  == dataProvider!['_id'];
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment:  isSender
+            ? MainAxisAlignment.start
+            : MainAxisAlignment.end,
+        children: [
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: isSender
+                      ? MyColor.yellow.withOpacity(0.15)
+                      : MyColor.pink.withOpacity(0.20),
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                child: SizedBox(
+                  child: MyAudioPlayer(data: _data,index:index,player:player,urlAudio: urlAudio,onDelete: (){
+                    final Map? dataProvider = Get.put(TokenProvider()).userData;
+                    bool isSender = _data['chat_from']  == dataProvider!['_id'];
+
+                    if(isSender){
+                      _deleteMessage(_data,index);
+                    }
+                  },),
+                ),
+              ),
+            if(_data['created_at']!=null) Padding(
+            padding: const EdgeInsets.only(right: 30),
+            child: Text(toDateAndTime(_data['created_at'],12),style: const TextStyle(fontSize: 8),),),
+            ],
+          ),
+        ],
+      );
     }else if(_data['chat_message_type'] == 'pdf'){
       return _pdfChatMessage(_data,index);
     }else{
@@ -76,6 +114,8 @@ Widget chatMessageBubbles(Map _data,int index,AudioPlayer player) {
     }
   }
 }
+
+
 
 Widget _deletedMessage(Map _data) {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
@@ -91,7 +131,7 @@ Widget _deletedMessage(Map _data) {
       color: Colors.grey.shade900,
       fontStyle: FontStyle.italic,
     ),
-    //MyColor.purple
+    //MyColor.pink
   );
 }
 
@@ -99,8 +139,10 @@ Widget _textChatMessage(Map _data , int index){
   final Map? dataProvider = Get.put(TokenProvider()).userData;
   bool isSender = _data['chat_from']  == dataProvider!['_id'];
   return GestureDetector(
+
     onLongPress: (){
-      Get.bottomSheet(
+      isSender
+     ? Get.bottomSheet(
         Container(
           color: MyColor.white0,
           padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
@@ -115,30 +157,17 @@ Widget _textChatMessage(Map _data , int index){
                 },
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
+                    if(isSender)
                     Icon(LineIcons.alternateTrashAlt),
                     Text("حذف")
                   ],
                 ),
               ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const[
-                  Icon(LineIcons.copy),
-                  Text("نسخ")
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const[
-                  Icon(LineIcons.reply),
-                  Text("رد")
-                ],
-              ),
             ],
           ),
         ),
-      );
+      ):null;
     },
     child: Container(
       margin: _margin,
@@ -147,16 +176,16 @@ Widget _textChatMessage(Map _data , int index){
         //delivered: _data['chat_delivered'] == null ?true : false,
         sent: !isSender ? false : _data['chat_delivered'] == null ?true : false ,
         text: _data['chat_message'],
-        time: toTimeOnly(_data['created_at'],12),
+        time: toDateAndTime(_data['created_at'],12),
         isSender: isSender,
         color: isSender
-            ? MyColor.turquoise.withOpacity(0.15)
-            : MyColor.red.withOpacity(0.20),
+            ? MyColor.yellow.withOpacity(0.15)
+            : MyColor.pink.withOpacity(0.20),
         textStyle: const TextStyle(
           fontSize: 15,
           color: MyColor.black,
         ),
-        //MyColor.purple
+        //MyColor.pink
       ),
     ),
   );
@@ -167,7 +196,8 @@ Widget _pdfChatMessage(Map _data , int index){
   bool isSender = _data['chat_from']  == dataProvider!['_id'];
   return GestureDetector(
     onLongPress: (){
-      Get.bottomSheet(
+      isSender
+      ?Get.bottomSheet(
         Container(
           color: MyColor.white0,
           padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
@@ -180,32 +210,19 @@ Widget _pdfChatMessage(Map _data , int index){
                       ? _deleteMessage(_data,index)
                       : null;
                 },
-                child: Column(
+                child: const Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Icon(LineIcons.alternateTrashAlt),
                     Text("حذف")
                   ],
                 ),
               ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const[
-                  Icon(LineIcons.copy),
-                  Text("نسخ")
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const[
-                  Icon(LineIcons.reply),
-                  Text("رد")
-                ],
-              ),
+
             ],
           ),
         ),
-      );
+      ):null;
     },
     onTap: ()=> Get.to(()=>PdfViewer(url: Get.put(ChatStudentListProvider()).contentUrl + _data['chat_url'])),
     child: Row(
@@ -219,8 +236,8 @@ Widget _pdfChatMessage(Map _data , int index){
             padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
                 color: isSender
-                    ? MyColor.turquoise.withOpacity(0.15)
-                    : MyColor.red.withOpacity(0.20),
+                    ? MyColor.yellow.withOpacity(0.15)
+                    : MyColor.pink.withOpacity(0.20),
                 borderRadius: BorderRadius.circular(10)
             ),
             child: Column(
@@ -235,7 +252,7 @@ Widget _pdfChatMessage(Map _data , int index){
                     //_data['chat_url'],
                     semanticsLabel: ''
                 ),
-                Text(toTimeOnly(_data['created_at'],12),style: const TextStyle(fontSize: 11),)
+                if(_data['created_at']!=null) Text(toDateAndTime(_data['created_at'],12),style: const TextStyle(fontSize: 11),)
               ],
             )
 
@@ -245,17 +262,17 @@ Widget _pdfChatMessage(Map _data , int index){
           //   //delivered: _data['chat_delivered'] == null ?true : false,
           //   sent: _data['chat_delivered'] == null ?true : false ,
           //   text: _data['chat_message'],
-          //   time: toTimeOnly(_data['created_at'],12),
+          //   time: toDateAndTime(_data['created_at'],12),
           //   isSender: isSender,
           //   color: isSender
           //       ? MyColor.yellow.withOpacity(0.15)
-          //       : MyColor.purple.withOpacity(0.20),
+          //       : MyColor.pink.withOpacity(0.20),
           //   textStyle: const TextStyle(
           //     fontSize: 15,
           //     color: MyColor.black,
           //   ),
           //
-          //   //MyColor.purple
+          //   //MyColor.pink
           // ),
         ),
       ],
@@ -321,8 +338,8 @@ Widget _audioChatMessage(Map _data , int index){
             padding: const EdgeInsets.all(5),
             decoration: BoxDecoration(
                 color: isSender
-                    ? MyColor.turquoise.withOpacity(0.15)
-                    : MyColor.red.withOpacity(0.20),
+                    ? MyColor.yellow.withOpacity(0.15)
+                    : MyColor.pink.withOpacity(0.20),
                 borderRadius: BorderRadius.circular(10)
             ),
             child: Column(
@@ -337,7 +354,7 @@ Widget _audioChatMessage(Map _data , int index){
                     //_data['chat_url'],
                     semanticsLabel: ''
                 ),
-                Text(toTimeOnly(_data['created_at'],12),style: const TextStyle(fontSize: 11),)
+                if(_data['created_at']!=null)Text(toDateAndTime(_data['created_at'],12),style: const TextStyle(fontSize: 11),)
               ],
             )
 
@@ -347,17 +364,17 @@ Widget _audioChatMessage(Map _data , int index){
           //   //delivered: _data['chat_delivered'] == null ?true : false,
           //   sent: _data['chat_delivered'] == null ?true : false ,
           //   text: _data['chat_message'],
-          //   time: toTimeOnly(_data['created_at'],12),
+          //   time: toDateAndTime(_data['created_at'],12),
           //   isSender: isSender,
           //   color: isSender
           //       ? MyColor.yellow.withOpacity(0.15)
-          //       : MyColor.purple.withOpacity(0.20),
+          //       : MyColor.pink.withOpacity(0.20),
           //   textStyle: const TextStyle(
           //     fontSize: 15,
           //     color: MyColor.black,
           //   ),
           //
-          //   //MyColor.purple
+          //   //MyColor.pink
           // ),
         ),
       ],
@@ -365,7 +382,7 @@ Widget _audioChatMessage(Map _data , int index){
   );
 }
 
-Widget _imgChatMessage(Map _data){
+Widget _imgChatMessage(Map _data,int index){
   //imageGrid(Get.put(ChatStudentListProvider()).contentUrl,_data['chat_message_imgs'])
   final Map? dataProvider = Get.put(TokenProvider()).userData;
   bool isSender = _data['chat_from']  == dataProvider!['_id'];
@@ -376,44 +393,74 @@ Widget _imgChatMessage(Map _data){
         : MainAxisAlignment.end,
     children: [
       Expanded(
-        child: Container(
-            margin: _margin2,
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-                color: isSender
-                    ? MyColor.turquoise.withOpacity(0.15)
-                    : MyColor.red.withOpacity(0.20),
-                borderRadius: BorderRadius.circular(10)
-            ),
-            child: Column(
-              crossAxisAlignment: isSender
-                  ? CrossAxisAlignment.start
-                  : CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                imageGridChat(Get.put(ChatStudentListProvider()).contentUrl,_data['chat_message_imgs'],MyColor.turquoise),
-                Text(toTimeOnly(_data['created_at'],12),style: const TextStyle(fontSize: 11),)
-              ],
-            )
+        child: GestureDetector(
+          onLongPress: (){
+            isSender
+           ? Get.bottomSheet(
+              Container(
+                color: MyColor.white0,
+                padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: (){
+                        isSender
+                            ? _deleteMessage(_data,index)
+                            : null;
+                      },
+                      child: const Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(LineIcons.alternateTrashAlt),
+                          Text("حذف")
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ):null;
+          },
+          child: Container(
+              margin: _margin2,
+              padding: const EdgeInsets.all(5),
+              decoration: BoxDecoration(
+                  color: isSender
+                      ? MyColor.yellow.withOpacity(0.15)
+                      : MyColor.pink.withOpacity(0.20),
+                  borderRadius: BorderRadius.circular(10)
+              ),
+              child: Column(
+                crossAxisAlignment: isSender
+                    ? CrossAxisAlignment.start
+                    : CrossAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  imageGridChat(Get.put(ChatStudentListProvider()).contentUrl,_data['chat_message_imgs'],MyColor.turquoise),
+                  if(_data['created_at']!=null) Text(toDateAndTime(_data['created_at'],12),style: const TextStyle(fontSize: 11),)
+                ],
+              )
 
 
-          // BubbleSpecialThree(
-          //   seen: _data['chat_message_isRead'],
-          //   //delivered: _data['chat_delivered'] == null ?true : false,
-          //   sent: _data['chat_delivered'] == null ?true : false ,
-          //   text: _data['chat_message'],
-          //   time: toTimeOnly(_data['created_at'],12),
-          //   isSender: isSender,
-          //   color: isSender
-          //       ? MyColor.yellow.withOpacity(0.15)
-          //       : MyColor.purple.withOpacity(0.20),
-          //   textStyle: const TextStyle(
-          //     fontSize: 15,
-          //     color: MyColor.black,
-          //   ),
-          //
-          //   //MyColor.purple
-          // ),
+            // BubbleSpecialThree(
+            //   seen: _data['chat_message_isRead'],
+            //   //delivered: _data['chat_delivered'] == null ?true : false,
+            //   sent: _data['chat_delivered'] == null ?true : false ,
+            //   text: _data['chat_message'],
+            //   time: toDateAndTime(_data['created_at'],12),
+            //   isSender: isSender,
+            //   color: isSender
+            //       ? MyColor.yellow.withOpacity(0.15)
+            //       : MyColor.pink.withOpacity(0.20),
+            //   textStyle: const TextStyle(
+            //     fontSize: 15,
+            //     color: MyColor.black,
+            //   ),
+            //
+            //   //MyColor.pink
+            // ),
+          ),
         ),
       ),
     ],

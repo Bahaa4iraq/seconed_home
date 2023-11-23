@@ -1,18 +1,15 @@
 import 'dart:async';
 import 'dart:io';
-
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:dio/dio.dart' as dio;
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_awesome_select/flutter_awesome_select.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
+import 'package:flutter_awesome_select/flutter_awesome_select.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:path/path.dart' as p;
 import 'package:rounded_loading_button/rounded_loading_button.dart';
-
 import '../../../../api_connection/student/chat/api_chat_group_list.dart';
 import '../../../../provider/auth_provider.dart';
 import '../../../../provider/student/chat/chat_all_list_items.dart';
@@ -22,6 +19,9 @@ import '../../../../static_files/my_color.dart';
 import '../../../../static_files/my_loading.dart';
 import '../../../../static_files/my_random.dart';
 import '../../../../static_files/my_times.dart';
+
+import 'package:http_parser/http_parser.dart';
+
 import 'chat_main/chat_page_group.dart';
 
 class ChatGroupList extends StatefulWidget {
@@ -81,25 +81,30 @@ class _ChatGroupListState extends State<ChatGroupList> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: GetBuilder<ChatGroupStudentListProvider>(builder: (val) {
+    return GetBuilder<ChatGroupStudentListProvider>(builder: (val) {
         return val.student.isEmpty && val.isLoading
             ? Center(
                 child: loadingChat(),
               )
-            : ListView.builder(
-                itemBuilder: (BuildContext context, int index) => _groups(val.student[index], val.contentUrl),
-                controller: _scrollController,
-                //separatorBuilder: (BuildContext context, int index)=>const Divider(),
-                itemCount: val.student.length);
-      }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _showCreateGroupBottomSheet,
-        backgroundColor: MyColor.pink,
-        child: const Icon(Icons.supervisor_account),
-        tooltip: "انشاء مجموعة",
-      ),
-    );
+            : Container(
+              child: ListView.builder(
+                  itemBuilder: (BuildContext context, int index) => Column(
+                    children:[
+                      Padding(
+                        padding: const EdgeInsets.only(right: 50),
+                        child: Container(height: 1,width: double.infinity,color: Colors.grey.shade400,),
+                      ),
+                      _groups(val.student[index], val.contentUrl),
+                    ]),
+
+
+                  controller: _scrollController,
+              padding: const EdgeInsets.only(top:10),
+
+              //separatorBuilder: (BuildContext context, int index)=>const Divider(),
+                  itemCount: val.student.length),
+            );
+      });
   }
 
   _groups(Map _data, String _contentUrl) {
@@ -113,22 +118,27 @@ class _ChatGroupListState extends State<ChatGroupList> {
           : Row(
               mainAxisSize: MainAxisSize.min,
               children: [
-                Container(
-                  padding: const EdgeInsets.fromLTRB(10, 1, 10, 1),
-                  decoration: _data['chats']['data'][0]['group_message_is_deleted']
-                      ? BoxDecoration(
-                          borderRadius: BorderRadius.circular(10),
-                          border: Border.all(
-                            width: 1.0,
-                            color: Colors.grey.shade300,
-                          ),
-                        )
-                      : null,
-                  child: Text(
-                      _data['chats']['data'][0]['group_message_is_deleted'] ? "تم مسح الرسالة" : _data['chats']['data'][0]['group_message'] ?? "تم ارسال ملف",
-                      style: TextStyle(fontSize: 12, fontWeight: _data['chats']['data'][0]['isRead'] ? FontWeight.normal : FontWeight.bold),
-                      maxLines: 1,
-                      overflow: TextOverflow.ellipsis),
+                Flexible(
+                  flex: 1,
+                  child: Container(
+                    padding: const EdgeInsets.fromLTRB(10, 1, 10, 1),
+                    decoration: _data['chats']['data'][0]['group_message_is_deleted']
+                        ? BoxDecoration(
+                            borderRadius: BorderRadius.circular(10),
+                            border: Border.all(
+                              width: 1.0,
+                              color: Colors.grey.shade300,
+                            ),
+                          )
+                        : null,
+                    child: Text(
+                        _data['chats']['data'][0]['group_message_is_deleted'] ? "تم مسح الرسالة" : _data['chats']['data'][0]['group_message'] ?? "تم ارسال ملف",
+                        style: TextStyle(fontSize: 12, fontWeight: _data['chats']['data'][0]['isRead'] ? FontWeight.normal : FontWeight.bold),
+                        maxLines: 1,
+                        overflow: TextOverflow.ellipsis,
+                    ),
+
+                  ),
                 ),
               ],
             ),
@@ -141,6 +151,7 @@ class _ChatGroupListState extends State<ChatGroupList> {
           if (_data['chats']['countUnRead'] > 0) _messageUnRead(_data['chats']['countUnRead']),
         ],
       ),
+
       onTap: () async {
         Get.put(ChatMessageGroupStudentProvider()).clear();
         Get.put(ChatMessageGroupStudentProvider()).addListChat(_data['chats']['data']);
@@ -149,7 +160,9 @@ class _ChatGroupListState extends State<ChatGroupList> {
         page = 0;
         _getStudentList();
       },
-      onLongPress: () {},
+       // onLongPress: () {
+       //   _showCreateGroupBottomSheet();
+       // },
     );
   }
 
@@ -194,7 +207,7 @@ class _ChatGroupListState extends State<ChatGroupList> {
 
   Text _timeText(int _time) {
     return Text(
-      toTimeAndDayAndMonth(_time, 12),
+      getChatDate(_time, 12),
       style: const TextStyle(fontSize: 10),
     );
   }
@@ -312,8 +325,8 @@ class _ChatGroupListState extends State<ChatGroupList> {
                   backgroundImage: AssetImage("assets/img/photo.png"),
                 )
               : CircleAvatar(
-                  //radius: 30,XFile
-                  backgroundImage: FileImage(File(val.pic!.path)),
+                  //radius: 30,
+                  backgroundImage: FileImage(val.pic!),
                   //backgroundColor: Colors.red,
                   // child: CachedNetworkImage(
                   //   imageUrl: _contentUrl + _img,

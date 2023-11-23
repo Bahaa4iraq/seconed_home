@@ -8,12 +8,17 @@ import 'package:secondhome2/screens/auth/connect_us.dart';
 import 'package:secondhome2/screens/nursery_teacher/pages/intimation.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../api_connection/auth_connection.dart';
+import '../../provider/accounts_provider.dart';
 import '../../provider/auth_provider.dart';
+import '../../provider/student/provider_student_dashboard.dart';
 import '../../provider/teacher/chat/chat_socket.dart';
 import '../../provider/teacher/provider_teacher_dashboard.dart';
 import '../../static_files/my_color.dart';
 import '../../static_files/my_loading.dart';
 import '../../static_files/my_url.dart';
+import '../kindergarten_teacher/teacher_kindergarten_home.dart';
+import '../nursery/nursery_home.dart';
+import '../student/home_page_student.dart';
 import 'profile.dart';
 import 'teacher_dashboard.dart';
 
@@ -30,7 +35,10 @@ class _HomePageNurseryTeacherState extends State<HomePageNurseryTeacher>
   Get.put(TeacherDashboardProvider());
   final Map? dataProvider = Get.put(TokenProvider()).userData;
 
-  void _onItemTapped(int index) {
+
+
+
+   void _onItemTapped(int index) {
     teacherDashboardProvider.changeIndex(index);
   }
 
@@ -52,7 +60,9 @@ class _HomePageNurseryTeacherState extends State<HomePageNurseryTeacher>
     initWidgetList();
   }
 
-  @override
+
+
+   @override
   void initState() {
     initUserData();
     super.initState();

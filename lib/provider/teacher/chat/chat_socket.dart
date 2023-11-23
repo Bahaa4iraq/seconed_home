@@ -1,5 +1,6 @@
 
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../../static_files/my_url.dart';
@@ -40,11 +41,13 @@ class ChatSocketProvider extends GetxController {
       }
     });
     socket.on('responseRemoveMessage', (_data){
+      Logger().i('response deleted');
       if(_data['chat_message_is_deleted']) {
         Get.put(ChatMessageProvider()).deleteMessageById(_data['_id']);
       }
     });
     socket.on('groupResponseRemoveMessage', (_data){
+      Logger().i('response deleted');
       if(_data['group_message_is_deleted']) {
         Get.put(ChatMessageGroupProvider()).deleteMessageById(_data['_id']);
       }

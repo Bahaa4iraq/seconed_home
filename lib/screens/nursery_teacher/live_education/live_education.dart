@@ -16,6 +16,7 @@ import '../../../../provider/teacher/provider_notification.dart';
 import '../../../../static_files/my_color.dart';
 import '../../../../static_files/my_loading.dart';
 import '../../../../static_files/my_times.dart';
+import '../../../provider/student/provider_notification.dart';
 import '../pages/notifications/show/show_message.dart';
 
 class NotificationTeacherLiveEducation extends StatefulWidget {
@@ -47,7 +48,7 @@ class _NotificationTeacherLiveEducationState
       "type": 'التعليم الالكتروني',
       "isRead": _notificationProvider.isRead
     };
-    NotificationsAPI().getNotificationsE(_data);
+    NotificationsAPI().getNotifications(_data);
   }
 
   final options = const LiveOptions(
@@ -132,7 +133,7 @@ class _NotificationTeacherLiveEducationState
           })
         ],
       ),
-      body: GetBuilder<NotificationProviderE>(
+      body: GetBuilder<NotificationProvider>(
           builder: (val) => Column(
                 children: [
                   Expanded(
@@ -240,7 +241,7 @@ class _NotificationTeacherLiveEducationState
                                                         ['notifications_type'],
                                                     onUpdate: () {
                                                       NotificationsAPI()
-                                                          .updateReadNotificationsE(
+                                                          .updateReadNotifications(
                                                               val.data[indexes]
                                                                   ['_id']);
                                                     }));

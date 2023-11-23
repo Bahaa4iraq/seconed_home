@@ -57,25 +57,81 @@ Widget profileImg(String _contentUrl, String? _img) {
 }
 
 
-Widget chatMessageBubbles(Map _data,int index,AudioPlayer player,Color color) {
+Widget chatMessageBubbles(Map _data,int index,AudioPlayer player) {
   if (_data['group_message_is_deleted']) {
     return _deletedMessage(_data);
   } else {
     if(_data['group_message_type'] == 'text'){
-      return _textChatMessage(_data,index,color);
+      return _textChatMessage(_data,index);
     }else if(_data['group_message_type'] == 'image'){
-      return _imgChatMessage(_data,color);
+      return _imgChatMessage(_data ,index);
     }else if(_data['group_message_type'] == 'video'){
       return const Text("video");
     }else if(_data['group_message_type'] == 'audio'){
       String urlAudio = Get.put(ChatGroupStudentListProvider()).contentUrl + _data['group_message_url'];
-      return MyAudioPlayer(data: _data,index:index,player:player,urlAudio: urlAudio);
+      final Map? dataProvider = Get.put(TokenProvider()).userData;
+      bool isSender = _data['group_message_from']["_id"]  == dataProvider!['_id'];
+      return _audioChat(isSender, _data, index, player, urlAudio);
     }else if(_data['group_message_type'] == 'pdf'){
-      return _pdfChatMessage(_data,index,color);
+      return _pdfChatMessage(_data,index);
     }else{
       return const Text("ERROR");
     }
   }
+}
+
+Widget _audioChat(bool isSender, Map<dynamic, dynamic> _data, int index, AudioPlayer player, String urlAudio) {
+  return Row(
+      mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
+      mainAxisAlignment:  isSender
+          ? MainAxisAlignment.start
+          : MainAxisAlignment.end,
+      children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            if(!isSender)
+              Text(_data['group_message_from']['account_name'],style: TextStyle(fontSize: 11,color: MyColor.black.withOpacity(.7)),),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Container(
+                  margin: EdgeInsets.only(left: 15,right: 15),
+                  decoration: BoxDecoration(
+                      color: isSender
+                          ? MyColor.yellow.withOpacity(0.15)
+                          : MyColor.pink.withOpacity(0.20),
+                      borderRadius: BorderRadius.circular(25)
+                  ),
+
+                    child: MyAudioPlayer(data: _data,index:index,player:player,urlAudio: urlAudio,onDelete: (){
+                      final Map? dataProvider = Get.put(TokenProvider()).userData;
+                      bool isSender = _data['group_message_from']["_id"]  == dataProvider!['_id'];
+                      if(isSender){
+                        _deleteMessage(_data,index);
+                      }
+                    },),
+                ),
+                if(_data['created_at']!=null) Padding(
+                  padding: const EdgeInsets.only(right: 30),
+                  child: Text(toDateAndTime(_data['created_at'],12),style: const TextStyle(fontSize: 8),),
+                )
+
+              ],
+            ),
+
+          ],
+        ),
+        if(!isSender)
+          Padding(
+            padding: const EdgeInsets.only(left: 8,right: 0),
+            child: SizedBox(
+                width: 30,
+                child: profileImg(Get.put(ChatTeacherListProvider()).contentUrl, _data['group_message_from']['account_img'])),
+          ),
+      ],
+    );
 }
 
 Widget _deletedMessage(Map _data) {
@@ -92,16 +148,17 @@ Widget _deletedMessage(Map _data) {
       color: Colors.grey.shade900,
       fontStyle: FontStyle.italic,
     ),
-    //MyColor.red
+    //MyColor.pink
   );
 }
 
-Widget _textChatMessage(Map _data , int index,Color color){
+Widget _textChatMessage(Map _data , int index){
   final Map? dataProvider = Get.put(TokenProvider()).userData;
   bool isSender = _data['group_message_from']["_id"]  == dataProvider!['_id'];
   return GestureDetector(
     onLongPress: (){
-      Get.bottomSheet(
+      isSender
+      ?Get.bottomSheet(
         Container(
           color: MyColor.white0,
           padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
@@ -114,32 +171,19 @@ Widget _textChatMessage(Map _data , int index,Color color){
                       ? _deleteMessage(_data,index)
                       : null;
                 },
-                child: Column(
+                child: const Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Icon(LineIcons.alternateTrashAlt),
                     Text("حذف")
                   ],
                 ),
               ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const[
-                  Icon(LineIcons.copy),
-                  Text("نسخ")
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const[
-                  Icon(LineIcons.reply),
-                  Text("رد")
-                ],
-              ),
+
             ],
           ),
         ),
-      );
+      ):null;
     },
     child: Container(
       margin: _margin,
@@ -159,16 +203,16 @@ Widget _textChatMessage(Map _data , int index,Color color){
                 //delivered: _data['chat_delivered'] == null ?true : false,
                 sent: _data['chat_delivered'] == null ?true : false ,
                 text: _data['group_message'],
-                time: toTimeOnly(_data['created_at'],12),
+                time: toDateAndTime(_data['created_at'],12),
                 isSender: isSender,
                 color: isSender
-                    ? color.withOpacity(0.15)
-                    : MyColor.red.withOpacity(0.20),
+                    ? MyColor.yellow.withOpacity(0.15)
+                    : MyColor.pink.withOpacity(0.20),
                 textStyle: const TextStyle(
                   fontSize: 15,
                   color: MyColor.black,
                 ),
-                //MyColor.red
+                //MyColor.pink
               ),
             ],
           ),
@@ -185,12 +229,13 @@ Widget _textChatMessage(Map _data , int index,Color color){
   );
 }
 
-Widget _pdfChatMessage(Map _data , int index,Color color){
+Widget _pdfChatMessage(Map _data , int index){
   final Map? dataProvider = Get.put(TokenProvider()).userData;
   bool isSender = _data['group_message_from']["_id"]  == dataProvider!['_id'];
   return GestureDetector(
     onLongPress: (){
-      Get.bottomSheet(
+      isSender
+      ?Get.bottomSheet(
         Container(
           color: MyColor.white0,
           padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
@@ -203,242 +248,256 @@ Widget _pdfChatMessage(Map _data , int index,Color color){
                       ? _deleteMessage(_data,index)
                       : null;
                 },
-                child: Column(
+                child: const Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
+                  children: [
                     Icon(LineIcons.alternateTrashAlt),
                     Text("حذف")
                   ],
                 ),
               ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const[
-                  Icon(LineIcons.copy),
-                  Text("نسخ")
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const[
-                  Icon(LineIcons.reply),
-                  Text("رد")
-                ],
-              ),
+
             ],
           ),
         ),
-      );
+      ):null;
     },
+
     onTap: ()=> Get.to(()=>PdfViewer(url: Get.put(ChatTeacherListProvider()).contentUrl + _data['group_message_url'])),
     child: Row(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.end,
       mainAxisAlignment:  isSender
           ? MainAxisAlignment.start
           : MainAxisAlignment.end,
       children: [
-        Container(
-            margin: _margin2,
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-                color: isSender
-                    ? color.withOpacity(0.15)
-                    : MyColor.red.withOpacity(0.20),
-                borderRadius: BorderRadius.circular(10)
-            ),
-            child: Column(
-              crossAxisAlignment: isSender
-                  ? CrossAxisAlignment.start
-                  : CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgPicture.asset(
-                    "assets/img/pdf.svg",
-                    width: Get.width/5,
-                    //_data['chat_url'],
-                    semanticsLabel: ''
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.end,
+          children: [
+            if(!isSender)
+              Text(_data['group_message_from']['account_name'],style: TextStyle(fontSize: 11,color: MyColor.black.withOpacity(.7)),),
+            Container(
+                margin: _margin2,
+                padding: const EdgeInsets.all(5),
+                decoration: BoxDecoration(
+                    color: isSender
+                        ? MyColor.yellow.withOpacity(0.15)
+                        : MyColor.pink.withOpacity(0.20),
+                    borderRadius: BorderRadius.circular(10)
                 ),
-                Text(toTimeOnly(_data['created_at'],12),style: const TextStyle(fontSize: 11),)
-              ],
-            )
-
-
-          // BubbleSpecialThree(
-          //   seen: _data['chat_message_isRead'],
-          //   //delivered: _data['chat_delivered'] == null ?true : false,
-          //   sent: _data['chat_delivered'] == null ?true : false ,
-          //   text: _data['chat_message'],
-          //   time: toTimeOnly(_data['created_at'],12),
-          //   isSender: isSender,
-          //   color: isSender
-          //       ? color.withOpacity(0.15)
-          //       : MyColor.red.withOpacity(0.20),
-          //   textStyle: const TextStyle(
-          //     fontSize: 15,
-          //     color: MyColor.black,
-          //   ),
-          //
-          //   //MyColor.red
-          // ),
-        ),
-      ],
-    ),
-  );
-}
-
-Widget _audioChatMessage(Map _data , int index,Color color){
-  //return MyAudioPlayer(data: _data,);
-  final Map? dataProvider = Get.put(TokenProvider()).userData;
-  bool isSender = _data['chat_from']  == dataProvider!['_id'];
-  return GestureDetector(
-    onLongPress: (){
-      Get.bottomSheet(
-        Container(
-          color: MyColor.white0,
-          padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: [
-              GestureDetector(
-                onTap: (){
-                  isSender
-                      ? _deleteMessage(_data,index)
-                      : null;
-                },
                 child: Column(
+                  crossAxisAlignment: isSender
+                      ? CrossAxisAlignment.start
+                      : CrossAxisAlignment.end,
                   mainAxisSize: MainAxisSize.min,
-                  children: const [
-                    Icon(LineIcons.alternateTrashAlt),
-                    Text("حذف")
+                  children: [
+                    SvgPicture.asset(
+                        "assets/img/pdf.svg",
+                        width: Get.width/5,
+                        //_data['chat_url'],
+                        semanticsLabel: ''
+                    ),
+                    if(_data['created_at']!=null) Text(toDateAndTime(_data['created_at'],12),style: const TextStyle(fontSize: 11),)
                   ],
-                ),
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const[
-                  Icon(LineIcons.copy),
-                  Text("نسخ")
-                ],
-              ),
-              Column(
-                mainAxisSize: MainAxisSize.min,
-                children: const[
-                  Icon(LineIcons.reply),
-                  Text("رد")
-                ],
-              ),
-            ],
-          ),
-        ),
-      );
-    },
-    onTap: ()=> Get.to(()=>PdfViewer(url: Get.put(ChatTeacherListProvider()).contentUrl + _data['chat_url'])),
-    child: Row(
-      mainAxisSize: MainAxisSize.min,
-      mainAxisAlignment:  isSender
-          ? MainAxisAlignment.start
-          : MainAxisAlignment.end,
-      children: [
-        Container(
-            margin: _margin2,
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-                color: isSender
-                    ? color.withOpacity(0.15)
-                    : MyColor.red.withOpacity(0.20),
-                borderRadius: BorderRadius.circular(10)
+                )
+
+
+              // BubbleSpecialThree(
+              //   seen: _data['chat_message_isRead'],
+              //   //delivered: _data['chat_delivered'] == null ?true : false,
+              //   sent: _data['chat_delivered'] == null ?true : false ,
+              //   text: _data['chat_message'],
+              //   time: toDateAndTime(_data['created_at'],12),
+              //   isSender: isSender,
+              //   color: isSender
+              //       ? MyColor.yellow.withOpacity(0.15)
+              //       : MyColor.pink.withOpacity(0.20),
+              //   textStyle: const TextStyle(
+              //     fontSize: 15,
+              //     color: MyColor.black,
+              //   ),
+              //
+              //   //MyColor.pink
+              // ),
             ),
-            child: Column(
-              crossAxisAlignment: isSender
-                  ? CrossAxisAlignment.start
-                  : CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                SvgPicture.asset(
-                    "assets/img/pdf.svg",
-                    width: Get.width/5,
-                    //_data['chat_url'],
-                    semanticsLabel: ''
-                ),
-                Text(toTimeOnly(_data['created_at'],12),style: const TextStyle(fontSize: 11),)
-              ],
-            )
-
-
-          // BubbleSpecialThree(
-          //   seen: _data['chat_message_isRead'],
-          //   //delivered: _data['chat_delivered'] == null ?true : false,
-          //   sent: _data['chat_delivered'] == null ?true : false ,
-          //   text: _data['chat_message'],
-          //   time: toTimeOnly(_data['created_at'],12),
-          //   isSender: isSender,
-          //   color: isSender
-          //       ? color.withOpacity(0.15)
-          //       : MyColor.red.withOpacity(0.20),
-          //   textStyle: const TextStyle(
-          //     fontSize: 15,
-          //     color: MyColor.black,
-          //   ),
-          //
-          //   //MyColor.red
-          // ),
+          ],
         ),
+        if(!isSender)
+          Padding(
+            padding: const EdgeInsets.only(left: 8,right: 0),
+            child: SizedBox(
+                width: 30,
+                child: profileImg(Get.put(ChatTeacherListProvider()).contentUrl, _data['group_message_from']['account_img'])),
+          ),
       ],
     ),
   );
 }
 
-Widget _imgChatMessage(Map _data,Color color){
+// Widget _audioChatMessage(Map _data , int index){
+//   //return MyAudioPlayer(data: _data,);
+//   final Map? dataProvider = Get.put(TokenProvider()).userData;
+//   bool isSender = _data['chat_from']  == dataProvider!['_id'];
+//   return GestureDetector(
+//     onTap: ()=> Get.to(()=>PdfViewer(url: Get.put(ChatTeacherListProvider()).contentUrl + _data['chat_url'])),
+//     child: Row(
+//       mainAxisSize: MainAxisSize.min,
+//       mainAxisAlignment:  isSender
+//           ? MainAxisAlignment.start
+//           : MainAxisAlignment.end,
+//       children: [
+//         Container(
+//             margin: _margin2,
+//             padding: const EdgeInsets.all(5),
+//             decoration: BoxDecoration(
+//                 color: isSender
+//                     ? MyColor.yellow.withOpacity(0.15)
+//                     : MyColor.pink.withOpacity(0.20),
+//                 borderRadius: BorderRadius.circular(10)
+//             ),
+//             child: Column(
+//               crossAxisAlignment: isSender
+//                   ? CrossAxisAlignment.start
+//                   : CrossAxisAlignment.end,
+//               mainAxisSize: MainAxisSize.min,
+//               children: [
+//                 SvgPicture.asset(
+//                     "assets/img/pdf.svg",
+//                     width: Get.width/5,
+//                     //_data['chat_url'],
+//                     semanticsLabel: ''
+//                 ),
+//                 if(_data['created_at']!=null) Text(toDateAndTime(_data['created_at'],12),style: const TextStyle(fontSize: 11),)
+//               ],
+//             )
+//
+//
+//           // BubbleSpecialThree(
+//           //   seen: _data['chat_message_isRead'],
+//           //   //delivered: _data['chat_delivered'] == null ?true : false,
+//           //   sent: _data['chat_delivered'] == null ?true : false ,
+//           //   text: _data['chat_message'],
+//           //   time: toDateAndTime(_data['created_at'],12),
+//           //   isSender: isSender,
+//           //   color: isSender
+//           //       ? MyColor.yellow.withOpacity(0.15)
+//           //       : MyColor.pink.withOpacity(0.20),
+//           //   textStyle: const TextStyle(
+//           //     fontSize: 15,
+//           //     color: MyColor.black,
+//           //   ),
+//           //
+//           //   //MyColor.pink
+//           // ),
+//         ),
+//       ],
+//     ),
+//   );
+// }
+
+Widget _imgChatMessage(Map _data,int index){
   //imageGrid(Get.put(ChatStudentListProvider()).contentUrl,_data['chat_message_imgs'])
   final Map? dataProvider = Get.put(TokenProvider()).userData;
   bool isSender = _data['group_message_from']["_id"]  == dataProvider!['_id'];
   return Row(
     mainAxisSize: MainAxisSize.min,
+    crossAxisAlignment: CrossAxisAlignment.end,
     mainAxisAlignment:  isSender
         ? MainAxisAlignment.start
         : MainAxisAlignment.end,
     children: [
       Expanded(
-        child: Container(
-            margin: _margin2,
-            padding: const EdgeInsets.all(5),
-            decoration: BoxDecoration(
-                color: isSender
-                    ? color.withOpacity(0.15)
-                    : MyColor.red.withOpacity(0.20),
-                borderRadius: BorderRadius.circular(10)
-            ),
-            child: Column(
-              crossAxisAlignment: isSender
-                  ? CrossAxisAlignment.start
-                  : CrossAxisAlignment.end,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                imageGridChat(Get.put(ChatTeacherListProvider()).contentUrl,_data['group_message_imgs'],color),
-                Text(toTimeOnly(_data['created_at'],12),style: const TextStyle(fontSize: 11),)
-              ],
-            )
+        child:GestureDetector(
+          onLongPress: (){
+            isSender
+            ?Get.bottomSheet(
+              Container(
+                color: MyColor.white0,
+                padding: const EdgeInsets.fromLTRB(0, 15, 0, 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    GestureDetector(
+                      onTap: (){
+                        isSender
+                            ? _deleteMessage(_data,index)
+                            : null;
+                      },
+                      child: const Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(LineIcons.alternateTrashAlt),
+                          Text("حذف")
+                        ],
+                      ),
+                    ),
+
+                  ],
+                ),
+              ),
+            ):null;
+          },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              if(!isSender)
+                Text(_data['group_message_from']['account_name'],style: TextStyle(fontSize: 11,color: MyColor.black.withOpacity(.7)),),
+
+              Container(
+                  margin: _margin2,
+                  padding: const EdgeInsets.all(5),
+                  decoration: BoxDecoration(
+                      color: isSender
+                          ? MyColor.yellow.withOpacity(0.15)
+                          : MyColor.pink.withOpacity(0.20),
+                      borderRadius: BorderRadius.circular(10)
+                  ),
+                  child: Column(
+                    crossAxisAlignment: isSender
+                        ? CrossAxisAlignment.start
+                        : CrossAxisAlignment.end,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+
+                      imageGridChat(Get.put(ChatTeacherListProvider()).contentUrl,_data['group_message_imgs'],MyColor.turquoise),
+                      if(_data['created_at']!=null) Text(toDateAndTime(_data['created_at'],12),style: const TextStyle(fontSize: 11),),
+
+                    ],
+                  )
 
 
-          // BubbleSpecialThree(
-          //   seen: _data['chat_message_isRead'],
-          //   //delivered: _data['chat_delivered'] == null ?true : false,
-          //   sent: _data['chat_delivered'] == null ?true : false ,
-          //   text: _data['chat_message'],
-          //   time: toTimeOnly(_data['created_at'],12),
-          //   isSender: isSender,
-          //   color: isSender
-          //       ? color.withOpacity(0.15)
-          //       : MyColor.red.withOpacity(0.20),
-          //   textStyle: const TextStyle(
-          //     fontSize: 15,
-          //     color: MyColor.black,
-          //   ),
-          //
-          //   //MyColor.red
-          // ),
+
+                // BubbleSpecialThree(
+                //   seen: _data['chat_message_isRead'],
+                //   //delivered: _data['chat_delivered'] == null ?true : false,
+                //   sent: _data['chat_delivered'] == null ?true : false ,
+                //   text: _data['chat_message'],
+                //   time: toDateAndTime(_data['created_at'],12),
+                //   isSender: isSender,
+                //   color: isSender
+                //       ? MyColor.yellow.withOpacity(0.15)
+                //       : MyColor.pink.withOpacity(0.20),
+                //   textStyle: const TextStyle(
+                //     fontSize: 15,
+                //     color: MyColor.black,
+                //   ),
+                //
+                //   //MyColor.pink
+                // ),
+              ),
+            ],
+          ),
         ),
       ),
+      if(!isSender)
+        Padding(
+          padding: const EdgeInsets.only(left: 8,right: 0),
+          child: SizedBox(
+              width: 30,
+              child: profileImg(Get.put(ChatTeacherListProvider()).contentUrl, _data['group_message_from']['account_img'])),
+        ),
+
+
     ],
   );
 }

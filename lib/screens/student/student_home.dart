@@ -5,6 +5,7 @@ import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:secondhome2/screens/auth/connect_us.dart';
+import 'package:secondhome2/screens/student/review/daily_review_date.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../api_connection/auth_connection.dart';
 import '../../provider/auth_provider.dart';
@@ -55,7 +56,7 @@ class _HomePageStudentOldState extends State<HomePageStudentOld>
   void initWidgetList() {
     List<Widget> _widget = <Widget>[
       Dashboard(userData: widget.userData),
-      const ConnectUs(color: MyColor.turquoise),
+      const ReviewDate(),
       const DailyExams(),
       StudentProfile(userData: widget.userData),
     ];

@@ -5,7 +5,6 @@ import '../../provider/student/food_schedule_provider.dart';
 import '../../static_files/my_color.dart';
 import '../../static_files/my_url.dart';
 import '../auth_connection.dart';
-import 'package:logger/logger.dart';
 
 class FoodScheduleAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
@@ -17,8 +16,8 @@ class FoodScheduleAPI extends GetConnect {
       final response = await get('${mainApi}student/schedule_food/class_school/$id',
           headers: headers);
       if (response.statusCode == 401) {
-        
-Logger().i("redirect");Auth().redirect();      } else if (response.body["error"] == false) {
+        Auth().redirect();
+      } else if (response.body["error"] == false) {
         foodScheduleProvider.changeLoading(false);
         foodScheduleProvider.addData(response.body['results']);
         EasyLoading.dismiss();
@@ -27,7 +26,6 @@ Logger().i("redirect");Auth().redirect();      } else if (response.body["error"]
         return {"error": true};
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }

@@ -16,6 +16,7 @@ import 'package:line_icons/line_icons.dart';
 import 'package:path/path.dart' as p;
 import 'package:secondhome2/provider/teacher/provider_teacher_dashboard.dart';
 import 'package:secondhome2/screens/auth/login_page.dart';
+import 'package:secondhome2/screens/nursery_teacher/teacher_nursery_home.dart';
 
 import '../../../api_connection/auth_connection.dart';
 import '../../../api_connection/student/api_profile.dart';
@@ -25,7 +26,13 @@ import '../../../static_files/my_loading.dart';
 import '../../../static_files/my_package_info.dart';
 import '../../../static_files/my_random.dart';
 import '../../../static_files/my_times.dart';
+import '../../provider/accounts_provider.dart';
+import '../../provider/student/provider_student_dashboard.dart';
+import '../auth/accounts_screen.dart';
+import '../kindergarten_teacher/teacher_kindergarten_home.dart';
+import '../nursery/nursery_home.dart';
 import '../nursery_teacher/attach_documents.dart';
+import '../student/home_page_student.dart';
 
 class TeacherProfile extends StatefulWidget {
   final Map userData;
@@ -39,6 +46,8 @@ class _TeacherProfileState extends State<TeacherProfile>
     with AutomaticKeepAliveClientMixin {
   final TextEditingController _zoomName = TextEditingController();
   final _formCheck = GlobalKey<FormState>();
+  final AccountProvider accountProvider = Get.put(AccountProvider());
+  TokenProvider get tokenProvider => Get.put(TokenProvider());
 
   @override
   bool get wantKeepAlive => true;
@@ -72,6 +81,33 @@ class _TeacherProfileState extends State<TeacherProfile>
       // User canceled the picker
     }
   }
+
+  onOtherAccountFound(Map<String, dynamic> account) async {
+    await accountProvider.onClickAccount(account);
+    tokenProvider.addToken(account);
+
+
+    if (account['account_type'] == 'student') {
+      Get.delete<StudentDashboardProvider>();
+
+      if(account["is_kindergarten"]) {
+        Get.offAll(() => HomePageStudent(userData: account));
+      }else{
+        Get.offAll(() => HomePageNursery(userData: account));
+      }
+    } else if (account['account_type'] == 'teacher') {
+      Get.delete<TeacherDashboardProvider>();
+      if(account["is_kindergarten"]){
+        Get.offAll(() => HomePageKindergartenTeacher(userData: account));
+      }
+      else{
+        Get.offAll(() => HomePageNurseryTeacher(userData: account));
+
+      }
+
+    }
+  }
+
 
   Future<XFile?> compressAndGetFile(XFile file, String targetPath) async {
     String getRand = RandomGen().getRandomString(5);
@@ -117,13 +153,17 @@ class _TeacherProfileState extends State<TeacherProfile>
                   confirm: MaterialButton(
                     color: MyColor.pink,
                     onPressed: () {
-                      Auth().loginOut().then((res) {
+                      Auth().loginOut().then((res) async{
                         if (res['error'] == false) {
-
-                          Get.offAll(() => const LoginPage());
-                          Get.delete<TeacherDashboardProvider>();
-                          FlutterAppBadger.removeBadge();
-                          EasyLoading.showSuccess(res['message'].toString());
+                          await accountProvider.deleteAccount(widget.userData['account_email']);
+                          if(accountProvider.accounts.firstOrNull !=null){
+                            onOtherAccountFound(accountProvider.accounts.first.toMap());
+                          }else{
+                            Get.offAll(() => const LoginPage());
+                            Get.delete<TeacherDashboardProvider>();
+                            FlutterAppBadger.removeBadge();
+                            EasyLoading.showSuccess(res['message'].toString());
+                          }
                         } else {
                           EasyLoading.showError(res['message'].toString());
                         }
@@ -301,12 +341,16 @@ class _TeacherProfileState extends State<TeacherProfile>
                     const SizedBox(
                       height: 30,
                     ),
-                    Row(
+                    Column(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
                       children: [
                         ///AttachDocuments()
                         _buttons("المستمسكات", const AttachDocuments(),
                             LineIcons.upload, true),
+                        SizedBox(height: 10,),
+
+                        _buttons2("اضافة حساب", AccountsScreen(), LineIcons.fileInvoice,true),
+
 
                         ///ConnectUs()
                         // _buttons("call the school", ConnectUs(), LineIcons.buildingAlt,true),
@@ -380,6 +424,40 @@ class _TeacherProfileState extends State<TeacherProfile>
       ),
     );
   }
+  _buttons2(_t, Widget _nav, _icon, bool enable) {
+    return SizedBox(
+      width: Get.width / 2.5,
+      child: GestureDetector(
+        onTap: enable
+            ? () {
+          Get.to(() => AccountsScreen());
+        }
+            : null,
+        child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(5.0),
+                border: Border.all(color: MyColor.black)),
+            child: Row(
+              children: [
+                AutoSizeText(
+                  _t,
+                  maxFontSize: 14,
+                  minFontSize: 11,
+                  maxLines: 1,
+                  style: const TextStyle(color: MyColor.black),
+                ),
+                const Spacer(),
+                Icon(
+                  _icon,
+                  color: MyColor.black,
+                )
+              ],
+            )),
+      ),
+    );
+  }
+
 
   _text(String _first, String _second) {
     return Padding(

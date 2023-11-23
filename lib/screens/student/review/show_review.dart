@@ -168,7 +168,7 @@ class _ShowReviewState extends State<ShowReview> {
                       color: Colors.green,
                     ));
               },
-              backgroundColor: MyColor.turquoise.withOpacity(0.9),
+              backgroundColor: MyColor.pink.withOpacity(0.9),
             );
           }),
     );

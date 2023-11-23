@@ -14,7 +14,7 @@ import '../../static_files/my_url.dart';
 class GeneralData extends GetConnect {
   getAds(int page) async {
     try {
-      final response = await get(mainApi + 'ads/page/$page');
+      final response = await get('${mainApi}ads/page/$page');
       if (!response.body['error']) {
         Get.put(AdsProvider()).changeLoading(false);
         Get.put(AdsProvider()).changeContentUrl(response.body['content_url']);
@@ -24,7 +24,6 @@ class GeneralData extends GetConnect {
         return false;
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -32,7 +31,7 @@ class GeneralData extends GetConnect {
 
   getSchools() async {
     try {
-      final response = await get(mainApi + 'schools');
+      final response = await get('${mainApi}schools');
       if (!response.body['error']) {
         Get.put(SchoolsProvider()).changeLoading(false);
         Get.put(SchoolsProvider()).addData(response.body['results']);
@@ -41,7 +40,6 @@ class GeneralData extends GetConnect {
         return false;
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -49,7 +47,7 @@ class GeneralData extends GetConnect {
 
   getGovernorate() async {
     try {
-      final response = await get(mainApi + 'governorate');
+      final response = await get('${mainApi}governorate');
       if (!response.body['error']) {
         Get.put(SchoolsProvider()).changeLoading(false);
         Get.put(SchoolsProvider()).addData(response.body['results']);
@@ -58,7 +56,6 @@ class GeneralData extends GetConnect {
         return false;
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -79,6 +76,27 @@ class GeneralData extends GetConnect {
       }
     } catch (e) {
       Logger().i("error");
+      Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
+          colorText: MyColor.white0, backgroundColor: MyColor.red);
+    }
+  }
+
+
+  joinUsSchool(Map data) async {
+    try {
+      final response = await post('${mainApi}student/register/school', data);
+      return response.body;
+    } catch (e) {
+      Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
+          colorText: MyColor.white0, backgroundColor: MyColor.red);
+    }
+  }
+
+  joinUsKindergarten(Map data) async {
+    try {
+      final response = await post('${mainApi}student/register', data);
+      return response.body;
+    } catch (e) {
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -125,18 +143,8 @@ class GeneralData extends GetConnect {
     }
   }
 
-  joinUs(Map _data) async {
-    try {
-      final response = await post(mainApi + 'joinUs', _data);
-      return response.body;
-    } catch (e) {
-      Logger().i("error");
-      Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
-          colorText: MyColor.white0, backgroundColor: MyColor.red);
-    }
-  }
 
-  // getSubject(String _subjectName) async {
+// getSubject(String _subjectName) async {
   //   Map _data = {
   //     "className" : _subjectName
   //   };

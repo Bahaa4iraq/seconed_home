@@ -2,8 +2,11 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:images_picker/images_picker.dart';
+import 'package:image_picker/image_picker.dart';
+// import 'package:images_picker/images_picker.dart';
 import 'package:just_audio/just_audio.dart';
+import 'package:logger/logger.dart';
+import 'package:mime/mime.dart';
 import '../../../../api_connection/teacher/chat/api_add_files_chat.dart';
 import '../../../../api_connection/teacher/chat/api_chat_group_list.dart';
 import '../../../../provider/auth_provider.dart';
@@ -11,6 +14,7 @@ import '../../../../provider/provider_audio_player.dart';
 import '../../../../provider/teacher/chat/chat_all_list_items.dart';
 import '../../../../provider/teacher/chat/chat_message.dart';
 import '../../../../provider/teacher/chat/chat_socket.dart';
+import '../../../../static_files/common_function.dart';
 import '../../../../static_files/my_group_static_files.dart';
 import '../../../../static_files/my_color.dart';
 import '../../../../static_files/my_times.dart';
@@ -31,11 +35,13 @@ class _ChatPageGroupState extends State<ChatPageGroup> {
   final ScrollController _scrollController = ScrollController();
   final ChatMessageBottomBarProvider _chatMessageBottomBarProvider = Get.put(ChatMessageBottomBarProvider());
   final player = AudioPlayer();
+  final Map? dataProvider = Get.put(TokenProvider()).userData;
 
   int page = 0;
   _getChatOfStudent() {
     EasyLoading.show(status: "جار جلب البيانات");
     ChatGroupListAPI().getChatOfGroup(widget.userInfo['_id'],page).then((res) {
+      Logger().i(res);
       EasyLoading.dismiss();
       if (!res['error']) {
         Get.put(ChatMessageGroupProvider()).addListChat(res["results"]);
@@ -54,6 +60,8 @@ class _ChatPageGroupState extends State<ChatPageGroup> {
 
   @override
   void initState() {
+    Get.put(ChatMessageGroupProvider()).currentChatSender =dataProvider!['_id'];
+    Get.put(ChatMessageGroupProvider()).currentGroupId = widget.userInfo['_id'];
     _checkUserOnline();
     _scrollController.addListener(() {
       if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
@@ -122,6 +130,28 @@ class _ChatPageGroupState extends State<ChatPageGroup> {
             ),
           ],
         ),
+        actions: [
+          InkWell(
+            onTap: () async {
+              bool newIsLocked = !widget.userInfo['is_locked'];
+              await ChatGroupListAPI().updateChatGroupLockStatus(widget.userInfo['_id'], newIsLocked);
+              setState(() {
+                widget.userInfo['is_locked'] = newIsLocked;
+              });
+            },
+            child: widget.userInfo['is_locked']
+                ? Padding(
+                  padding: const EdgeInsets.only(left: 14),
+                  child: CircleAvatar(child: Icon(Icons.lock,color: Colors.red,),backgroundColor: Colors.black,radius: 23,),
+                )
+                : Padding(
+                  padding: const EdgeInsets.only(left: 14.0),
+                  child: CircleAvatar(child: Icon(Icons.lock_open_sharp,color: Colors.green,),backgroundColor: Colors.white,radius: 23,),
+                ),
+          )
+
+
+        ],
       ),
       body: Column(
         children: [
@@ -147,7 +177,7 @@ class _ChatPageGroupState extends State<ChatPageGroup> {
                         },
                         child: const Icon(Icons.arrow_downward_rounded),
                         mini: true,
-                        backgroundColor: MyColor.red,
+                        backgroundColor: MyColor.pink,
                       )
                     : null,
               );
@@ -175,12 +205,12 @@ class _ChatPageGroupState extends State<ChatPageGroup> {
                       onPressed: () => _sendSound(),
                       icon: const Icon(
                         Icons.send_rounded,
-                        color: MyColor.red,
+                        color: MyColor.pink,
                       )),
                   Expanded(
                     child: Row(
                       children: [
-                        Text(secondToTime(val.current?.duration!.inSeconds.seconds.inSeconds.toInt() ?? 0)),
+                        Text(secondToTime(val.recordDuration.toInt())),
                         const Spacer(),
                         IconButton(
                             onPressed: val.recordSoundStop,
@@ -248,16 +278,16 @@ class _ChatPageGroupState extends State<ChatPageGroup> {
                       icon: val.message.text.trim().isNotEmpty
                           ? const Icon(
                               Icons.send,
-                              color: MyColor.red,
+                              color: MyColor.pink,
                             )
                           : const Icon(
                               Icons.mic,
-                              color: MyColor.red,
+                              color: MyColor.pink,
                             )
 
                       // const Icon(
                       //         Icons.mic,
-                      //         color: MyColor.red,
+                      //         color: MyColor.pink,
                       //       )
                       ),
                   Expanded(
@@ -309,7 +339,7 @@ class _ChatPageGroupState extends State<ChatPageGroup> {
                           onPressed: val.changeOpen,
                           icon: const Icon(
                             Icons.arrow_back_ios,
-                            color: MyColor.red,
+                            color: MyColor.pink,
                             size: iconSize,
                           ))
                       : Row(
@@ -319,28 +349,28 @@ class _ChatPageGroupState extends State<ChatPageGroup> {
                                 onPressed: val.changeOpen,
                                 icon: const Icon(
                                   Icons.arrow_forward_ios,
-                                  color: MyColor.red,
+                                  color: MyColor.pink,
                                   size: iconSize,
                                 )),
                             IconButton(
                                 onPressed: _pickPDF,
                                 icon: const Icon(
                                   Icons.picture_as_pdf,
-                                  color: MyColor.red,
+                                  color: MyColor.pink,
                                   size: iconSize,
                                 )),
                             IconButton(
                                 onPressed: _pickCamera,
                                 icon: const Icon(
                                   Icons.camera_alt,
-                                  color: MyColor.red,
+                                  color: MyColor.pink,
                                   size: iconSize,
                                 )),
                             IconButton(
                                 onPressed: _pickImage,
                                 icon: const Icon(
                                   Icons.image,
-                                  color: MyColor.red,
+                                  color: MyColor.pink,
                                   size: iconSize,
                                 )),
                           ],
@@ -381,123 +411,165 @@ class _ChatPageGroupState extends State<ChatPageGroup> {
   }
 
   Future _pickImage() async {
-    List<Media>? res = await ImagesPicker.pick(count: 10, pickType: PickType.all, gif: true, quality: 0.4, maxSize: 150);
+    final ImagePicker picker = ImagePicker();
+    final List<XFile> res = await picker.pickMultiImage();
+
     List<dio.MultipartFile> _localPic = [];
-    for (int i = 0; i < res!.length; i++) {
-      _localPic.add(dio.MultipartFile.fromFileSync(res[i].path, filename: 'pic$i.jpg', contentType: MediaType('image', 'jpg')));
+
+    for (int i = 0; i < res.length; i++) {
+      final mimeType = lookupMimeType(res[i].path);
+      if(getFileType(mimeType) != 'video'){
+        _localPic.add(dio.MultipartFile.fromFileSync(res[i].path, filename: 'pic$i.${getFileExtension(mimeType)}', contentType: MediaType(getFileType(mimeType), getFileExtension(mimeType))));
+      }
     }
+    if(_localPic.isNotEmpty){
+      final Map? dataProvider = Get.put(TokenProvider()).userData;
+      dio.FormData _data = dio.FormData.fromMap({
+        "group_message_type": "image",
+        "group_message_uuid": const Uuid().v1(),
+        "group_message": null,
+        'group_message_is_deleted': false,
+        'isRead': false,
+        "group_message_from": {
+          "_id": dataProvider!['_id'],
+          "account_name": dataProvider['account_name'],
+          //"account_img": dataProvider['account_name'],
+          "account_mobile": dataProvider['account_mobile']
+        },
+        "group_message_imgs": _localPic,
+        "group_message_group_id": widget.userInfo['_id'],
+        "group_chat_replay": null,
+        "created_at": DateTime.now().millisecond,
+        "group_message_url": null,
+        "chat_delivered": false,
+      });
 
-    final Map? dataProvider = Get.put(TokenProvider()).userData;
-    dio.FormData _data = dio.FormData.fromMap({
-      "group_message_type": "image",
-      "group_message_uuid": const Uuid().v1(),
-      "group_message": null,
-      'group_message_is_deleted': false,
-      'isRead': false,
-      "group_message_from": {
-        "_id": dataProvider!['_id'],
-        "account_name": dataProvider['account_name'],
-        //"account_img": dataProvider['account_name'],
-        "account_mobile": dataProvider['account_mobile']
-      },
-      "group_message_imgs": _localPic,
-      "group_message_group_id": widget.userInfo['_id'],
-      "group_chat_replay": null,
-      "created_at": DateTime.now().millisecond,
-      "group_message_url": null,
-      "chat_delivered": false,
-    });
-
-    AddChatFilesAPI().addImagesGroup(_data);
+      AddChatFilesAPI().addImagesGroup(_data);
+    }
   }
 
   Future _pickCamera() async {
-    List<Media>? res = await ImagesPicker.openCamera(pickType: PickType.image, maxTime: 180, quality: 0.4, maxSize: 150);
+    final ImagePicker picker = ImagePicker();
+    final XFile? res = await picker.pickImage(source: ImageSource.camera);
     List<dio.MultipartFile> _localPic = [];
-    for (int i = 0; i < res!.length; i++) {
-      _localPic.add(dio.MultipartFile.fromFileSync(res[i].path, filename: 'pic$i.jpg', contentType: MediaType('image', 'jpg')));
+    if(res!=null){
+      _localPic.add(dio.MultipartFile.fromFileSync(res.path, filename: 'pic$res.jpg', contentType: MediaType('image', 'jpg')));
+
+      final Map? dataProvider = Get.put(TokenProvider()).userData;
+      dio.FormData _data = dio.FormData.fromMap({
+        "group_message_type": "image",
+        "group_message_uuid": const Uuid().v1(),
+        "group_message": null,
+        'group_message_is_deleted': false,
+        'isRead': false,
+        "group_message_from": {
+          "_id": dataProvider!['_id'],
+          "account_name": dataProvider['account_name'],
+          //"account_img": dataProvider['account_name'],
+          "account_mobile": dataProvider['account_mobile']
+        },
+        "group_message_imgs": _localPic,
+        "group_message_group_id": widget.userInfo['_id'],
+        "group_chat_replay": null,
+        "created_at": DateTime.now().millisecond,
+        "group_message_url": null,
+        "chat_delivered": false,
+      });
+
+      AddChatFilesAPI().addImagesGroup(_data);
     }
 
-    final Map? dataProvider = Get.put(TokenProvider()).userData;
-    dio.FormData _data = dio.FormData.fromMap({
-      "group_message_type": "image",
-      "group_message_uuid": const Uuid().v1(),
-      "group_message": null,
-      'group_message_is_deleted': false,
-      'isRead': false,
-      "group_message_from": {
-        "_id": dataProvider!['_id'],
-        "account_name": dataProvider['account_name'],
-        //"account_img": dataProvider['account_name'],
-        "account_mobile": dataProvider['account_mobile']
-      },
-      "group_message_imgs": _localPic,
-      "group_message_group_id": widget.userInfo['_id'],
-      "group_chat_replay": null,
-      "created_at": DateTime.now().millisecond,
-      "group_message_url": null,
-      "chat_delivered": false,
-    });
-
-    AddChatFilesAPI().addImagesGroup(_data);
   }
 
-  Future _pickPDF() async {
+  Future<void> _pickPDF() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles(
       type: FileType.custom,
       allowedExtensions: ['pdf'],
       allowMultiple: false,
     );
 
-    final Map? dataProvider = Get.put(TokenProvider()).userData;
-    dio.FormData _data = dio.FormData.fromMap({
-      "group_message_type": "pdf",
-      "group_message_uuid": const Uuid().v1(),
-      "group_message": null,
-      'group_message_is_deleted': false,
-      'isRead': false,
-      "group_message_from": {
-        "_id": dataProvider!['_id'],
-        "account_name": dataProvider['account_name'],
-        //"account_img": dataProvider['account_name'],
-        "account_mobile": dataProvider['account_mobile']
-      },
-      "group_message_imgs": null,
-      "group_message_group_id": widget.userInfo['_id'],
-      "group_chat_replay": null,
-      "created_at": DateTime.now().millisecond,
-      "group_message_url": dio.MultipartFile.fromFileSync(result!.files.first.path!, filename: 'pdfFile.pdf', contentType: MediaType('application', 'pdf')),
-      "chat_delivered": false,
-    });
+    if (result != null && result.count == 1) {
+      final Map? dataProvider = Get.put(TokenProvider()).userData;
+      final pickedFile = result.files.single;
 
-    AddChatFilesAPI().addImagesGroup(_data);
+      if (pickedFile.extension == 'pdf') {
+        // Handle the selected PDF file.
+        final String? filePath = pickedFile.path;
+        if (filePath != null) {
+          dio.FormData _data = dio.FormData.fromMap({
+            "group_message_type": "pdf",
+            "group_message_uuid": const Uuid().v1(),
+            "group_message": null,
+            'group_message_is_deleted': false,
+            'isRead': false,
+            "group_message_from": {
+              "_id": dataProvider!['_id'],
+              "account_name": dataProvider['account_name'],
+              "account_mobile": dataProvider['account_mobile']
+            },
+            "group_message_imgs": null,
+            "group_message_group_id": widget.userInfo['_id'],
+            "group_chat_replay": null,
+            "created_at": DateTime.now().millisecondsSinceEpoch,
+            "group_message_url": dio.MultipartFile.fromFileSync(filePath, filename: 'pdfFile.pdf', contentType: MediaType('application', 'pdf')),
+            "chat_delivered": false,
+          });
+
+          AddChatFilesAPI().addImagesGroup(_data);
+        }
+      } else {
+        // Show an error message if the selected file is not a PDF.
+        showDialog(
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("خطا في اختيار الملف"),
+              content: Text("يرجى اختيار ملف pdf و ليس صورة"),
+              actions: <Widget>[
+                TextButton(
+                  child: Text("OK"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            );
+          },
+        );
+      }
+    } else {
+      // Handle file selection cancellation or multiple file selection if needed.
+    }
   }
 
   Future _sendSound() async {
-    String recordPath = await _chatMessageBottomBarProvider.recordSoundStop();
+    String? recordPath = await _chatMessageBottomBarProvider.recordSoundStop();
 
-    final Map? dataProvider = Get.put(TokenProvider()).userData;
-    dio.FormData _data = dio.FormData.fromMap({
-      "group_message_type": "audio",
-      "group_message_uuid": const Uuid().v1(),
-      "group_message": null,
-      'group_message_is_deleted': false,
-      'isRead': false,
-      "group_message_from": {
-        "_id": dataProvider!['_id'],
-        "account_name": dataProvider['account_name'],
-        //"account_img": dataProvider['account_name'],
-        "account_mobile": dataProvider['account_mobile']
-      },
-      "group_message_imgs": null,
-      "group_message_group_id": widget.userInfo['_id'],
-      "group_chat_replay": null,
-      "created_at": DateTime.now().millisecond,
-      "group_message_url": dio.MultipartFile.fromFileSync(recordPath, filename: 'audio.m4a', contentType: MediaType('audio', 'aac')),
-      "chat_delivered": false,
-    });
+    if(recordPath != null){
 
-    AddChatFilesAPI().addImagesGroup(_data);
+      final Map? dataProvider = Get.put(TokenProvider()).userData;
+      dio.FormData _data = dio.FormData.fromMap({
+        "group_message_type": "audio",
+        "group_message_uuid": const Uuid().v1(),
+        "group_message": null,
+        'group_message_is_deleted': false,
+        'isRead': false,
+        "group_message_from": {
+          "_id": dataProvider!['_id'],
+          "account_name": dataProvider['account_name'],
+          //"account_img": dataProvider['account_name'],
+          "account_mobile": dataProvider['account_mobile']
+        },
+        "group_message_imgs": null,
+        "group_message_group_id": widget.userInfo['_id'],
+        "group_chat_replay": null,
+        "created_at": DateTime.now().millisecond,
+        "group_message_url": dio.MultipartFile.fromFileSync(recordPath, filename: 'audio.m4a', contentType: MediaType('audio', 'aac')),
+        "chat_delivered": false,
+      });
+
+      AddChatFilesAPI().addImagesGroup(_data);
+    }
   }
 }
 

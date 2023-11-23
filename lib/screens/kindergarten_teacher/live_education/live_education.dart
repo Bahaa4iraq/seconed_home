@@ -16,6 +16,7 @@ import '../../../../provider/teacher/provider_notification.dart';
 import '../../../../static_files/my_color.dart';
 import '../../../../static_files/my_loading.dart';
 import '../../../../static_files/my_times.dart';
+import '../../../provider/student/provider_notification.dart';
 import '../pages/notifications/notification_add.dart';
 import '../pages/notifications/show/show_message.dart';
 import '../pages/teacher_attend.dart';
@@ -46,7 +47,7 @@ class _NotificationTeacherLiveEducationState extends State<NotificationTeacherLi
       "type": 'التعليم الالكتروني',
       "isRead": _notificationProvider.isRead
     };
-    NotificationsAPI().getNotificationsE(_data);
+    NotificationsAPI().getNotifications(_data);
   }
 
   final options = const LiveOptions(
@@ -229,7 +230,7 @@ class _NotificationTeacherLiveEducationState extends State<NotificationTeacherLi
                                 contentUrl: val.contentUrl,
                                 notificationsType: val.data[indexes]['notifications_type'],
                                 onUpdate: (){
-                                  NotificationsAPI().updateReadNotificationsE(val.data[indexes]['_id']);
+                                  NotificationsAPI().updateReadNotifications(val.data[indexes]['_id']);
                                 }));
                               },
                           ),

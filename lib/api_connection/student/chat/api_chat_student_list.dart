@@ -1,5 +1,4 @@
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 
 import '../../../provider/auth_provider.dart';
 import '../../../static_files/my_color.dart';
@@ -15,12 +14,11 @@ class ChatTeacherListAPI extends GetConnect {
       final response = await post(mainApi + 'student/chat/teachers', _data,
           headers: _headers);
       if (response.statusCode == 401) {
-        
-Logger().i("redirect");Auth().redirect();      } else {
+        Auth().redirect();
+      } else {
         return response.body;
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -32,12 +30,11 @@ Logger().i("redirect");Auth().redirect();      } else {
       final response =
           await post(mainApi + 'student/chat', _data, headers: _headers);
       if (response.statusCode == 401) {
-        
-Logger().i("redirect");Auth().redirect();      } else {
+        Auth().redirect();
+      } else {
         return response.body;
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }

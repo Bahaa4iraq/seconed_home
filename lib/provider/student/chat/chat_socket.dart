@@ -10,8 +10,6 @@ class ChatSocketStudentProvider extends GetxController {
   void changeSocket(Map? dataProvider) {
     Map<String, String> _headers = {"Authorization": dataProvider!['token']};
     socket = IO.io('${socketURL}chat', IO.OptionBuilder().setTransports(['websocket']).setAuth(_headers).build());
-    print(socket.disconnected);
-
     socket.on('message', (_data) {
       final Map? dataProvider = Get.put(TokenProvider()).userData;
       bool isSender = _data['chat_from'] == dataProvider!['_id'];

@@ -5,7 +5,6 @@ import '../../provider/student/provider_daily_exams.dart';
 import '../../static_files/my_color.dart';
 import '../../static_files/my_url.dart';
 import '../auth_connection.dart';
-import 'package:logger/logger.dart';
 
 class DailyExamsAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
@@ -20,8 +19,8 @@ class DailyExamsAPI extends GetConnect {
               'student/dailyExams/class_school/$_classId/study_year/$_year',
           headers: _headers);
       if (response.statusCode == 401) {
-
-Logger().i("redirect");Auth().redirect();      } else if (response.body["error"] == false) {
+        Auth().redirect();
+      } else if (response.body["error"] == false) {
         Get.put(DailyExamsProvider()).changeLoading(false);
         Get.put(DailyExamsProvider()).insertData(response.body['results']);
         EasyLoading.dismiss();
@@ -30,7 +29,6 @@ Logger().i("redirect");Auth().redirect();      } else if (response.body["error"]
         return {"error": true};
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }

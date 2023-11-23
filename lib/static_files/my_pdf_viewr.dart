@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter_cached_pdfview/flutter_cached_pdfview.dart';
 import 'package:syncfusion_flutter_pdfviewer/pdfviewer.dart';
 
 import 'my_color.dart';
@@ -14,53 +13,33 @@ class PdfViewer extends StatefulWidget {
 }
 
 class _PdfViewerState extends State<PdfViewer> {
-  @override
-  Widget build(BuildContext context) {
-    return SfPdfViewer.network(
-      widget.url,
-      enableDoubleTapZooming: true,
-    );
-    // return  const PDF(
-    //   enableSwipe: true,
-    //   swipeHorizontal: false,
-    //   autoSpacing: false,
-    //   pageFling: false,
-    //   // onError: (error) {
-    //   //   print(error.toString());
-    //   // },
-    //   // onPageChanged: (int? page, int? total) {
-    //   //   print('page change: $page/$total');
-    //   // },
-    //   // onPageError: (page, error) {
-    //   //   print('$page: ${error.toString()}');
-    //   // },
-    // ).cachedFromUrl(
-    //   widget.url,
-    //   placeholder: (progress) => Center(child: Text('$progress %')),
-    //   errorWidget: (error) => Center(child: Text(error.toString())),
-    // );
-  }
-}
+  Future<bool> _pdfLoaded = Future<bool>.delayed(
+    Duration(seconds: 1),
+        () => true,
+  );
 
-class PdfViewerAssets extends StatefulWidget {
-  final String filePDF;
-  final Color color;
-  const PdfViewerAssets({super.key, required this.filePDF, required this.color});
-
-  @override
-  State<PdfViewerAssets> createState() => _PdfViewerAssetsState();
-}
-
-class _PdfViewerAssetsState extends State<PdfViewerAssets> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: widget.color,
+        backgroundColor: MyColor.yellow,
       ),
-      body: SfPdfViewer.asset(
-        widget.filePDF,
-        enableDoubleTapZooming: true,
+      body: FutureBuilder(
+        future: _pdfLoaded,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return Center(
+              child: CircularProgressIndicator(),
+            );
+          } else if (snapshot.hasError) {
+            return Text('Error loading PDF');
+          } else {
+            return SfPdfViewer.network(
+              widget.url,
+              enableDoubleTapZooming: true,
+            );
+          }
+        },
       ),
     );
   }

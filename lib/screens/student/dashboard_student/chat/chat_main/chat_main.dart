@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:secondhome2/static_files/my_color.dart';
 
+import '../../../../../static_files/my_color.dart';
 import '../chat_group_list_student.dart';
 import '../chat_student_list.dart';
 
@@ -18,13 +18,13 @@ class _ChatMainState extends State<ChatMain> {
       length: 1,
       child: Scaffold(
         body: NestedScrollView(
-            headerSliverBuilder:
-                (BuildContext context, bool innerBoxIsScrolled) {
+            headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
               return <Widget>[
                 const SliverAppBar(
-                  backgroundColor: MyColor.turquoise,
+                  backgroundColor: MyColor.pink,
                   foregroundColor: MyColor.white0,
                   title: Text('CHAT'),
+                  centerTitle: true,
                   pinned: true,
                   floating: true,
                   bottom: TabBar(
@@ -49,7 +49,7 @@ class _ChatMainState extends State<ChatMain> {
               children: [
                 ChatTeacherList(),
                 //ChatClassGroupList(),
-                ChatGroupList(),
+                // ChatGroupList(),
               ],
             )),
       ),

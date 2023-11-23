@@ -5,7 +5,6 @@ import '../../provider/student/student_provider.dart';
 import '../../static_files/my_color.dart';
 import '../../static_files/my_url.dart';
 import '../auth_connection.dart';
-import 'package:logger/logger.dart';
 
 class DashboardDataAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
@@ -14,8 +13,8 @@ class DashboardDataAPI extends GetConnect {
     try {
       final response = await get(mainApi + 'latestNews', headers: _headers);
       if (response.statusCode == 401) {
-
-Logger().i("redirect");Auth().redirect();      } else if (response.body["error"] == false) {
+        Auth().redirect();
+      } else if (response.body["error"] == false) {
         Get.put(LatestNewsProvider())
             .changeContentUrl(response.body['content_url']);
         Get.put(LatestNewsProvider()).addData(response.body['results']);
@@ -23,7 +22,6 @@ Logger().i("redirect");Auth().redirect();      } else if (response.body["error"]
         return {"error": true};
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }

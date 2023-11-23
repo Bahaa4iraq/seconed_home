@@ -132,6 +132,7 @@ class _NotificationAllState extends State<NotificationAll> {
         elevation: 0,
         actions: [
           GetBuilder<NotificationProvider>(builder: (val) {
+
             return IconButton(
               onPressed: () {
                 if (val.isRead == null) {
@@ -154,7 +155,9 @@ class _NotificationAllState extends State<NotificationAll> {
         ],
       ),
       body: GetBuilder<NotificationProvider>(
+
           builder: (val) => Column(
+
                 children: [
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -193,6 +196,7 @@ class _NotificationAllState extends State<NotificationAll> {
                                 itemCount: val.data.length,
                                 itemBuilder: animationItemBuilder(
                                   (indexes) {
+
                                     return TimelineTile(
                                       alignment: TimelineAlign.manual,
                                       lineXY: .2,
@@ -271,6 +275,9 @@ class _NotificationAllState extends State<NotificationAll> {
   }
 
   _navPage(Map data, String contentUrl) {
+
+    print('=============================================');
+    print(data);
     List pageNotifications = [
       "رسالة",
       "ملابس",

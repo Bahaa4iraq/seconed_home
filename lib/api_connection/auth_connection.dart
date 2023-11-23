@@ -1,14 +1,10 @@
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:secondhome2/local_database/sql_database.dart';
-import 'package:secondhome2/provider/student/provider_student_dashboard.dart';
 import '../provider/auth_provider.dart';
-import '../provider/teacher/provider_teacher_dashboard.dart';
 import '../screens/auth/login_page.dart';
 import '../static_files/my_color.dart';
 import '../static_files/my_url.dart';
 import 'package:dio/dio.dart' as dio;
-import 'package:logger/logger.dart';
 
 class Auth extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
@@ -35,7 +31,7 @@ class Auth extends GetConnect {
     try {
       final response = await get('${mainApi}mainData', headers: _headers);
       if (response.statusCode == 401) {
-      Logger().i("error");
+        Auth().redirect();
       } else {
         if (response.body['error'] == false) {
           Get.put(MainDataGetProvider()).changeContentUrl(response.body['content_url']);
@@ -46,20 +42,13 @@ class Auth extends GetConnect {
         }
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت', colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
   }
 
   redirect() {
     final box = GetStorage();
-    Map? userData = box.read('_userData');
-    if (userData?["account_type"] == "student" &&userData?['account_email'].toString() != null) {
-      SqlDatabase.db.deleteAccount(userData!['account_email'].toString());
-    }
     box.erase();
-    Get.delete<TeacherDashboardProvider>();
-    Get.delete<StudentDashboardProvider>();
     Get.offAll(() => const LoginPage());
   }
 
@@ -88,7 +77,6 @@ class Auth extends GetConnect {
         return response.data;
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'يوجد خطأ من السيرفر', colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
   }

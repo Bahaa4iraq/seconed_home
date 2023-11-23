@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'package:logger/logger.dart';
 
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -34,7 +33,6 @@ class AddChatFilesAPI extends GetConnect {
       }
       return response.data;
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -63,7 +61,6 @@ class AddChatFilesAPI extends GetConnect {
       }
       return response.data;
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }

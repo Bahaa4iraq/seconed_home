@@ -68,7 +68,7 @@ class _ReviewDateState extends State<ReviewDate> {
                             title: Text(
                               val.data[indexes]['review_date'],
                               style: const TextStyle(
-                                  color: MyColor.turquoise,
+                                  color: MyColor.pink,
                                   fontWeight: FontWeight.bold),
                             ),
                             onTap: () {

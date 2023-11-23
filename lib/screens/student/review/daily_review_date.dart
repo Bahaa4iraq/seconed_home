@@ -1,7 +1,7 @@
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:secondhome2/screens/student/review/show_daily_review.dart';
+import 'package:secondhome2/screens/nursery/review/show_daily_review.dart';
 
 import '../../../api_connection/student/api_daily_review.dart';
 import '../../../provider/student/provider_daily_review.dart';
@@ -62,7 +62,7 @@ class _DailyReviewDateState extends State<DailyReviewDate> {
                         title: Text(
                           val.data[indexes]['review_date'],
                           style: const TextStyle(
-                              color: MyColor.turquoise,
+                              color: MyColor.pink,
                               fontWeight: FontWeight.bold),
                         ),
                         onTap: () {

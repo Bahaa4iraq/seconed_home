@@ -5,7 +5,6 @@ import '../../provider/student/provider_degree.dart';
 import '../../static_files/my_color.dart';
 import '../../static_files/my_url.dart';
 import '../auth_connection.dart';
-import 'package:logger/logger.dart';
 
 class DegreeStudentAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
@@ -17,8 +16,8 @@ class DegreeStudentAPI extends GetConnect {
           '${mainApi}student/exams/class_school/${_data['class_school']}/study_year/${_data['study_year']}',
           headers: _headers);
       if (response.statusCode == 401) {
-        
-Logger().i("redirect");Auth().redirect();      } else if (!response.body["error"]) {
+        Auth().redirect();
+      } else if (!response.body["error"]) {
         Get.put(ExamsProvider()).changeLoading(false);
         Get.put(ExamsProvider()).insertData(response.body['results']);
         EasyLoading.dismiss();
@@ -27,7 +26,6 @@ Logger().i("redirect");Auth().redirect();      } else if (!response.body["error"
         return {"error": true};
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -40,8 +38,8 @@ Logger().i("redirect");Auth().redirect();      } else if (!response.body["error"
           '${mainApi}student/degrees/class_school/${_data['class_school']}/study_year/${_data['study_year']}',
           headers: _headers);
       if (response.statusCode == 401) {
-        
-Logger().i("redirect");Auth().redirect();      } else if (!response.body["error"]) {
+        Auth().redirect();
+      } else if (!response.body["error"]) {
         Get.put(DegreeProvider()).changeLoading(false);
         Get.put(DegreeProvider()).insertData(response.body['results']);
         EasyLoading.dismiss();
@@ -50,7 +48,6 @@ Logger().i("redirect");Auth().redirect();      } else if (!response.body["error"
         return {"error": true};
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }

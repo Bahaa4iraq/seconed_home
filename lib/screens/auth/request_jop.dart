@@ -23,7 +23,7 @@ class RequestJop extends StatefulWidget {
 
 class _RequestJopState extends State<RequestJop> {
   final RoundedLoadingButtonController _btnController =
-      RoundedLoadingButtonController();
+  RoundedLoadingButtonController();
   final TextEditingController _name = TextEditingController();
   final TextEditingController _specialty = TextEditingController();
   final TextEditingController _university = TextEditingController();
@@ -39,16 +39,16 @@ class _RequestJopState extends State<RequestJop> {
   pickImage() async {
     EasyLoading.show(status: "جار التحميل...");
     FilePickerResult? result =
-        await FilePicker.platform.pickFiles(type: FileType.image);
+    await FilePicker.platform.pickFiles(type: FileType.image);
 
     if (result != null) {
       XFile file = XFile(result.files.single.path!);
       compressAndGetFile(file, p.dirname(file.path)).then((value) => {
-            setState(() {
-              _pic = value;
-            }),
-            EasyLoading.dismiss(),
-          });
+        setState(() {
+          _pic = value;
+        }),
+        EasyLoading.dismiss(),
+      });
     } else {
       EasyLoading.dismiss();
       // User canceled the picker
@@ -219,7 +219,7 @@ class _RequestJopState extends State<RequestJop> {
                   if (_pic != null)
                     Container(
                         padding:
-                            const EdgeInsets.only(right: 40, left: 40, top: 40),
+                        const EdgeInsets.only(right: 40, left: 40, top: 40),
                         child: Stack(
                           children: [
                             Image.file(File(_pic!.path)),
@@ -241,9 +241,9 @@ class _RequestJopState extends State<RequestJop> {
                         )),
                   Container(
                     constraints:
-                        const BoxConstraints(minWidth: 200, maxWidth: 350),
+                    const BoxConstraints(minWidth: 200, maxWidth: 350),
                     padding:
-                        const EdgeInsets.only(top: 10, right: 20, left: 20),
+                    const EdgeInsets.only(top: 10, right: 20, left: 20),
                     child: MaterialButton(
                         height: 45,
                         elevation: 0,
@@ -267,9 +267,9 @@ class _RequestJopState extends State<RequestJop> {
                   ),
                   Container(
                     constraints:
-                        const BoxConstraints(minWidth: 200, maxWidth: 350),
+                    const BoxConstraints(minWidth: 200, maxWidth: 350),
                     padding:
-                        const EdgeInsets.only(top: 10, right: 20, left: 20),
+                    const EdgeInsets.only(top: 10, right: 20, left: 20),
                     child: MaterialButton(
                         height: 45,
                         elevation: 0,
@@ -336,7 +336,7 @@ class _RequestJopState extends State<RequestJop> {
           maxLines: null,
           textAlignVertical: TextAlignVertical.top,
           decoration: InputDecoration(
-              //contentPadding: EdgeInsets.symmetric(vertical: 12.0),
+            //contentPadding: EdgeInsets.symmetric(vertical: 12.0),
               contentPadding: const EdgeInsets.all(12.0),
               hintText: _hintText,
               isDense: true,
@@ -367,8 +367,8 @@ class _RequestJopState extends State<RequestJop> {
                 ),
               ),
               filled: true
-              //fillColor: Colors.green
-              ),
+            //fillColor: Colors.green
+          ),
           validator: (value) {
             var result = value!.length < 3 ? "املئ البيانات" : null;
             return result;

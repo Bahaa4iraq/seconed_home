@@ -6,7 +6,6 @@ import '../../provider/teacher/provider_degree_teacher.dart';
 import '../../static_files/my_color.dart';
 import '../../static_files/my_url.dart';
 import '../auth_connection.dart';
-import 'package:logger/logger.dart';
 
 class ExamTeacherAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
@@ -18,8 +17,7 @@ class ExamTeacherAPI extends GetConnect {
           '${mainApi}teacher/exams/class_school/${_data['class_school']}/study_year/${_data['study_year']}',
           headers: _headers);
       if (response.statusCode == 401) {
-        Logger().i("redirect");               Auth().redirect();
-        
+        Auth().redirect();
       } else if (!response.body["error"]) {
         Get.put(ExamsTeacherProvider()).changeLoading(false);
         Get.put(ExamsTeacherProvider()).insertData(response.body['results']);
@@ -29,7 +27,6 @@ class ExamTeacherAPI extends GetConnect {
         return {"error": true};
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -46,14 +43,12 @@ class DegreeTeacherAPI extends GetConnect {
           '${mainApi}teacher/degrees/subject_id/$_subjectId/study_year/$_year',
           headers: _headers);
       if (response.statusCode == 401) {
-        Logger().i("redirect");               Auth().redirect();
-        
+        Auth().redirect();
       } else {
         EasyLoading.dismiss();
         return response.body;
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -66,13 +61,12 @@ class DegreeTeacherAPI extends GetConnect {
           '${mainApi}teacher/degrees/class_school', _data,
           headers: _headers);
       if (response.statusCode == 401) {
-        
-Logger().i("redirect");Auth().redirect();      } else {
+        Auth().redirect();
+      } else {
         EasyLoading.dismiss();
         return response.body;
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -84,13 +78,12 @@ Logger().i("redirect");Auth().redirect();      } else {
       final response = await post('${mainApi}teacher/degrees/getData', _data,
           headers: _headers);
       if (response.statusCode == 401) {
-        
-Logger().i("redirect");Auth().redirect();      } else {
+        Auth().redirect();
+      } else {
         EasyLoading.dismiss();
         return response.body['results'];
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -102,13 +95,12 @@ Logger().i("redirect");Auth().redirect();      } else {
       final response = await post('${mainApi}teacher/degrees/addDegrees', _data,
           headers: _headers);
       if (response.statusCode == 401) {
-        
-Logger().i("redirect");Auth().redirect();      } else {
+        Auth().redirect();
+      } else {
         EasyLoading.dismiss();
         return response.body['results'];
       }
     } catch (e) {
-      Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }

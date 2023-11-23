@@ -163,6 +163,7 @@ class _NotificationAllState extends State<NotificationAll> {
         ],
       ),
       body: GetBuilder<NotificationProvider>(
+
           builder: (val) => Column(
                 children: [
                   SingleChildScrollView(
@@ -238,6 +239,8 @@ class _NotificationAllState extends State<NotificationAll> {
                                         child: LiveList.options(
                                             itemBuilder: animationItemBuilder(
                                               (ind) {
+                                                print('=============================');
+                                                print(val.data);
                                                 return InkWell(
                                                   onTap: () {
                                                     _navPage(val.data[ind],
@@ -331,8 +334,10 @@ class _NotificationAllState extends State<NotificationAll> {
                                     itemCount: val.data.length,
                                     itemBuilder: animationItemBuilder(
                                       (indexes) {
-                                        print(val.data[indexes]
-                                            ['notifications_type']);
+                                        print('+++++++++++++++++++++++++++++++++');
+                                        print(val.data[indexes]["notifications_title"]);
+                                        print(val.data[indexes]["notifications_type"]);
+
                                         return TimelineTile(
                                           alignment: TimelineAlign.manual,
                                           lineXY: .2,
@@ -437,7 +442,7 @@ class _NotificationAllState extends State<NotificationAll> {
       "هل تعلم",
       "ملخص",
     ];
-    if (_data['notifications_title'] == "تم اضافة تقييم يومي جديد") {
+    if (_data['notifications_type'] == "التقييم") {
       setState(() {
         NotificationsAPI().updateReadNotifications(_data['_id']);
       });

@@ -15,11 +15,11 @@ Widget imageGrid(String _contentUrl, List _imgs,Color color) {
       child: GestureDetector(
         onTap: () {
           Get.to(() => ImageShowList(
-                contentUrl: _contentUrl,
-                imgs: _imgs,
-                initialIndex: 0,
+            contentUrl: _contentUrl,
+            imgs: _imgs,
+            initialIndex: 0,
             color: color,
-              ));
+          ));
         },
         child: Hero(
           tag: _imgs[0],
@@ -44,11 +44,11 @@ Widget imageGrid(String _contentUrl, List _imgs,Color color) {
         GestureDetector(
           onTap: () {
             Get.to(() => ImageShowList(
-                  contentUrl: _contentUrl,
-                  imgs: _imgs,
-                  initialIndex: 0,
+              contentUrl: _contentUrl,
+              imgs: _imgs,
+              initialIndex: 0,
               color: color,
-                ));
+            ));
           },
           child: Hero(
             tag: _imgs[0],
@@ -75,11 +75,11 @@ Widget imageGrid(String _contentUrl, List _imgs,Color color) {
         GestureDetector(
           onTap: () {
             Get.to(() => ImageShowList(
-                  contentUrl: _contentUrl,
-                  imgs: _imgs,
-                  initialIndex: 1,
+              contentUrl: _contentUrl,
+              imgs: _imgs,
+              initialIndex: 1,
               color: color,
-                ));
+            ));
           },
           child: Hero(
             tag: _imgs[1],
@@ -120,9 +120,9 @@ Widget imageGrid(String _contentUrl, List _imgs,Color color) {
             return GestureDetector(
               onTap: () {
                 Get.to(() => ImageShowList(
-                    contentUrl: _contentUrl,
-                    imgs: _imgs,
-                    initialIndex: index,
+                  contentUrl: _contentUrl,
+                  imgs: _imgs,
+                  initialIndex: index,
                   color: color,
                 ));
               },
@@ -239,9 +239,9 @@ Widget imageGridChat(String _contentUrl, List _imgs,Color color) {
       child: GestureDetector(
         onTap: () {
           Get.to(() => ImageShowList(
-                contentUrl: _contentUrl,
-                imgs: _imgs,
-                initialIndex: 0,
+            contentUrl: _contentUrl,
+            imgs: _imgs,
+            initialIndex: 0,
             color: color,
           ));
         },
@@ -268,9 +268,9 @@ Widget imageGridChat(String _contentUrl, List _imgs,Color color) {
         GestureDetector(
           onTap: () {
             Get.to(() => ImageShowList(
-                  contentUrl: _contentUrl,
-                  imgs: _imgs,
-                  initialIndex: 0,
+              contentUrl: _contentUrl,
+              imgs: _imgs,
+              initialIndex: 0,
               color: color,
 
             ));
@@ -300,11 +300,11 @@ Widget imageGridChat(String _contentUrl, List _imgs,Color color) {
         GestureDetector(
           onTap: () {
             Get.to(() => ImageShowList(
-                  contentUrl: _contentUrl,
-                  imgs: _imgs,
-                  initialIndex: 1,
+              contentUrl: _contentUrl,
+              imgs: _imgs,
+              initialIndex: 1,
               color: color,
-                ));
+            ));
           },
           child: Hero(
             tag: _imgs[1],
@@ -459,10 +459,10 @@ Widget singleImageShowAndSave(String _contentUrl, String _imgs,Color color) {
   return GestureDetector(
       onTap: () {
         Get.to(() => ImageShowSingle(
-              contentUrl: _contentUrl,
-              imgs: _imgs,
+          contentUrl: _contentUrl,
+          imgs: _imgs,
           color: color,
-            ));
+        ));
       },
       child: Hero(
         tag: _imgs,

@@ -4,6 +4,8 @@ import 'package:iconsax/iconsax.dart';
 import 'package:secondhome2/api_connection/student/api_daily_review.dart';
 import 'package:secondhome2/provider/student/provider_daily_review.dart';
 
+import '../../../api_connection/student/api_daily_review.dart';
+import '../../../provider/student/provider_daily_review.dart';
 import '../../../static_files/my_appbar.dart';
 import '../../../static_files/my_color.dart';
 
@@ -188,7 +190,7 @@ class _ShowDailyReviewState extends State<ShowDailyReview> {
                   color: Colors.green,
                 ));
           },
-          backgroundColor: MyColor.turquoise.withOpacity(0.9),
+          backgroundColor: MyColor.pink.withOpacity(0.9),
         );
       }),
     );

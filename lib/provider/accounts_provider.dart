@@ -1,7 +1,9 @@
-import 'package:secondhome2/local_database/models/account.dart';
-import 'package:secondhome2/local_database/sql_database.dart';
+
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:secondhome2/local_database/models/account.dart';
+import 'package:secondhome2/local_database/sql_database.dart';
+
 
 class AccountProvider extends GetxController {
   RxList<Account> accounts = <Account>[].obs;
