@@ -11,7 +11,6 @@ import 'package:get/get.dart';
 import 'package:path/path.dart' as p;
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import '../../../../api_connection/student/chat/api_chat_group_list.dart';
-import '../../../../provider/auth_provider.dart';
 import '../../../../provider/student/chat/chat_all_list_items.dart';
 import '../../../../provider/student/chat/chat_message.dart';
 import '../../../../provider/student/chat/image_provider.dart';
@@ -25,7 +24,7 @@ import 'package:http_parser/http_parser.dart';
 import 'chat_main/chat_page_group.dart';
 
 class ChatGroupList extends StatefulWidget {
-  const ChatGroupList({Key? key}) : super(key: key);
+  const ChatGroupList({super.key});
 
   @override
   State<ChatGroupList> createState() => _ChatGroupListState();
@@ -33,11 +32,11 @@ class ChatGroupList extends StatefulWidget {
 
 class _ChatGroupListState extends State<ChatGroupList> {
   TextEditingController groupName = TextEditingController();
-  final RoundedLoadingButtonController _btnController = RoundedLoadingButtonController();
-  final MainDataGetProvider _mainDataGetProvider = Get.put(MainDataGetProvider());
+  final RoundedLoadingButtonController _btnController =
+      RoundedLoadingButtonController();
+
   final ScrollController _scrollController = ScrollController();
-  final List _classes = Get.put(MainDataGetProvider()).mainData['account']['account_division'];
-  final MainDataGetProvider _mainDataProvider = Get.put(MainDataGetProvider());
+
   List<String> _student = [];
   List<S2Choice<String>> student = [];
 
@@ -51,7 +50,8 @@ class _ChatGroupListState extends State<ChatGroupList> {
       if (!res['error']) {
         if (page == 0) {
           Get.put(ChatGroupStudentListProvider()).clear();
-          Get.put(ChatGroupStudentListProvider()).changeContentUrl(res["content_url"]);
+          Get.put(ChatGroupStudentListProvider())
+              .changeContentUrl(res["content_url"]);
           Get.put(ChatGroupStudentListProvider()).changeLoading(false);
         }
         Get.put(ChatGroupStudentListProvider()).addStudent(res["results"]);
@@ -65,7 +65,8 @@ class _ChatGroupListState extends State<ChatGroupList> {
   void initState() {
     _getStudentList();
     _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
+      if (_scrollController.position.pixels ==
+          _scrollController.position.maxScrollExtent) {
         page++;
         _getStudentList();
       }
@@ -82,38 +83,40 @@ class _ChatGroupListState extends State<ChatGroupList> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatGroupStudentListProvider>(builder: (val) {
-        return val.student.isEmpty && val.isLoading
-            ? Center(
-                child: loadingChat(),
-              )
-            : Container(
+      return val.student.isEmpty && val.isLoading
+          ? Center(
+              child: loadingChat(),
+            )
+          : Container(
               child: ListView.builder(
-                  itemBuilder: (BuildContext context, int index) => Column(
-                    children:[
-                      Padding(
-                        padding: const EdgeInsets.only(right: 50),
-                        child: Container(height: 1,width: double.infinity,color: Colors.grey.shade400,),
-                      ),
-                      _groups(val.student[index], val.contentUrl),
-                    ]),
-
-
+                  itemBuilder: (BuildContext context, int index) =>
+                      Column(children: [
+                        Padding(
+                          padding: const EdgeInsets.only(right: 50),
+                          child: Container(
+                            height: 1,
+                            width: double.infinity,
+                            color: Colors.grey.shade400,
+                          ),
+                        ),
+                        _groups(val.student[index], val.contentUrl),
+                      ]),
                   controller: _scrollController,
-              padding: const EdgeInsets.only(top:10),
+                  padding: const EdgeInsets.only(top: 10),
 
-              //separatorBuilder: (BuildContext context, int index)=>const Divider(),
+                  //separatorBuilder: (BuildContext context, int index)=>const Divider(),
                   itemCount: val.student.length),
             );
-      });
+    });
   }
 
-  _groups(Map _data, String _contentUrl) {
+  _groups(Map data, String contentUrl) {
     return ListTile(
       title: Text(
-        _data['group_name'].toString(),
+        data['group_name'].toString(),
         style: const TextStyle(fontSize: 14),
       ),
-      subtitle: _data['chats']['data'].length == 0
+      subtitle: data['chats']['data'].length == 0
           ? null
           : Row(
               mainAxisSize: MainAxisSize.min,
@@ -122,7 +125,8 @@ class _ChatGroupListState extends State<ChatGroupList> {
                   flex: 1,
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(10, 1, 10, 1),
-                    decoration: _data['chats']['data'][0]['group_message_is_deleted']
+                    decoration: data['chats']['data'][0]
+                            ['group_message_is_deleted']
                         ? BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
                             border: Border.all(
@@ -132,42 +136,52 @@ class _ChatGroupListState extends State<ChatGroupList> {
                           )
                         : null,
                     child: Text(
-                        _data['chats']['data'][0]['group_message_is_deleted'] ? "تم مسح الرسالة" : _data['chats']['data'][0]['group_message'] ?? "تم ارسال ملف",
-                        style: TextStyle(fontSize: 12, fontWeight: _data['chats']['data'][0]['isRead'] ? FontWeight.normal : FontWeight.bold),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                      data['chats']['data'][0]['group_message_is_deleted']
+                          ? "تم مسح الرسالة"
+                          : data['chats']['data'][0]['group_message'] ??
+                              "تم ارسال ملف",
+                      style: TextStyle(
+                          fontSize: 12,
+                          fontWeight: data['chats']['data'][0]['isRead']
+                              ? FontWeight.normal
+                              : FontWeight.bold),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                     ),
-
                   ),
                 ),
               ],
             ),
-      leading: profileImg(_contentUrl, _data['group_img']),
+      leading: profileImg(contentUrl, data['group_img']),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (_data['chats']['data'].isNotEmpty) _timeText(_data['chats']['data'][0]['created_at']),
-          if (_data['chats']['countUnRead'] > 0) _messageUnRead(_data['chats']['countUnRead']),
+          if (data['chats']['data'].isNotEmpty)
+            _timeText(data['chats']['data'][0]['created_at']),
+          if (data['chats']['countUnRead'] > 0)
+            _messageUnRead(data['chats']['countUnRead']),
         ],
       ),
 
       onTap: () async {
         Get.put(ChatMessageGroupStudentProvider()).clear();
-        Get.put(ChatMessageGroupStudentProvider()).addListChat(_data['chats']['data']);
-        Get.put(ChatGroupStudentListProvider()).changeReadingCount(_data["_id"]);
-        await Get.to(() => ChatPageGroup(userInfo: _data, contentUrl: _contentUrl));
+        Get.put(ChatMessageGroupStudentProvider())
+            .addListChat(data['chats']['data']);
+        Get.put(ChatGroupStudentListProvider()).changeReadingCount(data["_id"]);
+        await Get.to(
+            () => ChatPageGroup(userInfo: data, contentUrl: contentUrl));
         page = 0;
         _getStudentList();
       },
-       // onLongPress: () {
-       //   _showCreateGroupBottomSheet();
-       // },
+      // onLongPress: () {
+      //   _showCreateGroupBottomSheet();
+      // },
     );
   }
 
-  Widget profileImg(String _contentUrl, String? _img) {
-    if (_img == null) {
+  Widget profileImg(String contentUrl, String? img) {
+    if (img == null) {
       return const CircleAvatar(
         backgroundImage: AssetImage("assets/img/logo.jpg"),
       );
@@ -175,7 +189,7 @@ class _ChatGroupListState extends State<ChatGroupList> {
       return CircleAvatar(
         //radius: 30,
         backgroundImage: CachedNetworkImageProvider(
-          _contentUrl + _img,
+          contentUrl + img,
           // fit: BoxFit.cover,
           // placeholder: (context, url) => Row(
           //   mainAxisSize: MainAxisSize.min,
@@ -205,27 +219,27 @@ class _ChatGroupListState extends State<ChatGroupList> {
     }
   }
 
-  Text _timeText(int _time) {
+  Text _timeText(int time) {
     return Text(
-      getChatDate(_time, 12),
+      getChatDate(time, 12),
       style: const TextStyle(fontSize: 10),
     );
   }
 
-  Widget _messageUnRead(int _count) {
+  Widget _messageUnRead(int count) {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(15),
         color: MyColor.green,
       ),
       padding: const EdgeInsets.fromLTRB(7, 3, 7, 3),
-      child: _count > 99
+      child: count > 99
           ? const Text(
               "99+",
               style: TextStyle(fontSize: 10, color: MyColor.white0),
             )
           : Text(
-              _count.toString(),
+              count.toString(),
               style: const TextStyle(fontSize: 10, color: MyColor.white0),
             ),
     );
@@ -233,7 +247,10 @@ class _ChatGroupListState extends State<ChatGroupList> {
 
   _showCreateGroupBottomSheet() {
     Get.bottomSheet(Container(
-      decoration: const BoxDecoration(color: MyColor.white0, borderRadius: BorderRadius.only(topLeft: Radius.circular(10), topRight: Radius.circular(10))),
+      decoration: const BoxDecoration(
+          color: MyColor.white0,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(10), topRight: Radius.circular(10))),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -270,7 +287,8 @@ class _ChatGroupListState extends State<ChatGroupList> {
             leading: groupImage(),
           ),
           Container(
-            margin: const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
+            margin:
+                const EdgeInsets.only(top: 10, bottom: 10, right: 10, left: 10),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(10.0),
               border: Border.all(
@@ -287,7 +305,8 @@ class _ChatGroupListState extends State<ChatGroupList> {
                 setState(() => _student = selected.value);
                 //_showData(selected.value);
               },
-              groupHeaderStyle: const S2GroupHeaderStyle(backgroundColor: MyColor.white4),
+              groupHeaderStyle:
+                  const S2GroupHeaderStyle(backgroundColor: MyColor.white4),
               choiceItems: student,
               modalFilter: true,
               modalFilterAuto: true,
@@ -301,12 +320,16 @@ class _ChatGroupListState extends State<ChatGroupList> {
                 width: Get.width / 1.2,
                 child: RoundedLoadingButton(
                   color: MyColor.pink,
-                  child: const Text("اضافة المجموعة", style: TextStyle(color: MyColor.white0, fontSize: 20, fontWeight: FontWeight.bold)),
                   valueColor: MyColor.white0,
                   successColor: MyColor.pink,
                   controller: _btnController,
                   onPressed: _createGroup,
                   borderRadius: 10,
+                  child: const Text("اضافة المجموعة",
+                      style: TextStyle(
+                          color: MyColor.white0,
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold)),
                 ),
               ),
             ),
@@ -347,13 +370,16 @@ class _ChatGroupListState extends State<ChatGroupList> {
 
   Future<XFile?> compressAndGetFile(File file, String targetPath) async {
     String getRand = RandomGen().getRandomString(5);
-    var result = await FlutterImageCompress.compressAndGetFile(file.absolute.path, targetPath + "/img_$getRand.jpg", quality: 40);
+    var result = await FlutterImageCompress.compressAndGetFile(
+        file.absolute.path, "$targetPath/img_$getRand.jpg",
+        quality: 40);
     return result;
   }
 
   pickImage() async {
     EasyLoading.show(status: "جار التحميل...");
-    FilePickerResult? result = await FilePicker.platform.pickFiles(type: FileType.image);
+    FilePickerResult? result =
+        await FilePicker.platform.pickFiles(type: FileType.image);
     if (result != null) {
       File file = File(result.files.single.path!);
       compressAndGetFile(file, p.dirname(file.path)).then((value) {
@@ -366,14 +392,17 @@ class _ChatGroupListState extends State<ChatGroupList> {
   }
 
   _createGroup() {
-    File? _pic = Get.put(ImageGroupProvider()).pic;
-    dio.FormData _data = dio.FormData.fromMap({
+    File? pic = Get.put(ImageGroupProvider()).pic;
+    dio.FormData data = dio.FormData.fromMap({
       "group_name": groupName.text,
       "group_users": _student,
-      "group_img": _pic == null ? null : dio.MultipartFile.fromFileSync(_pic.path, filename: 'img.jpg', contentType: MediaType('image', 'jpg')),
+      "group_img": pic == null
+          ? null
+          : dio.MultipartFile.fromFileSync(pic.path,
+              filename: 'img.jpg', contentType: MediaType('image', 'jpg')),
     });
     if (groupName.text.trim().isNotEmpty) {
-      ChatGroupListAPI().createGroup(_data).then((res) {
+      ChatGroupListAPI().createGroup(data).then((res) {
         if (res['error']) {
           _btnController.error();
           Timer(const Duration(seconds: 2), () {

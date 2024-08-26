@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:logger/logger.dart';
 import 'package:secondhome2/screens/nursery/review/daily_review_date.dart';
-import 'package:secondhome2/screens/nursery/review/review_date.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../api_connection/student/api_notification.dart';
@@ -25,7 +24,7 @@ import 'weekly_schedule.dart';
 class NotificationAll extends StatefulWidget {
   final Map userData;
 
-  const NotificationAll({Key? key, required this.userData}) : super(key: key);
+  const NotificationAll({super.key, required this.userData});
 
   @override
   _NotificationAllState createState() => _NotificationAllState();
@@ -51,21 +50,22 @@ class _NotificationAllState extends State<NotificationAll> {
     "هل تعلم",
     "الميلاد"
   ];
-  String? getType(){
+  String? getType() {
     Logger().i(type);
 
-    if(type== "هل تعلم") {
+    if (type == "هل تعلم") {
       return "تقرير";
-    }else if(type == "يوميات"){
+    } else if (type == "يوميات") {
       return "دروس";
-    }else if(type == "العناية بالطفل"){
+    } else if (type == "العناية بالطفل") {
       return "الحفاض";
-    }else{
+    } else {
       return type;
     }
   }
+
   initFunction() {
-    Map _data = {
+    Map data = {
       "study_year": _mainDataGetProvider.mainData['setting'][0]['setting_year'],
       "page": page,
       "class_school": _mainDataGetProvider.mainData['account']
@@ -73,9 +73,9 @@ class _NotificationAllState extends State<NotificationAll> {
       "type": getType(),
       "isRead": _notificationProvider.isRead
     };
-    Logger().i(_data);
+    Logger().i(data);
 
-    NotificationsAPI().getNotifications(_data);
+    NotificationsAPI().getNotifications(data);
   }
 
   final options = const LiveOptions(
@@ -132,7 +132,6 @@ class _NotificationAllState extends State<NotificationAll> {
         elevation: 0,
         actions: [
           GetBuilder<NotificationProvider>(builder: (val) {
-
             return IconButton(
               onPressed: () {
                 if (val.isRead == null) {
@@ -155,9 +154,7 @@ class _NotificationAllState extends State<NotificationAll> {
         ],
       ),
       body: GetBuilder<NotificationProvider>(
-
           builder: (val) => Column(
-
                 children: [
                   SingleChildScrollView(
                     scrollDirection: Axis.horizontal,
@@ -196,7 +193,6 @@ class _NotificationAllState extends State<NotificationAll> {
                                 itemCount: val.data.length,
                                 itemBuilder: animationItemBuilder(
                                   (indexes) {
-
                                     return TimelineTile(
                                       alignment: TimelineAlign.manual,
                                       lineXY: .2,
@@ -230,9 +226,8 @@ class _NotificationAllState extends State<NotificationAll> {
                                       endChild: Container(
                                         margin: const EdgeInsets.only(
                                             right: 10, left: 10, top: 10),
-                                        padding: const EdgeInsets.only(
-                                            bottom: 16),
-
+                                        padding:
+                                            const EdgeInsets.only(bottom: 16),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
@@ -253,11 +248,15 @@ class _NotificationAllState extends State<NotificationAll> {
                                           subtitle: val.data[indexes][
                                                       "notifications_description"] !=
                                                   null
-                                              ? Text(val.data[indexes][
-                                                      "notifications_description"]
-                                                  .toString(),maxLines: 4,overflow: TextOverflow.ellipsis,)
+                                              ? Text(
+                                                  val.data[indexes][
+                                                          "notifications_description"]
+                                                      .toString(),
+                                                  maxLines: 4,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                )
                                               : null,
-
                                           onTap: () {
                                             _navPage(val.data[indexes],
                                                 val.contentUrl);
@@ -275,7 +274,6 @@ class _NotificationAllState extends State<NotificationAll> {
   }
 
   _navPage(Map data, String contentUrl) {
-
     print('=============================================');
     print(data);
     List pageNotifications = [
@@ -302,7 +300,7 @@ class _NotificationAllState extends State<NotificationAll> {
         NotificationsAPI().updateReadNotifications(data['_id']);
       });
       Get.to(() => StudentAttend(userData: widget.userData));
-    }else if (pageNotifications.contains(data['notifications_type'])) {
+    } else if (pageNotifications.contains(data['notifications_type'])) {
       setState(() {
         Get.put(NotificationsAPI()).updateReadNotifications(data["_id"]);
       });
@@ -345,43 +343,42 @@ class _NotificationAllState extends State<NotificationAll> {
     }
   }
 
-  _button(String? _type) {
+  _button(String? type) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
       child: MaterialButton(
         onPressed: () {
           page = 0;
-          type = _type;
+          type = type;
           Get.put(NotificationProvider()).remove();
           EasyLoading.show(status: "جار جلب البيانات");
           initFunction();
         },
-        color: _type == type ? MyColor.pink : MyColor.white0,
-        textColor: _type == type ? MyColor.white0 : MyColor.pink,
-        child: Text(_type ?? "الكل"),
+        color: type == type ? MyColor.pink : MyColor.white0,
+        textColor: type == type ? MyColor.white0 : MyColor.pink,
+        child: Text(type ?? "الكل"),
       ),
     );
   }
 
-
-  IconData _icon(_type) {
-    if (_type == "رسالة") {
+  IconData _icon(type) {
+    if (type == "رسالة") {
       return Iconsax.message;
-    } else if (_type == "ملابس") {
+    } else if (type == "ملابس") {
       return Iconsax.book;
-    } else if (_type == "دروس") {
+    } else if (type == "دروس") {
       return Iconsax.presention_chart;
-    } else if (_type == "اقساط") {
+    } else if (type == "اقساط") {
       return Iconsax.money_send;
-    } else if (_type == "الحضور") {
+    } else if (type == "الحضور") {
       return Iconsax.frame;
-    } else if (_type == "تبليغ") {
+    } else if (type == "تبليغ") {
       return Iconsax.edit;
-    } else if (_type == "ملخص") {
+    } else if (type == "ملخص") {
       return Iconsax.task;
-    } else if (_type == "البصمة") {
+    } else if (type == "البصمة") {
       return Iconsax.finger_scan;
-    } else if (_type == "الميلاد") {
+    } else if (type == "الميلاد") {
       return Iconsax.cake;
     } else {
       return Iconsax.timer;
@@ -448,18 +445,3 @@ Widget Function(
             ),
           ),
         );
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

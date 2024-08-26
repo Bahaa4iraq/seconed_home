@@ -1,5 +1,3 @@
-import 'dart:io';
-
 // import 'package:path_provider/path_provider.dart';
 import 'package:secondhome2/local_database/base_database.dart';
 import 'package:sqflite/sqflite.dart';
@@ -13,8 +11,7 @@ class SqlDatabase extends BaseDatabase {
 
   SqlDatabase._createInstance();
 
-  static final SqlDatabase db =
-  SqlDatabase._createInstance();
+  static final SqlDatabase db = SqlDatabase._createInstance();
 
   factory SqlDatabase() {
     _sqlDatabase ??= SqlDatabase._createInstance();
@@ -42,13 +39,15 @@ class SqlDatabase extends BaseDatabase {
   @override
   Future deleteAccount(String email) async {
     final database = await this.database;
-    await database.delete('accounts',where: 'account_email = ?', whereArgs: [email]);
+    await database
+        .delete('accounts', where: 'account_email = ?', whereArgs: [email]);
   }
 
   @override
   Future<Account?> getAccount(String email) async {
     final database = await this.database;
-    var result = await database.query('accounts',where:  'account_email = ?', whereArgs: [email]);
+    var result = await database
+        .query('accounts', where: 'account_email = ?', whereArgs: [email]);
     return result.firstOrNull == null ? null : Account.fromMap(result.first);
   }
 
@@ -59,11 +58,10 @@ class SqlDatabase extends BaseDatabase {
     return result.map((e) => Account.fromMap(e)).toList();
   }
 
-
   @override
-  Future insertAccountAsMap(Map<String, dynamic> account)async {
-    final user ={
-      'token':account['token'],
+  Future insertAccountAsMap(Map<String, dynamic> account) async {
+    final user = {
+      'token': account['token'],
       '_id': account['_id'],
       'account_name': account['account_name'],
       'account_mobile': account['account_mobile'],
@@ -71,31 +69,36 @@ class SqlDatabase extends BaseDatabase {
       'account_email': account['account_email'],
       'account_birthday': account['account_birthday'],
       'account_address': account['account_address'],
-      'is_kindergarten': account['is_kindergarten'] ? 1: 0,
+      'is_kindergarten': account['is_kindergarten'] ? 1 : 0,
     };
     final database = await this.database;
-    var result = await database.query('accounts',where:  'account_email = ?', whereArgs: [user['account_email']]);
-    if(result.isEmpty){
-      await database.insert('accounts',user);
-    }else{
-      await database.update('accounts',user,where: 'account_email = ?', whereArgs: [user['account_email']]);
+    var result = await database.query('accounts',
+        where: 'account_email = ?', whereArgs: [user['account_email']]);
+    if (result.isEmpty) {
+      await database.insert('accounts', user);
+    } else {
+      await database.update('accounts', user,
+          where: 'account_email = ?', whereArgs: [user['account_email']]);
     }
   }
+
   @override
   Future insertAccount(Account account) async {
     final database = await this.database;
-    var result = await database.query('accounts',where:  'account_email = ?', whereArgs: [account.accountEmail]);
-    if(result.isEmpty){
-      await database.insert('accounts',account.toMap());
-    }else{
-      await database.update('accounts',account.toMap(),where: 'account_email = ?', whereArgs: [account.accountEmail]);
+    var result = await database.query('accounts',
+        where: 'account_email = ?', whereArgs: [account.accountEmail]);
+    if (result.isEmpty) {
+      await database.insert('accounts', account.toMap());
+    } else {
+      await database.update('accounts', account.toMap(),
+          where: 'account_email = ?', whereArgs: [account.accountEmail]);
     }
   }
+
   @override
   close() async {
     var db = await database;
     var result = db.close();
     return result;
   }
-  
 }

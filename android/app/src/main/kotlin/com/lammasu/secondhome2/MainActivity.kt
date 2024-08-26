@@ -1,4 +1,4 @@
-package com.lammasu.secondhome2
+package dev.flutter.secondhome
 
 import io.flutter.embedding.android.FlutterActivity
 

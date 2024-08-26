@@ -1,0 +1,30 @@
+{
+  "flutter": {
+    "platforms": {
+      "android": {
+        "default": {
+          "projectId": "kindergarten-50094",
+          "appId": "1:132743123666:android:01c9cfdcefc2c98704130b",
+          "fileOutput": "android/app/google-services.json"
+        }
+      },
+      "ios": {
+        "default": {
+          "projectId": "kindergarten-50094",
+          "appId": "1:132743123666:ios:67ab62f223fa800e04130b",
+          "uploadDebugSymbols": false,
+          "fileOutput": "ios/Runner/GoogleService-Info.plist"
+        }
+      },
+      "dart": {
+        "lib/firebase_options.dart": {
+          "projectId": "kindergarten-50094",
+          "configurations": {
+            "android": "1:132743123666:android:01c9cfdcefc2c98704130b",
+            "ios": "1:132743123666:ios:67ab62f223fa800e04130b"
+          }
+        }
+      }
+    }
+  }
+}

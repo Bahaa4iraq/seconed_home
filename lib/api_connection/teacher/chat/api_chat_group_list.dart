@@ -14,10 +14,10 @@ class ChatGroupListAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
 
   getGroupList() async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response =
-          await get(mainApi + 'teacher/chatGroup/get', headers: _headers);
+          await get('${mainApi}teacher/chatGroup/get', headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else {
@@ -30,12 +30,12 @@ class ChatGroupListAPI extends GetConnect {
     }
   }
 
-  getChatOfGroup(String _groupId, int page) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  getChatOfGroup(String groupId, int page) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response = await get(
-          mainApi + 'teacher/chatGroup/messages/groupId/$_groupId/page/$page',
-          headers: _headers);
+          '${mainApi}teacher/chatGroup/messages/groupId/$groupId/page/$page',
+          headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else {
@@ -47,13 +47,13 @@ class ChatGroupListAPI extends GetConnect {
     }
   }
 
-  createGroup(dio.FormData _data) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  createGroup(dio.FormData data) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response = await dio.Dio().post(
-        mainApi + 'teacher/chatGroup/create',
-        data: _data,
-        options: dio.Options(headers: _headers),
+        '${mainApi}teacher/chatGroup/create',
+        data: data,
+        options: dio.Options(headers: headers),
         onSendProgress: (int sent, int total) {
           EasyLoading.showProgress(sent / total, status: "جار الرفع...");
           if (sent == total) {
@@ -74,14 +74,15 @@ class ChatGroupListAPI extends GetConnect {
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
   }
-  editGroup(dio.FormData _data) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
-    Logger().i(_headers);
+
+  editGroup(dio.FormData data) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
+    Logger().i(headers);
     try {
       final response = await dio.Dio().put(
-        mainApi + 'teacher/chatGroup/edit',
-        data: _data,
-        options: dio.Options(headers: _headers),
+        '${mainApi}teacher/chatGroup/edit',
+        data: data,
+        options: dio.Options(headers: headers),
         onSendProgress: (int sent, int total) {
           EasyLoading.showProgress(sent / total, status: "جار الرفع...");
           if (sent == total) {
@@ -104,16 +105,17 @@ class ChatGroupListAPI extends GetConnect {
     }
   }
 
-  Future<dynamic> deleteGroup(String id)async{
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  Future<dynamic> deleteGroup(String id) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response = await dio.Dio().delete(
-        mainApi + 'teacher/chatGroup/remove/$id',
-        options: dio.Options(headers: _headers),
+        '${mainApi}teacher/chatGroup/remove/$id',
+        options: dio.Options(headers: headers),
       );
       if (response.data['error'] == false) {
-        return response.data;
         EasyLoading.showSuccess(response.data['message'].toString());
+
+        return response.data;
       } else {
         EasyLoading.showError(response.data['message'].toString());
       }
@@ -124,15 +126,14 @@ class ChatGroupListAPI extends GetConnect {
     }
   }
 
-
   Future<bool> getChatGroupLockStatus(String groupId) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
 
     try {
       final response = await Dio().put(
-        mainApi + 'teacher/chatGroup/is_locked',
+        '${mainApi}teacher/chatGroup/is_locked',
         data: {"_id": groupId},
-        options: Options(headers: _headers),
+        options: Options(headers: headers),
       );
 
       if (response.statusCode == 401) {
@@ -157,13 +158,13 @@ class ChatGroupListAPI extends GetConnect {
   }
 
   Future<void> updateChatGroupLockStatus(String groupId, bool isLocked) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
 
     try {
       final response = await Dio().put(
-        mainApi + 'teacher/chatGroup/is_locked',
+        '${mainApi}teacher/chatGroup/is_locked',
         data: {"_id": groupId, "is_locked": isLocked},
-        options: Options(headers: _headers),
+        options: Options(headers: headers),
       );
 
       if (response.statusCode == 401) {

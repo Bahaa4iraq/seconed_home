@@ -3,7 +3,6 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 
 import '../../provider/auth_provider.dart';
-import '../../provider/student/provider_daily_review.dart';
 import '../../provider/student/provider_review.dart';
 import '../../static_files/my_color.dart';
 import '../../static_files/my_url.dart';
@@ -14,12 +13,13 @@ class ReviewAPI extends GetConnect {
 
   getReview() async {
     EasyLoading.show(status: "جار جلب البيانات");
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
-      final response = await get(mainApi + 'student/review', headers: _headers);
+      final response = await get('${mainApi}student/review', headers: headers);
       if (response.statusCode == 401) {
-
-        Logger().i("redirect");Auth().redirect();      } else if (response.body["error"] == false) {
+        Logger().i("redirect");
+        Auth().redirect();
+      } else if (response.body["error"] == false) {
         Get.put(ReviewDateProvider()).changeLoading(false);
         Get.put(ReviewDateProvider()).insertData(response.body['results']);
         EasyLoading.dismiss();
@@ -34,12 +34,12 @@ class ReviewAPI extends GetConnect {
     }
   }
 
-  addReview(String _text, String reviewId) async {
-    Map _data = {"review_father_note": _text, "review_id": reviewId};
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  addReview(String text, String reviewId) async {
+    Map data = {"review_father_note": text, "review_id": reviewId};
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response =
-          await put(mainApi + 'student/review', _data, headers: _headers);
+          await put('${mainApi}student/review', data, headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else {

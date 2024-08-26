@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import '../../../../../api_connection/teacher/api_notification.dart';
 import '../../../../../static_files/my_appbar.dart';
 import '../../../../../static_files/my_color.dart';
 import '../../../../../static_files/my_image_grid.dart';
@@ -20,11 +19,11 @@ class ShowMessage extends StatefulWidget {
   final VoidCallback? onUpdate;
 
   const ShowMessage(
-      {Key? key,
+      {super.key,
       required this.data,
       required this.contentUrl,
-      required this.notificationsType, this.onUpdate})
-      : super(key: key);
+      required this.notificationsType,
+      this.onUpdate});
 
   @override
   _ShowMessageState createState() => _ShowMessageState();
@@ -32,21 +31,19 @@ class ShowMessage extends StatefulWidget {
 
 class _ShowMessageState extends State<ShowMessage> {
   //["رسالة","تبليغ","واجب بيتي","ملخص","تقرير"]
-  void _launchURL(_url) async => await canLaunch(_url)
-      ? await launch(_url)
+  void launchU(_url) async => await canLaunchUrl(Uri.parse(_url))
+      ? await launchUrl(Uri.parse(_url))
       : throw 'Could not launch $_url';
-
 
   void _launchSocial(String url, String fallbackUrl) async {
     try {
-      bool launched =
-      await launch(url, forceSafariVC: false, forceWebView: false);
+      bool launched = await launchUrl(Uri.parse(url));
       if (!launched) {
-        await launch(fallbackUrl, forceSafariVC: false, forceWebView: false);
+        await launchUrl(Uri.parse(fallbackUrl));
       }
     } catch (e) {
       Logger().i("error");
-      await launch(fallbackUrl, forceSafariVC: false, forceWebView: false);
+      await launchUrl(Uri.parse(fallbackUrl));
     }
   }
 
@@ -61,13 +58,14 @@ class _ShowMessageState extends State<ShowMessage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar(widget.data['notifications_title'].toString(),MyColor.turquoise),
+      appBar: myAppBar(
+          widget.data['notifications_title'].toString(), MyColor.turquoise),
       body: ListView(
         children: [
           Padding(
               padding: const EdgeInsets.all(10),
-              child: imageGrid(
-                  widget.contentUrl, widget.data['notifications_imgs'],MyColor.turquoise)),
+              child: imageGrid(widget.contentUrl,
+                  widget.data['notifications_imgs'], MyColor.turquoise)),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Text(toDateAndTime(widget.data['created_at'], 12)),
@@ -91,20 +89,21 @@ class _ShowMessageState extends State<ShowMessage> {
               child: MaterialButton(
                 onPressed: () =>
                     Get.to(() => ShowStudentAnswers(data: widget.data)),
+                color: MyColor.white0,
                 child: const Text(
                   "عرض اجابات الطلبة",
                   style: TextStyle(color: MyColor.turquoise),
                 ),
-                color: MyColor.white0,
               ),
             ),
           if (widget.data['notifications_link'] != "" &&
               widget.data['notifications_link'] != null)
             InkWell(
-              onTap: () => _launchSocial(widget.data['notifications_link'],'www.google.com'),
-             // onTap: () => _launchURL(widget.data['notifications_link']),
+              onTap: () => _launchSocial(
+                  widget.data['notifications_link'], 'www.google.com'),
+              // onTap: () => _launchURL(widget.data['notifications_link']),
               child: Container(
-                margin: const EdgeInsets.only(right: 20, left: 20,top:20),
+                margin: const EdgeInsets.only(right: 20, left: 20, top: 20),
                 padding: const EdgeInsets.all(5),
                 decoration: BoxDecoration(
                     color: MyColor.turquoise.withOpacity(.17),

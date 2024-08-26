@@ -4,7 +4,6 @@ import 'package:get_storage/get_storage.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:secondhome2/provider/student/provider_daily_review.dart';
 import 'package:secondhome2/provider/teacher/provider_teacher_dashboard.dart';
-import 'firebase_options.dart';
 import 'provider/auth_provider.dart';
 import 'provider/driver/provider_maps.dart';
 import 'provider/driver/provider_notification.dart';
@@ -38,9 +37,7 @@ import 'provider/teacher/provider_weekly_schedule.dart';
 import 'static_files/my_firebase_notification.dart';
 
 Future<void> init() async {
-  await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
-  );
+  await Firebase.initializeApp();
   await GetStorage.init();
 
   if (intl.Intl.defaultLocale != "en_US") {

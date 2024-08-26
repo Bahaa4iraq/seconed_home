@@ -31,7 +31,7 @@ import '../review/review_date.dart';
 
 class Dashboard extends StatefulWidget {
   final Map userData;
-  const Dashboard({Key? key, required this.userData}) : super(key: key);
+  const Dashboard({super.key, required this.userData});
   @override
   _DashboardState createState() => _DashboardState();
 }
@@ -64,11 +64,7 @@ class _DashboardState extends State<Dashboard>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    final double data =
-        // ignore: deprecated_member_use
-        MediaQueryData.fromView(WidgetsBinding.instance.window)
-            .size
-            .shortestSide;
+
     return Scaffold(
       body: SafeArea(
         child: Container(
@@ -212,45 +208,60 @@ class _DashboardState extends State<Dashboard>
                                   return ClipRRect(
                                     borderRadius: BorderRadius.circular(100),
                                     child: InkWell(
-                                      onTap: () {
-                                        Get.to(() => ShowLatestNews(
-                                              data: _data.newsData[index],
-                                              //tag: _data.newsData[index]['latest_news_img'],
-                                            ));
-                                      },
-                                        child:
-                                        Container(
+                                        onTap: () {
+                                          Get.to(() => ShowLatestNews(
+                                                data: _data.newsData[index],
+                                                //tag: _data.newsData[index]['latest_news_img'],
+                                              ));
+                                        },
+                                        child: Container(
                                           width: Get.width,
                                           decoration: BoxDecoration(
-                                            color: MyColor.turquoise2,
-                                            borderRadius: BorderRadius.circular(100)
-                                          ),
+                                              color: MyColor.turquoise2,
+                                              borderRadius:
+                                                  BorderRadius.circular(100)),
                                           child: Padding(
-                                            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 24.0),
                                             child: Row(
                                               children: [
-                                                _data.newsData[index]['latest_news_title'] == null
+                                                _data.newsData[index][
+                                                            'latest_news_title'] ==
+                                                        null
                                                     ? Container()
                                                     : Expanded(
-                                                      child: Center(
-                                                        child: SizedBox(
-                                                            width: 120,
-                                                            child: Text(
-                                                              _data.newsData[index]['latest_news_title'],
-                                                              style: const TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: MyColor.white0),
-                                                              textAlign: TextAlign.center,
-                                                            )),
+                                                        child: Center(
+                                                          child: SizedBox(
+                                                              width: 120,
+                                                              child: Text(
+                                                                _data.newsData[
+                                                                        index][
+                                                                    'latest_news_title'],
+                                                                style: const TextStyle(
+                                                                    fontSize:
+                                                                        22,
+                                                                    fontWeight:
+                                                                        FontWeight
+                                                                            .bold,
+                                                                    color: MyColor
+                                                                        .white0),
+                                                                textAlign:
+                                                                    TextAlign
+                                                                        .center,
+                                                              )),
+                                                        ),
                                                       ),
-                                                    ),
                                                 Padding(
-                                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                                  child: Image.asset("assets/img/ايكونه تطبيق 1.png"),
+                                                  padding: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 8.0),
+                                                  child: Image.asset(
+                                                      "assets/img/ايكونه تطبيق 1.png"),
                                                 )
                                               ],
                                             ),
                                           ),
-                                        )
-                                    ),
+                                        )),
                                   );
                                 },
                                 loop: false,
@@ -262,7 +273,8 @@ class _DashboardState extends State<Dashboard>
                           ],
                         )),
               Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0,vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
                 child: Align(
                   alignment: Alignment.centerRight,
                   child: InkWell(
@@ -306,7 +318,10 @@ class _DashboardState extends State<Dashboard>
                                           child: ItemMainMenu(
                                             img: "assets/img/study_table.png",
                                             nav: WeeklySchedule(),
-                                            features: val.mainData['account']['school']['school_features']['features_schedule_weekly'],
+                                            features: val.mainData['account']
+                                                        ['school']
+                                                    ['school_features']
+                                                ['features_schedule_weekly'],
                                           ),
                                         ),
                                         SizedBox(

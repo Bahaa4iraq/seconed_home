@@ -1,9 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
-
-import '../../../api_connection/teacher/chat/api_chat_student_list.dart';
 import '../../../provider/auth_provider.dart';
 import '../../../provider/teacher/chat/chat_all_list_items.dart';
 import '../../../provider/teacher/chat/chat_message.dart';
@@ -36,18 +33,20 @@ class _ChatStudentListState extends State<ChatStudentList> {
   List _classesId = [];
   late var _studyYear;
 
-  search(){
+  search() {
     page = 0;
     EasyLoading.show(status: "جار جلب البيانات");
-    chatStudentProvider.getStudent(page, _classesId, _studyYear, searchController.text);
+    chatStudentProvider.getStudent(
+        page, _classesId, _studyYear, searchController.text);
   }
+
   _getStudentList() {
-    _studyYear= _mainDataGetProvider.mainData['setting'][0]['setting_year'];
+    _studyYear = _mainDataGetProvider.mainData['setting'][0]['setting_year'];
     if (page != 0) {
       EasyLoading.show(status: "جار جلب البيانات");
     }
-    chatStudentProvider.getStudent(page, _classesId, _studyYear, searchController.text);
-
+    chatStudentProvider.getStudent(
+        page, _classesId, _studyYear, searchController.text);
   }
 
   @override
@@ -75,7 +74,7 @@ class _ChatStudentListState extends State<ChatStudentList> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<ChatStudentListProvider>(builder: (val) {
-      return val.student.value.isEmpty && val.isLoading
+      return val.student.isEmpty && val.isLoading
           ? Center(
               child: loadingChat(),
             )
@@ -128,7 +127,7 @@ class _ChatStudentListState extends State<ChatStudentList> {
                       itemBuilder: (BuildContext context, int index) =>
                           _student(val.student[index], val.contentUrl),
                       controller: _scrollController,
-                      padding: const EdgeInsets.only(top:10),
+                      padding: const EdgeInsets.only(top: 10),
                       //separatorBuilder: (BuildContext context, int index)=>const Divider(),
                       itemCount: val.student.length),
                 ),

@@ -36,7 +36,7 @@ import '../student/home_page_student.dart';
 
 class TeacherProfile extends StatefulWidget {
   final Map userData;
-  const TeacherProfile({Key? key, required this.userData}) : super(key: key);
+  const TeacherProfile({super.key, required this.userData});
 
   @override
   _TeacherProfileState createState() => _TeacherProfileState();
@@ -44,12 +44,9 @@ class TeacherProfile extends StatefulWidget {
 
 class _TeacherProfileState extends State<TeacherProfile>
     with AutomaticKeepAliveClientMixin {
-  final TextEditingController _zoomName = TextEditingController();
-  final _formCheck = GlobalKey<FormState>();
   final AccountProvider accountProvider = Get.put(AccountProvider());
 
   TokenProvider get tokenProvider => Get.put(TokenProvider());
-
 
   @override
   bool get wantKeepAlive => true;
@@ -88,28 +85,23 @@ class _TeacherProfileState extends State<TeacherProfile>
     await accountProvider.onClickAccount(account);
     tokenProvider.addToken(account);
 
-
     if (account['account_type'] == 'student') {
       Get.delete<StudentDashboardProvider>();
 
-      if(account["is_kindergarten"]) {
+      if (account["is_kindergarten"]) {
         Get.offAll(() => HomePageStudent(userData: account));
-      }else{
+      } else {
         Get.offAll(() => HomePageNursery(userData: account));
       }
     } else if (account['account_type'] == 'teacher') {
       Get.delete<TeacherDashboardProvider>();
-      if(account["is_kindergarten"]){
+      if (account["is_kindergarten"]) {
         Get.offAll(() => HomePageKindergartenTeacher(userData: account));
-      }
-      else{
+      } else {
         Get.offAll(() => HomePageNurseryTeacher(userData: account));
-
       }
-
     }
   }
-
 
   Future<XFile?> compressAndGetFile(XFile file, String targetPath) async {
     String getRand = RandomGen().getRandomString(5);
@@ -118,7 +110,6 @@ class _TeacherProfileState extends State<TeacherProfile>
         quality: 40);
     return result;
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -155,12 +146,14 @@ class _TeacherProfileState extends State<TeacherProfile>
                   confirm: MaterialButton(
                     color: MyColor.turquoise,
                     onPressed: () {
-                      Auth().loginOut().then((res) async{
+                      Auth().loginOut().then((res) async {
                         if (res['error'] == false) {
-                          await accountProvider.deleteAccount(widget.userData['account_email']);
-                          if(accountProvider.accounts.firstOrNull !=null){
-                            onOtherAccountFound(accountProvider.accounts.first.toMap());
-                          }else{
+                          await accountProvider
+                              .deleteAccount(widget.userData['account_email']);
+                          if (accountProvider.accounts.firstOrNull != null) {
+                            onOtherAccountFound(
+                                accountProvider.accounts.first.toMap());
+                          } else {
                             Get.offAll(() => const LoginPage());
                             Get.delete<TeacherDashboardProvider>();
                             FlutterAppBadger.removeBadge();
@@ -313,9 +306,8 @@ class _TeacherProfileState extends State<TeacherProfile>
                     if (_.mainData['account']["account_division_current"]
                             ['class_name'] !=
                         null)
-                    _text("الروضة",
-                        _.mainData['account']['school']['school_name']),
-
+                      _text("الروضة",
+                          _.mainData['account']['school']['school_name']),
 
                     if (widget.userData['account_birthday'] != null)
                       _text("الميلاد",
@@ -350,10 +342,12 @@ class _TeacherProfileState extends State<TeacherProfile>
                         ///AttachDocuments()
                         _buttons("المستمسكات", const AttachDocuments(),
                             LineIcons.upload, true),
-                        SizedBox(height: 10,),
+                        SizedBox(
+                          height: 10,
+                        ),
 
-                        _buttons2("اضافة حساب", AccountsScreen(), LineIcons.fileInvoice,true),
-
+                        _buttons2("اضافة حساب", AccountsScreen(),
+                            LineIcons.fileInvoice, true),
 
                         ///ConnectUs()
                         // _buttons("call the school", ConnectUs(), LineIcons.buildingAlt,true),
@@ -413,8 +407,8 @@ class _TeacherProfileState extends State<TeacherProfile>
       child: GestureDetector(
         onTap: enable
             ? () {
-          Get.to(() => AccountsScreen());
-        }
+                Get.to(() => AccountsScreen());
+              }
             : null,
         child: Container(
             padding: const EdgeInsets.all(8),
@@ -440,7 +434,6 @@ class _TeacherProfileState extends State<TeacherProfile>
       ),
     );
   }
-
 
   _buttonsSession(_t, Widget _nav) {
     return SizedBox(

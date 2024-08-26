@@ -9,7 +9,6 @@ import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:get/get.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:logger/logger.dart';
 import 'package:path/path.dart' as p;
 import 'package:secondhome2/provider/accounts_provider.dart';
 import 'package:secondhome2/provider/student/provider_student_dashboard.dart';
@@ -35,7 +34,7 @@ import 'attach_documents.dart';
 class StudentProfile extends StatefulWidget {
   final Map userData;
 
-  const StudentProfile({Key? key, required this.userData}) : super(key: key);
+  const StudentProfile({super.key, required this.userData});
 
   @override
   _StudentProfileState createState() => _StudentProfileState();
@@ -43,8 +42,6 @@ class StudentProfile extends StatefulWidget {
 
 class _StudentProfileState extends State<StudentProfile>
     with AutomaticKeepAliveClientMixin {
-  final TextEditingController _zoomName = TextEditingController();
-  final _formCheck = GlobalKey<FormState>();
   final AccountProvider accountProvider = Get.put(AccountProvider());
 
   TokenProvider get tokenProvider => Get.put(TokenProvider());
@@ -53,25 +50,21 @@ class _StudentProfileState extends State<StudentProfile>
     await accountProvider.onClickAccount(account);
     tokenProvider.addToken(account);
 
-
     if (account['account_type'] == 'student') {
       Get.delete<StudentDashboardProvider>();
 
-      if(account["is_kindergarten"]) {
+      if (account["is_kindergarten"]) {
         Get.offAll(() => HomePageStudent(userData: account));
-      }else{
+      } else {
         Get.offAll(() => HomePageNursery(userData: account));
       }
     } else if (account['account_type'] == 'teacher') {
       Get.delete<TeacherDashboardProvider>();
-      if(account["is_kindergarten"]){
+      if (account["is_kindergarten"]) {
         Get.offAll(() => HomePageKindergartenTeacher(userData: account));
-      }
-      else{
+      } else {
         Get.offAll(() => HomePageNurseryTeacher(userData: account));
-
       }
-
     }
   }
 
@@ -86,13 +79,13 @@ class _StudentProfileState extends State<StudentProfile>
     if (result != null) {
       XFile file = XFile(result.files.single.path!);
       compressAndGetFile(file, p.dirname(file.path)).then((value) {
-        dio.FormData _data = dio.FormData.fromMap({
+        dio.FormData data = dio.FormData.fromMap({
           "account_img": dio.MultipartFile.fromFileSync(value!.path,
               filename: 'pic.jpg', contentType: MediaType('image', 'jpg')),
           "account_img_old": Get.put(MainDataGetProvider()).mainData['account']
               ['account_img']
         });
-        StudentProfileAPI().editImgProfile(_data).then((res) async {
+        StudentProfileAPI().editImgProfile(data).then((res) async {
           if (res['error'] == false) {
             await Auth().getStudentInfo();
             EasyLoading.showSuccess("تم تغيير الصورة بنجاح");
@@ -151,12 +144,14 @@ class _StudentProfileState extends State<StudentProfile>
                   confirm: MaterialButton(
                     color: MyColor.pink,
                     onPressed: () {
-                      Auth().loginOut().then((res) async{
+                      Auth().loginOut().then((res) async {
                         if (res['error'] == false) {
-                          await accountProvider.deleteAccount(widget.userData['account_email']);
-                          if(accountProvider.accounts.firstOrNull !=null){
-                            onOtherAccountFound(accountProvider.accounts.first.toMap());
-                          }else{
+                          await accountProvider
+                              .deleteAccount(widget.userData['account_email']);
+                          if (accountProvider.accounts.firstOrNull != null) {
+                            onOtherAccountFound(
+                                accountProvider.accounts.first.toMap());
+                          } else {
                             Get.offAll(() => const LoginPage());
                             Get.delete<StudentDashboardProvider>();
                             FlutterAppBadger.removeBadge();
@@ -370,13 +365,8 @@ class _StudentProfileState extends State<StudentProfile>
                         ///AttachDocuments()
                         _buttons("المستمسكات", const AttachDocuments(),
                             LineIcons.upload, true),
-                        _buttons(
-                            "اضافة حساب",
-                            AccountsScreen(
-
-                            ),
-                            LineIcons.fileInvoice,
-                            true),
+                        _buttons("اضافة حساب", const AccountsScreen(),
+                            LineIcons.fileInvoice, true),
 
                         _buttons(
                             "اتصل بنا",
@@ -399,7 +389,7 @@ class _StudentProfileState extends State<StudentProfile>
         }));
   }
 
-  _buttons(_t, Widget _nav, _icon, bool enable) {
+  _buttons(t, Widget nav, icon, bool enable) {
     return SizedBox(
       width: Get.width / 2.5,
       child: MaterialButton(
@@ -407,7 +397,7 @@ class _StudentProfileState extends State<StudentProfile>
           elevation: 0,
           onPressed: enable
               ? () {
-                  Get.to(() => _nav);
+                  Get.to(() => nav);
                 }
               : null,
           shape:
@@ -415,7 +405,7 @@ class _StudentProfileState extends State<StudentProfile>
           child: Row(
             children: [
               AutoSizeText(
-                _t,
+                t,
                 maxFontSize: 14,
                 minFontSize: 11,
                 maxLines: 1,
@@ -423,7 +413,7 @@ class _StudentProfileState extends State<StudentProfile>
               ),
               const Spacer(),
               Icon(
-                _icon,
+                icon,
                 color: MyColor.white0,
               )
             ],
@@ -431,18 +421,18 @@ class _StudentProfileState extends State<StudentProfile>
     );
   }
 
-  _buttonsSession(_t, Widget _nav) {
+  _buttonsSession(t, Widget nav) {
     return SizedBox(
       width: Get.width / 2.5,
       child: MaterialButton(
         color: MyColor.pink,
         elevation: 0,
         onPressed: () {
-          Get.to(() => _nav);
+          Get.to(() => nav);
         },
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
         child: AutoSizeText(
-          _t,
+          t,
           maxFontSize: 14,
           minFontSize: 11,
           maxLines: 1,
@@ -452,20 +442,20 @@ class _StudentProfileState extends State<StudentProfile>
     );
   }
 
-  _text(String _first, String _second) {
+  _text(String first, String second) {
     return Padding(
       padding: const EdgeInsets.only(right: 20, left: 20),
       child: RichText(
         text: TextSpan(
-            text: _first,
+            text: first,
             style: const TextStyle(color: Colors.black, fontSize: 17),
             children: <TextSpan>[
-              TextSpan(
+              const TextSpan(
                 text: " : ",
-                style: const TextStyle(color: MyColor.pink, fontSize: 17),
+                style: TextStyle(color: MyColor.pink, fontSize: 17),
               ),
               TextSpan(
-                text: _second,
+                text: second,
                 style: const TextStyle(color: MyColor.pink, fontSize: 17),
               ),
             ]),

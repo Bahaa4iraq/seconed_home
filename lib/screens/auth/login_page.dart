@@ -14,9 +14,11 @@ import 'package:platform_device_id/platform_device_id.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
+import 'package:secondhome2/api_connection/student/api_notification.dart';
 import 'package:secondhome2/screens/auth/accounts_screen.dart';
 import 'package:secondhome2/screens/kindergarten_teacher/teacher_kindergarten_home.dart';
 import 'package:secondhome2/screens/nursery_teacher/teacher_nursery_home.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api_connection/auth_connection.dart';
 import '../../provider/auth_provider.dart';
@@ -29,7 +31,7 @@ import '../student/home_page_student.dart';
 // import 'requestJop.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({Key? key}) : super(key: key);
+  const LoginPage({super.key});
 
   @override
   _LoginPageState createState() => _LoginPageState();
@@ -43,7 +45,7 @@ class _LoginPageState extends State<LoginPage> {
   bool isSwitched = false;
 
   final RoundedLoadingButtonController _btnController =
-  RoundedLoadingButtonController();
+      RoundedLoadingButtonController();
   final _formCheck = GlobalKey<FormState>();
   // TextEditingController email = TextEditingController(text: 'lilian@secondhome.com'); // وردي
   TextEditingController email = TextEditingController();
@@ -53,20 +55,20 @@ class _LoginPageState extends State<LoginPage> {
   var storage = GetStorage();
   Map? authData;
 
-  shaConvert(_pass) {
-    var bytes = utf8.encode(_pass);
+  shaConvert(pass) {
+    var bytes = utf8.encode(pass);
     Digest sha512Result = sha512.convert(bytes);
     return sha512Result.toString();
   }
 
   _login() async {
     final box = GetStorage();
-    Map _data = {
+    Map data = {
       "account_email": email.text,
       "account_password": shaConvert(pass.text),
       "auth_ip": authData!['query'].toString(),
       "auth_city":
-      authData!['country'].toString() + authData!['city'].toString(),
+          authData!['country'].toString() + authData!['city'].toString(),
       "auth_lon": authData!['lon'].toString(),
       "auth_lat": authData!['lat'].toString(),
       "auth_phone_details": await getDeviceInfo(),
@@ -75,7 +77,7 @@ class _LoginPageState extends State<LoginPage> {
     };
 
     if (_formCheck.currentState!.validate() && authData != null) {
-      Auth().login(_data).then((res) async {
+      Auth().login(data).then((res) async {
         if (!res['error']) {
           _btnController.success();
           await box.write('_userData', res['results']);
@@ -85,18 +87,18 @@ class _LoginPageState extends State<LoginPage> {
 
             if (res['results']["is_kindergarten"]) {
               Get.offAll(() => HomePageStudent(userData: res['results']));
-            }else{
+            } else {
               Get.offAll(() => HomePageNursery(userData: res['results']));
             }
-
-
           } else if (res['results']["account_type"] == "teacher") {
             tokenProvider.addAccountToDatabase(res['results']);
 
             if (res['results']["is_kindergarten"]) {
-              Get.offAll(() => HomePageKindergartenTeacher(userData: res['results']));
-            }else{
-              Get.offAll(() => HomePageNurseryTeacher(userData: res['results']));
+              Get.offAll(
+                  () => HomePageKindergartenTeacher(userData: res['results']));
+            } else {
+              Get.offAll(
+                  () => HomePageNurseryTeacher(userData: res['results']));
             }
           } else if (res['results']["account_type"] == "assistance") {
             // Timer(const Duration(seconds: 1), () {
@@ -132,7 +134,31 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       _btnController.reset();
     }
+
+    print('654rtfghfdsdfgchth');
+    _getStudentInfo();
   }
+
+  _getStudentInfo() async {
+    Map data = {
+      "study_year": Get.put(MainDataGetProvider()).mainData['setting'][0]
+          ['setting_year'],
+      "page": 0,
+      "class_school": Get.put(MainDataGetProvider()).mainData['account']
+          ['account_division_current']['_id'],
+      "type": null,
+    };
+
+    String schoolId =
+        Get.put(MainDataGetProvider()).mainData['account']['school']['_id'];
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setString('school_id', schoolId);
+
+    await NotificationsAPI().getNotifications(data);
+  }
+
+  ///teacher@g.com
 
   ///teacher@g.com
   getDeviceInfo() async {
@@ -189,13 +215,11 @@ class _LoginPageState extends State<LoginPage> {
             height: Get.height,
             child: Column(
               children: [
-
                 Padding(
-                  padding:  EdgeInsets.only(top: Get.height* .05),
+                  padding: EdgeInsets.only(top: Get.height * .05),
                   child: Image.asset(
                     "assets/img/main.png",
                     height: Get.height * 0.3,
-
                   ),
                 ),
 
@@ -228,7 +252,8 @@ class _LoginPageState extends State<LoginPage> {
                               contentPadding: const EdgeInsets.symmetric(
                                   vertical: 18.0, horizontal: 18),
                               //hintText: "الايميل",
-                              errorStyle: const TextStyle(color: MyColor.grayDark),
+                              errorStyle:
+                                  const TextStyle(color: MyColor.grayDark),
                               fillColor: Colors.transparent,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(55.0),
@@ -249,11 +274,11 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               //prefixIcon: const Icon(LineIcons.user),
                               filled: true
-                            //fillColor: Colors.green
-                          ),
+                              //fillColor: Colors.green
+                              ),
                           validator: (value) {
                             var result =
-                            value!.length < 3 ? "املئ البيانات" : null;
+                                value!.length < 3 ? "املئ البيانات" : null;
                             return result;
                           },
                         ),
@@ -281,7 +306,8 @@ class _LoginPageState extends State<LoginPage> {
                           decoration: InputDecoration(
                               contentPadding: const EdgeInsets.symmetric(
                                   vertical: 18.0, horizontal: 18),
-                              errorStyle: const TextStyle(color: MyColor.grayDark),
+                              errorStyle:
+                                  const TextStyle(color: MyColor.grayDark),
                               fillColor: Colors.transparent,
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(55.0),
@@ -302,12 +328,12 @@ class _LoginPageState extends State<LoginPage> {
                               ),
                               //prefixIcon: const Icon(LineIcons.user),
                               filled: true
-                            //fillColor: Colors.green
-                          ),
+                              //fillColor: Colors.green
+                              ),
                           obscureText: _obscurePassword,
                           validator: (value) {
                             var result =
-                            value!.length < 4 ? "املئ البيانات" : null;
+                                value!.length < 4 ? "املئ البيانات" : null;
                             return result;
                           },
                         ),
@@ -339,7 +365,14 @@ class _LoginPageState extends State<LoginPage> {
                   ),
                 ),
                 SizedBox(height: Get.height * 0.06),
-                _buttons("حساباتي",  AccountsScreen(),'assets/img/dashboard/group.svg',),
+                Padding(
+                  padding: const EdgeInsets.all(10),
+                  child: _buttons(
+                    "حساباتي",
+                    const AccountsScreen(),
+                    'assets/img/dashboard/k_logo.svg',
+                  ),
+                ),
 
                 // Container(
                 //   padding:
@@ -371,35 +404,42 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 
-  _buttons(_t, Widget _nav,String icon) {
+  _buttons(t, Widget nav, String icon) {
     return SizedBox(
-      height: 50 ,
+      height: 50,
       child: MaterialButton(
           color: MyColor.turquoise,
           elevation: 8,
           onPressed: () {
-            Get.to(() => _nav);
+            Get.to(() => nav);
           },
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               AutoSizeText(
-                _t,
+                t,
                 maxFontSize: 15,
                 minFontSize: 12,
                 maxLines: 1,
-                style: const TextStyle(color: MyColor.white0,fontWeight: FontWeight.bold),
+                style: const TextStyle(
+                    color: MyColor.white0, fontWeight: FontWeight.bold),
               ),
-              SizedBox(width: 10,),
-
-              SvgPicture.asset(icon,height: 20,color: Colors.white,),
+              const SizedBox(
+                width: 10,
+              ),
+              SvgPicture.asset(
+                icon,
+                height: 20,
+                color: Colors.white,
+              ),
             ],
           )),
     );
   }
 
-  txtFormField(TextEditingController _controller, String _hint) {
+  txtFormField(TextEditingController controller, String hint) {
     return Container(
       constraints: const BoxConstraints(maxWidth: 350),
       padding: const EdgeInsets.only(top: 15),

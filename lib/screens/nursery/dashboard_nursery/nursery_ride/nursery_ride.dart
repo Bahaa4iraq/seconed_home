@@ -14,7 +14,7 @@ import 'nursery_map.dart';
 
 class StudentDriver extends StatefulWidget {
   final Map userData;
-  const StudentDriver({Key? key, required this.userData}) : super(key: key);
+  const StudentDriver({super.key, required this.userData});
 
   @override
   _StudentDriverState createState() => _StudentDriverState();
@@ -58,8 +58,7 @@ class _StudentDriverState extends State<StudentDriver> {
             ),
             child: child!,
           );
-        }
-    );
+        });
     if (picked != null && picked != selectedDate) {
       String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
       _date = formattedDate;
@@ -96,57 +95,52 @@ class _StudentDriverState extends State<StudentDriver> {
             height: 20,
           ),
           GetBuilder<MainDataGetProvider>(builder: (val) {
-            return val.mainData == null
+            return val.mainData['account']['account_img'] == null
                 ? Center(
                     child: Container(
-                      constraints: const BoxConstraints(minWidth: 100, maxWidth: 200, minHeight: 100, maxHeight: 200),
+                      constraints: const BoxConstraints(
+                          minWidth: 100,
+                          maxWidth: 200,
+                          minHeight: 100,
+                          maxHeight: 200),
                       width: Get.height / 6,
                       height: Get.height / 6,
                       decoration: BoxDecoration(
                           border: Border.all(width: 1.5, color: MyColor.pink),
-                          borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10.0)),
                           shape: BoxShape.rectangle),
                       child: ClipRRect(
-                        borderRadius: const BorderRadius.all(Radius.circular(10.0)),
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10.0)),
                         child: Image.asset("assets/img/graduated.png"),
                       ),
                     ),
                   )
-                : val.mainData['account']['account_img'] == null
-                    ? Center(
-                        child: Container(
-                          constraints: const BoxConstraints(minWidth: 100, maxWidth: 200, minHeight: 100, maxHeight: 200),
-                          width: Get.height / 6,
-                          height: Get.height / 6,
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 1.5, color: MyColor.pink),
-                              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                              shape: BoxShape.rectangle),
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                            child: Image.asset("assets/img/graduated.png"),
-                          ),
+                : Center(
+                    child: Container(
+                      width: Get.height / 6,
+                      height: Get.height / 6,
+                      decoration: BoxDecoration(
+                          border: Border.all(width: 1.5, color: MyColor.pink),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10.0)),
+                          shape: BoxShape.rectangle),
+                      child: ClipRRect(
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(10.0)),
+                        child: CachedNetworkImage(
+                          imageUrl: val.contentUrl +
+                              val.mainData['account']['account_img'],
+                          fit: BoxFit.cover,
+                          placeholder: (context, url) =>
+                              const CircularProgressIndicator(),
+                          errorWidget: (context, url, error) =>
+                              const Icon(Icons.error),
                         ),
-                      )
-                    : Center(
-                        child: Container(
-                          width: Get.height / 6,
-                          height: Get.height / 6,
-                          decoration: BoxDecoration(
-                              border: Border.all(width: 1.5, color: MyColor.pink),
-                              borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                              shape: BoxShape.rectangle),
-                          child: ClipRRect(
-                            borderRadius: const BorderRadius.all(Radius.circular(10.0)),
-                            child: CachedNetworkImage(
-                              imageUrl: val.contentUrl + val.mainData['account']['account_img'],
-                              fit: BoxFit.cover,
-                              placeholder: (context, url) => const CircularProgressIndicator(),
-                              errorWidget: (context, url, error) => const Icon(Icons.error),
-                            ),
-                          ),
-                        ),
-                      );
+                      ),
+                    ),
+                  );
           }),
           Container(
             padding: const EdgeInsets.only(top: 10, bottom: 10),
@@ -160,7 +154,10 @@ class _StudentDriverState extends State<StudentDriver> {
                   minFontSize: 15,
                   maxFontSize: 20,
                   overflow: TextOverflow.ellipsis,
-                  style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: MyColor.black),
+                  style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: MyColor.black),
                 ),
                 AutoSizeText(
                   widget.userData['account_name'].toString(),
@@ -168,7 +165,10 @@ class _StudentDriverState extends State<StudentDriver> {
                   minFontSize: 15,
                   maxFontSize: 20,
                   overflow: TextOverflow.ellipsis,
-                  style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold, color: MyColor.pink),
+                  style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: MyColor.pink),
                 ),
               ],
             ),
@@ -179,21 +179,73 @@ class _StudentDriverState extends State<StudentDriver> {
           GetBuilder<StudentRideProvider>(builder: (val) {
             return Column(
               children: [
-                val.data.where((element) => element['driver_student_ride_status'] == "PickupFromHome").length == 1
-                    ? _listTile("تم الصعود الى الخط", true,
-                        toTimeOnly(val.data.where((element) => element['driver_student_ride_status'] == "PickupFromHome").toList()[0]['created_at'], 12))
+                val.data
+                            .where((element) =>
+                                element['driver_student_ride_status'] ==
+                                "PickupFromHome")
+                            .length ==
+                        1
+                    ? _listTile(
+                        "تم الصعود الى الخط",
+                        true,
+                        toTimeOnly(
+                            val.data
+                                .where((element) =>
+                                    element['driver_student_ride_status'] ==
+                                    "PickupFromHome")
+                                .toList()[0]['created_at'],
+                            12))
                     : _listTile("تم الصعود الى الخط", false, null),
-                val.data.where((element) => element['driver_student_ride_status'] == "GettingSchool").length == 1
-                    ? _listTile("تم الوصول للمدرسة", true,
-                        toTimeOnly(val.data.where((element) => element['driver_student_ride_status'] == "GettingSchool").toList()[0]['created_at'], 12))
+                val.data
+                            .where((element) =>
+                                element['driver_student_ride_status'] ==
+                                "GettingSchool")
+                            .length ==
+                        1
+                    ? _listTile(
+                        "تم الوصول للمدرسة",
+                        true,
+                        toTimeOnly(
+                            val.data
+                                .where((element) =>
+                                    element['driver_student_ride_status'] ==
+                                    "GettingSchool")
+                                .toList()[0]['created_at'],
+                            12))
                     : _listTile("تم الوصول للمدرسة", false, null),
-                val.data.where((element) => element['driver_student_ride_status'] == "PickupFromSchool").length == 1
-                    ? _listTile("تم الصعود من المدرسة", true,
-                        toTimeOnly(val.data.where((element) => element['driver_student_ride_status'] == "PickupFromSchool").toList()[0]['created_at'], 12))
+                val.data
+                            .where((element) =>
+                                element['driver_student_ride_status'] ==
+                                "PickupFromSchool")
+                            .length ==
+                        1
+                    ? _listTile(
+                        "تم الصعود من المدرسة",
+                        true,
+                        toTimeOnly(
+                            val.data
+                                .where((element) =>
+                                    element['driver_student_ride_status'] ==
+                                    "PickupFromSchool")
+                                .toList()[0]['created_at'],
+                            12))
                     : _listTile("تم الصعود من المدرسة", false, null),
-                val.data.where((element) => element['driver_student_ride_status'] == "GettingHome").length == 1
-                    ? _listTile("تم الوصول للمنزل", true,
-                        toTimeOnly(val.data.where((element) => element['driver_student_ride_status'] == "GettingHome").toList()[0]['created_at'], 12))
+                val.data
+                            .where((element) =>
+                                element['driver_student_ride_status'] ==
+                                "GettingHome")
+                            .length ==
+                        1
+                    ? _listTile(
+                        "تم الوصول للمنزل",
+                        true,
+                        toTimeOnly(
+                            val.data
+                                .where((element) =>
+                                    element['driver_student_ride_status'] ==
+                                    "GettingHome")
+                                .toList()[0]['created_at'],
+                            12))
                     : _listTile("تم الوصول للمنزل", false, null),
               ],
             );
@@ -203,20 +255,28 @@ class _StudentDriverState extends State<StudentDriver> {
           ),
           GetBuilder<MainDataGetProvider>(builder: (val) {
             return Container(
-              decoration: const BoxDecoration(shape: BoxShape.circle, color: MyColor.pink),
+              decoration: const BoxDecoration(
+                  shape: BoxShape.circle, color: MyColor.pink),
               child: TextButton(
                 onPressed: () {
                   // todo gps doing
                   val.mainData['account']["account_driver"] == null
-                      ? Get.snackbar("ملاحظة", "انت غير متواجد مع سائق", colorText: Colors.white, backgroundColor: Colors.orange)
-                      : val.mainData['account']['school']['school_features']['features_gps']
-                      ? Get.to(()=>const StudentsMap())
-                      : Get.snackbar("ملاحظة", "هذه الميزة غير مفعلة,الرجاء الاتصال بالمدرسة", colorText: Colors.white, backgroundColor: Colors.orange);
+                      ? Get.snackbar("ملاحظة", "انت غير متواجد مع سائق",
+                          colorText: Colors.white,
+                          backgroundColor: Colors.orange)
+                      : val.mainData['account']['school']['school_features']
+                              ['features_gps']
+                          ? Get.to(() => const StudentsMap())
+                          : Get.snackbar("ملاحظة",
+                              "هذه الميزة غير مفعلة,الرجاء الاتصال بالمدرسة",
+                              colorText: Colors.white,
+                              backgroundColor: Colors.orange);
                   //_mainDataGetProvider.mainData['account']["account_driver"]
                 },
                 child: const Text(
                   "GPS",
-                  style: TextStyle(color: MyColor.white0, fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                      color: MyColor.white0, fontWeight: FontWeight.bold),
                 ),
               ),
             );
@@ -231,21 +291,24 @@ class _StudentDriverState extends State<StudentDriver> {
     );
   }
 
-  _listTile(_title, _value, _date) {
+  _listTile(title, value, date) {
     return Theme(
-      data: ThemeData(unselectedWidgetColor: MyColor.pink, primarySwatch: MyColor().pinkMaterial),
+      data: ThemeData(
+          unselectedWidgetColor: MyColor.pink,
+          primarySwatch: MyColor().pinkMaterial),
       child: CheckboxListTile(
         title: Text(
-          _title,
-          style: const TextStyle(color: MyColor.pink, fontWeight: FontWeight.bold),
+          title,
+          style:
+              const TextStyle(color: MyColor.pink, fontWeight: FontWeight.bold),
         ),
         selected: false,
         onChanged: (_) {},
-        value: _value,
-        secondary: _date == null
+        value: value,
+        secondary: date == null
             ? null
             : Text(
-                _date.toString(),
+                date.toString(),
                 style: const TextStyle(color: MyColor.pink),
               ),
         controlAffinity: ListTileControlAffinity.leading,

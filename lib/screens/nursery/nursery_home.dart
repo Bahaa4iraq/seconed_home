@@ -2,9 +2,7 @@ import 'package:community_material_icon/community_material_icon.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:secondhome2/screens/nursery/review/daily_review_date.dart';
 import 'package:secondhome2/screens/nursery/review/review_date.dart';
-import 'package:secondhome2/screens/nursery/review/show_review.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../api_connection/auth_connection.dart';
@@ -22,26 +20,27 @@ import 'profile/nursery_profile.dart';
 
 class HomePageNursery extends StatefulWidget {
   final Map userData;
-  const HomePageNursery({Key? key, required this.userData}) : super(key: key);
+  const HomePageNursery({super.key, required this.userData});
   @override
   HomePageNurseryState createState() => HomePageNurseryState();
 }
 
-class HomePageNurseryState extends State<HomePageNursery> with AutomaticKeepAliveClientMixin {
+class HomePageNurseryState extends State<HomePageNursery>
+    with AutomaticKeepAliveClientMixin {
   final LatestNewsProvider latestNewsProvider = Get.put(LatestNewsProvider());
   final StudentDashboardProvider nurseryDashboardProvider =
-  Get.put(StudentDashboardProvider());
+      Get.put(StudentDashboardProvider());
   late IO.Socket socket;
   final Map? dataProvider = Get.put(TokenProvider()).userData;
   final SocketDataProvider _socketDataProvider = Get.put(SocketDataProvider());
   initSocketDriver() {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     socket = IO.io(
-        socketURL + 'driver',
+        '${socketURL}driver',
         IO.OptionBuilder()
             .disableAutoConnect()
             .setTransports(['websocket'])
-            .setAuth(_headers)
+            .setAuth(headers)
             .build());
     _socketDataProvider.changeSocket(socket);
   }
@@ -51,13 +50,13 @@ class HomePageNurseryState extends State<HomePageNursery> with AutomaticKeepAliv
   }
 
   void initWidgetList() {
-    List<Widget> _widget = <Widget>[
+    List<Widget> widgetList = <Widget>[
       Dashboard(userData: widget.userData),
       const ReviewDate(),
       const StudentSalary(),
       StudentProfile(userData: widget.userData),
     ];
-    nurseryDashboardProvider.initWidget(_widget);
+    nurseryDashboardProvider.initWidget(widgetList);
   }
 
   initUserData() async {

@@ -7,16 +7,15 @@ class ChatStudentListProvider extends GetxController {
   final student = <dynamic>[].obs;
   List data = [];
   String contentUrl = '';
-  void getStudent(page,classesId,studyYear,searchKeyword){
-
-    Map _data = {
+  void getStudent(page, classesId, studyYear, searchKeyword) {
+    Map data = {
       "class_school": classesId,
       "study_year": studyYear,
       "page": page,
       "search": searchKeyword == '' ? null : searchKeyword,
     };
 
-    ChatStudentListAPI().getStudentList(_data).then((res) {
+    ChatStudentListAPI().getStudentList(data).then((res) {
       EasyLoading.dismiss();
       if (!res['error']) {
         if (page == 0) {
@@ -24,8 +23,8 @@ class ChatStudentListProvider extends GetxController {
           changeContentUrl(res["content_url"]);
           changeLoading(false);
           student.value = res['results'];
-        }else{
-          List temp = student.value;
+        } else {
+          List temp = student;
           temp.addAll(res['results']);
           student.value = temp;
         }
@@ -36,50 +35,53 @@ class ChatStudentListProvider extends GetxController {
     });
   }
 
+  void changeContentUrl(String contentUrl) {
+    contentUrl = contentUrl;
+  }
 
-  void changeContentUrl(String _contentUrl) {
-    contentUrl = _contentUrl;
-  }
   bool isLoading = true;
-  void changeLoading(bool _isLoading){
-    isLoading = _isLoading;
+  void changeLoading(bool isLoading) {
+    isLoading = isLoading;
   }
-  void clear(){
-    student.value =[];
+
+  void clear() {
+    student.value = [];
     update();
     data.clear();
   }
-
 }
 
 class ChatGroupListProvider extends GetxController {
   List student = [];
   String contentUrl = '';
-  void addStudent(List _data){
-    student.addAll(_data);
+  void addStudent(List data) {
+    student.addAll(data);
     update();
   }
 
-  void changeContentUrl(String _contentUrl) {
-    contentUrl = _contentUrl;
+  void changeContentUrl(String contentUrl) {
+    contentUrl = contentUrl;
   }
+
   bool isLoading = true;
-  void changeLoading(bool _isLoading){
-    isLoading = _isLoading;
+  void changeLoading(bool isLoading) {
+    isLoading = isLoading;
   }
-  void clear(){
+
+  void clear() {
     student.clear();
   }
-  void changeReadingCount(String _id){
-    student.where((element) => element['_id'] == _id);
-    final singleChat = student.firstWhere((item) => item['_id'] == _id);
+
+  void changeReadingCount(String id) {
+    student.where((element) => element['_id'] == id);
+    final singleChat = student.firstWhere((item) => item['_id'] == id);
     singleChat['chats']['countUnRead'] = 0;
     update();
   }
 
-  void addSingleChat(Map _data,String _id) {
-    final singleChat = student.firstWhere((item) => item['_id'] == _id);
-    singleChat['chats']['data'] = [_data];
+  void addSingleChat(Map data, String id) {
+    final singleChat = student.firstWhere((item) => item['_id'] == id);
+    singleChat['chats']['data'] = [data];
     update();
   }
   //_data['chats']['data']

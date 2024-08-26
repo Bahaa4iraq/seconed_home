@@ -9,14 +9,14 @@ import 'package:dio/dio.dart' as dio;
 class Auth extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
 
-  login(Map _data) async {
-    final response = await post('${mainApi}login', _data);
+  login(Map data) async {
+    final response = await post('${mainApi}login', data);
     return response.body;
   }
 
   loginOut() async {
-    Map<String, String> _headers = {"Authorization": dataProvider?['token']};
-    final response = await get('${mainApi}logout', headers: _headers);
+    Map<String, String> headers = {"Authorization": dataProvider?['token']};
+    final response = await get('${mainApi}logout', headers: headers);
     if (response.status.hasError) {
       return {"error": true};
     } else {
@@ -27,14 +27,15 @@ class Auth extends GetConnect {
   }
 
   getStudentInfo() async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
-      final response = await get('${mainApi}mainData', headers: _headers);
+      final response = await get('${mainApi}mainData', headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else {
         if (response.body['error'] == false) {
-          Get.put(MainDataGetProvider()).changeContentUrl(response.body['content_url']);
+          Get.put(MainDataGetProvider())
+              .changeContentUrl(response.body['content_url']);
           Get.put(MainDataGetProvider()).addData(response.body['results']);
           //todo subscribe To Topic firebase
           //await FirebaseMessaging.instance.subscribeToTopic("school_${response.body['results']['account_school']}");
@@ -42,7 +43,8 @@ class Auth extends GetConnect {
         }
       }
     } catch (e) {
-      Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت', colorText: MyColor.white0, backgroundColor: MyColor.red);
+      Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
+          colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
   }
 
@@ -67,7 +69,8 @@ class Auth extends GetConnect {
         options: dio.Options(headers: headers),
         onSendProgress: (int sent, int total) {
           if (sent == total) {
-            Get.snackbar("success".tr, "file uploaded success".tr, colorText: MyColor.white0, backgroundColor: MyColor.green);
+            Get.snackbar("success".tr, "file uploaded success".tr,
+                colorText: MyColor.white0, backgroundColor: MyColor.green);
           }
         },
       );
@@ -77,7 +80,8 @@ class Auth extends GetConnect {
         return response.data;
       }
     } catch (e) {
-      Get.snackbar("خطأ", 'يوجد خطأ من السيرفر', colorText: MyColor.white0, backgroundColor: MyColor.red);
+      Get.snackbar("خطأ", 'يوجد خطأ من السيرفر',
+          colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
   }
 }

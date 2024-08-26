@@ -6,23 +6,20 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'firebase_options.dart';
 import 'init_data.dart';
 import 'provider/auth_provider.dart';
 import 'screens/auth/login_page.dart';
 import 'screens/nursery/nursery_home.dart';
 import 'screens/nursery_teacher/teacher_nursery_home.dart';
 import 'screens/student/home_page_student.dart';
-import 'screens/kindergarten_teacher/teacher_dashboard.dart';
 import 'screens/kindergarten_teacher/teacher_kindergarten_home.dart';
 import 'static_files/my_color.dart';
 import 'static_files/my_firebase_notification.dart' show receivedMessages;
 import 'static_files/my_translations.dart';
-import 'static_files/my_url.dart';
 
 //parse
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp();
   receivedMessages(message);
 }
 
@@ -41,9 +38,8 @@ void main() async {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -55,7 +51,6 @@ class MyApp extends StatelessWidget {
         theme: ThemeData(
           fontFamily: 'Almarai',
           scaffoldBackgroundColor: MyColor.white0,
-          // primarySwatch: MyColor().purpleMaterial,
           tabBarTheme: const TabBarTheme(
             labelStyle: TextStyle(fontFamily: 'Almarai'),
             unselectedLabelStyle: TextStyle(fontFamily: 'Almarai'),
@@ -64,7 +59,8 @@ class MyApp extends StatelessWidget {
         builder: EasyLoading.init(
           builder: (context, child) {
             return MediaQuery(
-              data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+              data: MediaQuery.of(context)
+                  .copyWith(textScaler: const TextScaler.linear(1.0)),
               child: child!,
             );
           },
@@ -85,16 +81,17 @@ Widget _redirectToPage() {
     Get.put(TokenProvider()).addToken(userData);
     if (userData["is_kindergarten"]) {
       return HomePageStudent(userData: userData);
-    }else{
+    } else {
       return HomePageNursery(userData: userData);
     }
   } else if (userData["account_type"] == "teacher") {
     Get.put(TokenProvider()).addToken(userData);
     if (userData["is_kindergarten"]) {
       return HomePageKindergartenTeacher(userData: userData);
-    }else{
+    } else {
       return HomePageNurseryTeacher(userData: userData);
-    } } else {
+    }
+  } else {
     return const LoginPage();
   }
 }

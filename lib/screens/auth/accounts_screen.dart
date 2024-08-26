@@ -1,7 +1,6 @@
 import 'package:secondhome2/provider/accounts_provider.dart';
 import 'package:secondhome2/provider/auth_provider.dart';
 import 'package:secondhome2/screens/auth/login_page.dart';
-import 'package:secondhome2/screens/student/student_home.dart';
 import 'package:secondhome2/static_files/my_color.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -12,9 +11,8 @@ import '../nursery/nursery_home.dart';
 import '../nursery_teacher/teacher_nursery_home.dart';
 import '../student/home_page_student.dart';
 
-
 class AccountsScreen extends StatefulWidget {
-  AccountsScreen({Key? key}) : super(key: key);
+  const AccountsScreen({super.key});
 
   @override
   State<AccountsScreen> createState() => _AccountsScreenState();
@@ -25,7 +23,6 @@ class _AccountsScreenState extends State<AccountsScreen> {
 
   TokenProvider get tokenProvider => Get.put(TokenProvider());
 
-
   onCLickAccount(Map<String, dynamic> account) async {
     if (tokenProvider.userData?['account_email'] != account['account_email']) {
       await accountProvider.onClickAccount(account);
@@ -33,20 +30,17 @@ class _AccountsScreenState extends State<AccountsScreen> {
       Get.delete<StudentDashboardProvider>();
 
       if (account['account_type'] == 'student') {
-        if(account["is_kindergarten"]) {
+        if (account["is_kindergarten"]) {
           Get.offAll(() => HomePageStudent(userData: account));
-        }else{
+        } else {
           Get.offAll(() => HomePageNursery(userData: account));
         }
       } else if (account['account_type'] == 'teacher') {
-        if(account["is_kindergarten"]){
+        if (account["is_kindergarten"]) {
           Get.offAll(() => HomePageKindergartenTeacher(userData: account));
-        }
-        else{
+        } else {
           Get.offAll(() => HomePageNurseryTeacher(userData: account));
-
         }
-
       }
     }
   }
@@ -56,6 +50,7 @@ class _AccountsScreenState extends State<AccountsScreen> {
     accountProvider.fetchAccounts();
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -102,26 +97,32 @@ class _AccountsScreenState extends State<AccountsScreen> {
                             children: [
                               const CircleAvatar(
                                 backgroundImage:
-                                AssetImage("assets/img/logo.jpg"),
+                                    AssetImage("assets/img/logo.jpg"),
                               ),
                               const SizedBox(
                                 width: 16,
                               ),
                               Expanded(
                                   child: Column(
-                                    crossAxisAlignment: CrossAxisAlignment.start,
-                                    children: [
-                                      Text(account.accountName),
-                                      Text(account.accountEmail)
-                                    ],
-                                  )),
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(account.accountName),
+                                  Text(account.accountEmail)
+                                ],
+                              )),
                               const SizedBox(
                                 width: 16,
                               ),
-                              if(tokenProvider.userData?['account_email'] != account.accountEmail) GestureDetector(
-                                onTap: () => accountProvider.deleteAccount(account.accountEmail),
-                                child: const Icon(Icons.delete), ),
-                              if(tokenProvider.userData?['account_email'] == account.accountEmail) const Icon(Icons.star,color: MyColor.pink)
+                              if (tokenProvider.userData?['account_email'] !=
+                                  account.accountEmail)
+                                GestureDetector(
+                                  onTap: () => accountProvider
+                                      .deleteAccount(account.accountEmail),
+                                  child: const Icon(Icons.delete),
+                                ),
+                              if (tokenProvider.userData?['account_email'] ==
+                                  account.accountEmail)
+                                const Icon(Icons.star, color: MyColor.pink)
                             ],
                           ),
                         ));

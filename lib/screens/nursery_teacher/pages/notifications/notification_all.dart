@@ -8,7 +8,6 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:iconsax/iconsax.dart';
 import 'package:line_icons/line_icons.dart';
-import 'package:secondhome2/screens/nursery_teacher/pages/notifications/show/show_news_notification.dart';
 import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../../api_connection/teacher/api_notification.dart';
@@ -23,8 +22,7 @@ import 'show/show_message.dart';
 
 class NotificationTeacherAll extends StatefulWidget {
   final Map userData;
-  const NotificationTeacherAll({Key? key, required this.userData})
-      : super(key: key);
+  const NotificationTeacherAll({super.key, required this.userData});
 
   @override
   _NotificationTeacherAllState createState() => _NotificationTeacherAllState();
@@ -213,8 +211,8 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
                                       endChild: Container(
                                         margin: const EdgeInsets.only(
                                             right: 10, left: 10, top: 10),
-                                        padding: const EdgeInsets.only(
-                                            bottom: 24),
+                                        padding:
+                                            const EdgeInsets.only(bottom: 24),
                                         decoration: BoxDecoration(
                                           borderRadius:
                                               BorderRadius.circular(10),
@@ -235,9 +233,14 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
                                           subtitle: val.data[indexes][
                                                       "notifications_description"] !=
                                                   null
-                                              ? Text(val.data[indexes][
-                                                      "notifications_description"]
-                                                  .toString(),maxLines: 4,overflow: TextOverflow.ellipsis,)
+                                              ? Text(
+                                                  val.data[indexes][
+                                                          "notifications_description"]
+                                                      .toString(),
+                                                  maxLines: 4,
+                                                  overflow:
+                                                      TextOverflow.ellipsis,
+                                                )
                                               : null,
                                           trailing: _star(val.data[indexes]
                                                       ['notifications_sender']
@@ -315,31 +318,33 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
 
   _navPage(Map _data, String _contentUrl) {
     List _pageNotifications = [
-    "رسالة",
-    "ملابس",
-    "غذاء",
-    "دروس",
-    "تدريب",
-    "غفوة",
-    "الحفاض",
-    "واجب بيتي",
-    "امتحان يومي",
-    "تقرير",
-    "تبليغ",
-    "اقساط",
-    "ملخص",
-    "البصمة",
-    'اشعار'
-  ];
+      "رسالة",
+      "ملابس",
+      "غذاء",
+      "دروس",
+      "تدريب",
+      "غفوة",
+      "الحفاض",
+      "واجب بيتي",
+      "امتحان يومي",
+      "تقرير",
+      "تبليغ",
+      "اقساط",
+      "ملخص",
+      "البصمة",
+      'اشعار'
+    ];
 
-  if (_pageNotifications.contains(_data['notifications_type'])) {
-    Get.to(() => ShowMessage(
-        data: _data, contentUrl: _contentUrl, notificationsType: _data['notifications_type']));
-  } else if (_data['notifications_type'] == "الحضور") {
-    Get.to(() => TeacherAttend(
-      userData: widget.userData,
-    ));
-  }
+    if (_pageNotifications.contains(_data['notifications_type'])) {
+      Get.to(() => ShowMessage(
+          data: _data,
+          contentUrl: _contentUrl,
+          notificationsType: _data['notifications_type']));
+    } else if (_data['notifications_type'] == "الحضور") {
+      Get.to(() => TeacherAttend(
+            userData: widget.userData,
+          ));
+    }
   }
 
   _button(String? _type) {
@@ -362,10 +367,10 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
 
   _star(bool _isMine) {
     if (_isMine) {
-      return Column(
+      return const Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
+        children: [
           Icon(
             LineIcons.starAlt,
             size: 20,

@@ -1,7 +1,6 @@
 // ignore_for_file: library_private_types_in_public_api, no_leading_underscores_for_local_identifiers
 
 import 'package:auto_animated/auto_animated.dart';
-import 'package:community_material_icon/community_material_icon.dart';
 import 'package:empty_widget/empty_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
@@ -16,26 +15,24 @@ import '../../../../provider/teacher/provider_notification.dart';
 import '../../../../static_files/my_color.dart';
 import '../../../../static_files/my_loading.dart';
 import '../../../../static_files/my_times.dart';
-import '../pages/notifications/notification_add.dart';
 import '../pages/notifications/show/show_message.dart';
-import '../pages/teacher_attend.dart';
-
 
 class NotificationTeacherIntimation extends StatefulWidget {
   final Map userData;
-  const NotificationTeacherIntimation({Key? key, required this.userData})
-      : super(key: key);
+  const NotificationTeacherIntimation({super.key, required this.userData});
 
   @override
-  _NotificationTeacherIntimationState createState() => _NotificationTeacherIntimationState();
+  _NotificationTeacherIntimationState createState() =>
+      _NotificationTeacherIntimationState();
 }
 
-class _NotificationTeacherIntimationState extends State<NotificationTeacherIntimation> {
+class _NotificationTeacherIntimationState
+    extends State<NotificationTeacherIntimation> {
   final ScrollController _scrollController = ScrollController();
   final MainDataGetProvider _mainDataGetProvider =
-  Get.put(MainDataGetProvider());
+      Get.put(MainDataGetProvider());
   final NotificationProviderIntimation _notificationProvider =
-  Get.put(NotificationProviderIntimation());
+      Get.put(NotificationProviderIntimation());
   List accountDivisionList = [];
   int page = 0;
   initFunction() {
@@ -76,7 +73,7 @@ class _NotificationTeacherIntimationState extends State<NotificationTeacherIntim
   @override
   void initState() {
     for (Map accountDivision in _mainDataGetProvider.mainData['account']
-    ['account_division']) {
+        ['account_division']) {
       accountDivisionList.add(accountDivision['_id']);
     }
     initFunction();
@@ -108,126 +105,129 @@ class _NotificationTeacherIntimationState extends State<NotificationTeacherIntim
       ),
       body: GetBuilder<NotificationProviderIntimation>(
           builder: (val) => Column(
-            children: [
-              Expanded(
-                child: val.isLoading
-                    ? loading()
-                    : val.data.isEmpty
-                    ? EmptyWidget(
-                  image: null,
-                  packageImage: PackageImage.Image_1,
-                  title: 'لاتوجد اشعارات',
-                  subTitle: 'لم يتم اضافة اشعار خاص بك',
-                  titleTextStyle: const TextStyle(
-                    fontSize: 22,
-                    color: Color(0xff9da9c7),
-                    fontWeight: FontWeight.w500,
-                  ),
-                  subtitleTextStyle: const TextStyle(
-                    fontSize: 14,
-                    color: Color(0xffabb8d6),
-                  ),
-                )
-                    : LiveList.options(
-                  options: options,
-                  shrinkWrap: true,
-                  physics: const BouncingScrollPhysics(),
-                  controller: _scrollController,
-                  itemCount: val.data.length,
-                  itemBuilder: animationItemBuilder(
-                        (indexes) {
-                      return TimelineTile(
-                        alignment: TimelineAlign.manual,
-                        lineXY: .2,
-                        isFirst: indexes == 0,
-                        indicatorStyle: IndicatorStyle(
-                          color: val.data[indexes]["isRead"]
-                              ? MyColor.turquoise
-                              : MyColor.red,
-                          indicator: Container(
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                color: val.data[indexes]["isRead"]
-                                    ? MyColor.turquoise
-                                    : MyColor.red,
+                children: [
+                  Expanded(
+                    child: val.isLoading
+                        ? loading()
+                        : val.data.isEmpty
+                            ? EmptyWidget(
+                                image: null,
+                                packageImage: PackageImage.Image_1,
+                                title: 'لاتوجد اشعارات',
+                                subTitle: 'لم يتم اضافة اشعار خاص بك',
+                                titleTextStyle: const TextStyle(
+                                  fontSize: 22,
+                                  color: Color(0xff9da9c7),
+                                  fontWeight: FontWeight.w500,
+                                ),
+                                subtitleTextStyle: const TextStyle(
+                                  fontSize: 14,
+                                  color: Color(0xffabb8d6),
+                                ),
+                              )
+                            : LiveList.options(
+                                options: options,
+                                shrinkWrap: true,
+                                physics: const BouncingScrollPhysics(),
+                                controller: _scrollController,
+                                itemCount: val.data.length,
+                                itemBuilder: animationItemBuilder(
+                                  (indexes) {
+                                    return TimelineTile(
+                                      alignment: TimelineAlign.manual,
+                                      lineXY: .2,
+                                      isFirst: indexes == 0,
+                                      indicatorStyle: IndicatorStyle(
+                                        color: val.data[indexes]["isRead"]
+                                            ? MyColor.turquoise
+                                            : MyColor.red,
+                                        indicator: Container(
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              color: val.data[indexes]["isRead"]
+                                                  ? MyColor.turquoise
+                                                  : MyColor.red,
+                                            ),
+                                            child: Icon(
+                                              _icon(val.data[indexes]
+                                                  ["notifications_type"]),
+                                              size: 15,
+                                              color: MyColor.white0,
+                                            )),
+                                      ),
+                                      afterLineStyle: LineStyle(
+                                        color: MyColor.grayDark.withOpacity(.2),
+                                      ),
+                                      beforeLineStyle: LineStyle(
+                                        color: MyColor.grayDark.withOpacity(.2),
+                                      ),
+                                      startChild: _dateTimeLine(
+                                          val.data[indexes]["created_at"]),
+                                      endChild: Container(
+                                        margin: const EdgeInsets.only(
+                                            right: 10, left: 10, top: 10),
+                                        decoration: BoxDecoration(
+                                          borderRadius:
+                                              BorderRadius.circular(10),
+                                          border: Border.all(
+                                              color: val.data[indexes]["isRead"]
+                                                  ? MyColor.turquoise
+                                                  : MyColor.red),
+                                        ),
+                                        child: ListTile(
+                                          title: Text(
+                                            val.data[indexes]
+                                                    ["notifications_title"]
+                                                .toString(),
+                                            style: const TextStyle(
+                                                color: MyColor.turquoise,
+                                                fontWeight: FontWeight.bold),
+                                          ),
+                                          subtitle: val.data[indexes][
+                                                      "notifications_description"] !=
+                                                  null
+                                              ? Text(val.data[indexes][
+                                                      "notifications_description"]
+                                                  .toString())
+                                              : null,
+                                          trailing: _star(val.data[indexes]
+                                                      ['notifications_sender']
+                                                  ['_id'] ==
+                                              _mainDataGetProvider
+                                                  .mainData['account']['_id']),
+                                          //val.data[indexes]['notifications_sender']['_id'] !=_mainDataGetProvider.mainData['account']['_id']
+                                          onTap: () {
+                                            Get.to(() => ShowMessage(
+                                                data: val.data[indexes],
+                                                contentUrl: val.contentUrl,
+                                                notificationsType:
+                                                    val.data[indexes]
+                                                        ['notifications_type'],
+                                                onUpdate: () {
+                                                  NotificationsAPI()
+                                                      .updateReadNotificationsIntimation(
+                                                          val.data[indexes]
+                                                              ['_id']);
+                                                }));
+                                          },
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ),
                               ),
-                              child: Icon(
-                                _icon(val.data[indexes]
-                                ["notifications_type"]),
-                                size: 15,
-                                color: MyColor.white0,
-                              )),
-                        ),
-                        afterLineStyle: LineStyle(
-                          color: MyColor.grayDark.withOpacity(.2),
-                        ),
-                        beforeLineStyle: LineStyle(
-                          color: MyColor.grayDark.withOpacity(.2),
-                        ),
-                        startChild: _dateTimeLine(
-                            val.data[indexes]["created_at"]),
-                        endChild: Container(
-                          margin: const EdgeInsets.only(
-                              right: 10, left: 10, top: 10),
-                          decoration: BoxDecoration(
-                            borderRadius:
-                            BorderRadius.circular(10),
-                            border: Border.all(
-                                color: val.data[indexes]["isRead"]
-                                    ? MyColor.turquoise
-                                    : MyColor.red),
-                          ),
-                          child: ListTile(
-                            title: Text(
-                              val.data[indexes]
-                              ["notifications_title"]
-                                  .toString(),
-                              style: const TextStyle(
-                                  color: MyColor.turquoise,
-                                  fontWeight: FontWeight.bold),
-                            ),
-                            subtitle: val.data[indexes][
-                            "notifications_description"] !=
-                                null
-                                ? Text(val.data[indexes][
-                            "notifications_description"]
-                                .toString())
-                                : null,
-                            trailing: _star(val.data[indexes]
-                            ['notifications_sender']
-                            ['_id'] ==
-                                _mainDataGetProvider
-                                    .mainData['account']['_id']),
-                            //val.data[indexes]['notifications_sender']['_id'] !=_mainDataGetProvider.mainData['account']['_id']
-                            onTap: () {
-                              Get.to(() => ShowMessage(
-                                  data: val.data[indexes],
-                                  contentUrl: val.contentUrl,
-                                  notificationsType: val.data[indexes]['notifications_type'],
-                                  onUpdate: (){
-                                    NotificationsAPI().updateReadNotificationsIntimation(val.data[indexes]['_id']);
-                                  }));
-                            },
-                          ),
-                        ),
-                      );
-                    },
                   ),
-                ),
-              ),
-            ],
-          )),
+                ],
+              )),
     );
   }
 
-
-
   _star(bool _isMine) {
     if (_isMine) {
-      return Column(
+      return const Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
+        children: [
           Icon(
             LineIcons.starAlt,
             size: 20,
@@ -294,18 +294,18 @@ class _NotificationTeacherIntimationState extends State<NotificationTeacherIntim
 }
 
 Widget Function(
-    BuildContext context,
-    int index,
-    Animation<double> animation,
-    ) animationItemBuilder(
-    Widget Function(int index) child, {
-      EdgeInsets padding = EdgeInsets.zero,
-    }) =>
-        (
-        BuildContext context,
-        int index,
-        Animation<double> animation,
-        ) =>
+  BuildContext context,
+  int index,
+  Animation<double> animation,
+) animationItemBuilder(
+  Widget Function(int index) child, {
+  EdgeInsets padding = EdgeInsets.zero,
+}) =>
+    (
+      BuildContext context,
+      int index,
+      Animation<double> animation,
+    ) =>
         FadeTransition(
           opacity: Tween<double>(
             begin: 0,

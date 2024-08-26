@@ -12,7 +12,6 @@ import 'package:timeline_tile/timeline_tile.dart';
 
 import '../../../../api_connection/teacher/api_notification.dart';
 import '../../../../provider/auth_provider.dart';
-import '../../../../provider/teacher/provider_notification.dart';
 import '../../../../static_files/my_color.dart';
 import '../../../../static_files/my_loading.dart';
 import '../../../../static_files/my_times.dart';
@@ -22,8 +21,7 @@ import '../pages/notifications/show/show_message.dart';
 class NotificationTeacherLiveEducation extends StatefulWidget {
   final Map userData;
 
-  const NotificationTeacherLiveEducation({Key? key, required this.userData})
-      : super(key: key);
+  const NotificationTeacherLiveEducation({super.key, required this.userData});
 
   @override
   _NotificationTeacherLiveEducationState createState() =>
@@ -176,7 +174,8 @@ class _NotificationTeacherLiveEducationState
                                                 shape: BoxShape.circle,
                                                 color: val.data[indexes]
                                                         ["isRead"]
-                                                    ? MyColor.pink.withOpacity(.2)
+                                                    ? MyColor.pink
+                                                        .withOpacity(.2)
                                                     : MyColor.red,
                                               ),
                                               child: Icon(
@@ -205,7 +204,8 @@ class _NotificationTeacherLiveEducationState
                                               border: Border.all(
                                                   color: val.data[indexes]
                                                           ["isRead"]
-                                                      ? MyColor.pink.withOpacity(.2)
+                                                      ? MyColor.pink
+                                                          .withOpacity(.2)
                                                       : MyColor.red),
                                             ),
                                             child: ListTile(
@@ -258,10 +258,10 @@ class _NotificationTeacherLiveEducationState
 
   _star(bool _isMine) {
     if (_isMine) {
-      return Column(
+      return const Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         mainAxisAlignment: MainAxisAlignment.start,
-        children: const [
+        children: [
           Icon(
             LineIcons.starAlt,
             size: 20,

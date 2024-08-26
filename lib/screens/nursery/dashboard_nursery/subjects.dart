@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../../../api_connection/student/api_homework.dart';
-import '../../../provider/auth_provider.dart';
 import '../../../provider/student/subjects_provider.dart';
 import '../../../static_files/my_appbar.dart';
 import '../../../static_files/my_color.dart';
@@ -11,7 +10,7 @@ import '../../../static_files/my_loading.dart';
 import 'subject_details.dart';
 
 class SubjectsList extends StatefulWidget {
-  const SubjectsList({Key? key}) : super(key: key);
+  const SubjectsList({super.key});
 
   @override
   _SubjectsListState createState() => _SubjectsListState();
@@ -19,12 +18,10 @@ class SubjectsList extends StatefulWidget {
 
 class _SubjectsListState extends State<SubjectsList> {
   final ScrollController _scrollController = ScrollController();
-  final MainDataGetProvider _mainDataGetProvider =
-      Get.put(MainDataGetProvider());
+
   bool _isLoading = true;
   _getData() {
     HomeworkAPI().getSubjectsList().then((result) {
-      print(result);
       if (result) {
         setState(() {
           _isLoading = false;
@@ -49,7 +46,7 @@ class _SubjectsListState extends State<SubjectsList> {
     //   Scaffold(appBar: myAppBar("ملخص الدروس"), body: Container());
     // }
     return Scaffold(
-      appBar: myAppBar("ملخص الدروس",MyColor.pink),
+      appBar: myAppBar("ملخص الدروس", MyColor.pink),
       body: GetBuilder<SubjectsProvider>(builder: (val) {
         return _isLoading
             ? loading()

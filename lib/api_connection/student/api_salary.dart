@@ -1,7 +1,6 @@
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import '../../provider/auth_provider.dart';
-import '../../provider/student/provider_ride.dart';
 import '../../provider/student/provider_salary.dart';
 import '../../static_files/my_color.dart';
 import '../../static_files/my_url.dart';
@@ -10,12 +9,12 @@ import '../auth_connection.dart';
 class StudentSalaryAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
 
-  getSalary(String _year) async {
+  getSalary(String year) async {
     EasyLoading.show(status: "جار جلب البيانات");
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
-      final response = await get(mainApi + 'student/salary/study_year/$_year',
-          headers: _headers);
+      final response = await get('${mainApi}student/salary/study_year/$year',
+          headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else if (response.body["error"] == false) {
@@ -32,12 +31,12 @@ class StudentSalaryAPI extends GetConnect {
     }
   }
 
-  getFullSalary(String _year) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  getFullSalary(String year) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response = await get(
-          '${mainApi}student/salary/details/study_year/$_year',
-          headers: _headers);
+          '${mainApi}student/salary/details/study_year/$year',
+          headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else if (!response.body["error"]) {

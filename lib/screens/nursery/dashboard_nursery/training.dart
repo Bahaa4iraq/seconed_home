@@ -28,10 +28,7 @@ class _TrainingState extends State<Training> {
   final ScrollController _scrollController = ScrollController();
 
   _getData() {
-    String year = _mainDataGetProvider.mainData['setting'][0]['setting_year'];
-    String classId = _mainDataGetProvider.mainData['account']
-        ['account_division_current']['_id'];
-    Map _data = {
+    Map data = {
       "study_year": _mainDataGetProvider.mainData['setting'][0]['setting_year'],
       "page": 0,
       "class_school": _mainDataGetProvider.mainData['account']
@@ -39,8 +36,9 @@ class _TrainingState extends State<Training> {
       "type": 'تدريب',
       "isRead": null
     };
-    NotificationsAPI().getNotificationsTraining(_data);
+    NotificationsAPI().getNotificationsTraining(data);
   }
+
   final options = const LiveOptions(
     // Show each item through (default 250)
     showItemInterval: Duration(milliseconds: 100),
@@ -69,110 +67,113 @@ class _TrainingState extends State<Training> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar("تدريب",MyColor.pink),
+      appBar: myAppBar("تدريب", MyColor.pink),
       body: GetBuilder<TrainingNotificationProvider>(
           builder: (val) => val.isLoading
               ? loading()
               : val.data.isEmpty
-              ? Center(
-                child: EmptyWidget(
-            image: null,
-            packageImage: PackageImage.Image_1,
-            title: 'لاتوجد بيانات',
-            subTitle: 'لم يتم اضافة البيانات',
-            titleTextStyle: const TextStyle(
-                fontSize: 22,
-                color: Color(0xff9da9c7),
-                fontWeight: FontWeight.w500,
-            ),
-            subtitleTextStyle: const TextStyle(
-                fontSize: 14,
-                color: Color(0xffabb8d6),
-            ),
-          ),
-              )
-              : LiveList.options(
-            options: options,
-            shrinkWrap: true,
-            physics: const BouncingScrollPhysics(),
-            controller: _scrollController,
-            itemCount: val.data.length,
-            itemBuilder: animationItemBuilder(
-                  (indexes) {
-                return TimelineTile(
-                  alignment: TimelineAlign.manual,
-                  lineXY: .2,
-                  isFirst: indexes == 0,
-                  indicatorStyle: IndicatorStyle(
-                    color: val.data[indexes]["isRead"]
-                        ? MyColor.pink.withOpacity(.2)
-                        : MyColor.red,
-                    indicator: Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: val.data[indexes]["isRead"]
-                              ? MyColor.pink.withOpacity(.2)
-                              : MyColor.red,
+                  ? Center(
+                      child: EmptyWidget(
+                        image: null,
+                        packageImage: PackageImage.Image_1,
+                        title: 'لاتوجد بيانات',
+                        subTitle: 'لم يتم اضافة البيانات',
+                        titleTextStyle: const TextStyle(
+                          fontSize: 22,
+                          color: Color(0xff9da9c7),
+                          fontWeight: FontWeight.w500,
                         ),
-                        child: const Icon(
-                          Icons.edit,
-                          size: 15,
-                          color: MyColor.white0,
-                        )),
-                  ),
-                  afterLineStyle: LineStyle(
-                    color: MyColor.grayDark.withOpacity(.2),
-                  ),
-                  beforeLineStyle: LineStyle(
-                    color: MyColor.grayDark.withOpacity(.2),
-                  ),
-                  startChild: _dateTimeLine(
-                      val.data[indexes]["created_at"]),
-                  endChild: Container(
-                    margin: const EdgeInsets.only(
-                        right: 10, left: 10, top: 10),
-                    decoration: BoxDecoration(
-                      borderRadius:
-                      BorderRadius.circular(10),
-                      border: Border.all(
-                          color: val.data[indexes]["isRead"]
-                              ? MyColor.pink.withOpacity(.2)
-                              : MyColor.red),
-                    ),
-                    child: ListTile(
-                      title: Text(
-                        val.data[indexes]
-                        ["notifications_title"]
-                            .toString(),
-                        style: const TextStyle(
-                            color: MyColor.pink,
-                            fontWeight: FontWeight.bold),
+                        subtitleTextStyle: const TextStyle(
+                          fontSize: 14,
+                          color: Color(0xffabb8d6),
+                        ),
                       ),
-                      subtitle: val.data[indexes][
-                      "notifications_description"] !=
-                          null
-                          ? Text(val.data[indexes][
-                      "notifications_description"]
-                          .toString())
-                          : null,
-                      onTap: () {
-                        Get.to(() => ShowMessage(
-                            data: val.data[indexes],
-                            contentUrl: val.contentUrl,
-                            notificationsType: val.data[indexes]['notifications_type'],
-                          onUpdate: (){
-                            NotificationsAPI().updateReadTraining(val.data[indexes]['_id']);
-                          },
-                        ),
-                        );
-                      },
-                    ),
-                  ),
-                );
-              },
-            ),
-          )),    );
+                    )
+                  : LiveList.options(
+                      options: options,
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
+                      controller: _scrollController,
+                      itemCount: val.data.length,
+                      itemBuilder: animationItemBuilder(
+                        (indexes) {
+                          return TimelineTile(
+                            alignment: TimelineAlign.manual,
+                            lineXY: .2,
+                            isFirst: indexes == 0,
+                            indicatorStyle: IndicatorStyle(
+                              color: val.data[indexes]["isRead"]
+                                  ? MyColor.pink.withOpacity(.2)
+                                  : MyColor.red,
+                              indicator: Container(
+                                  decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: val.data[indexes]["isRead"]
+                                        ? MyColor.pink.withOpacity(.2)
+                                        : MyColor.red,
+                                  ),
+                                  child: const Icon(
+                                    Icons.edit,
+                                    size: 15,
+                                    color: MyColor.white0,
+                                  )),
+                            ),
+                            afterLineStyle: LineStyle(
+                              color: MyColor.grayDark.withOpacity(.2),
+                            ),
+                            beforeLineStyle: LineStyle(
+                              color: MyColor.grayDark.withOpacity(.2),
+                            ),
+                            startChild:
+                                _dateTimeLine(val.data[indexes]["created_at"]),
+                            endChild: Container(
+                              margin: const EdgeInsets.only(
+                                  right: 10, left: 10, top: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(10),
+                                border: Border.all(
+                                    color: val.data[indexes]["isRead"]
+                                        ? MyColor.pink.withOpacity(.2)
+                                        : MyColor.red),
+                              ),
+                              child: ListTile(
+                                title: Text(
+                                  val.data[indexes]["notifications_title"]
+                                      .toString(),
+                                  style: const TextStyle(
+                                      color: MyColor.pink,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                                subtitle: val.data[indexes]
+                                            ["notifications_description"] !=
+                                        null
+                                    ? Text(val.data[indexes]
+                                            ["notifications_description"]
+                                        .toString())
+                                    : null,
+                                onTap: () {
+                                  Get.to(
+                                    () => ShowMessage(
+                                      data: val.data[indexes],
+                                      contentUrl: val.contentUrl,
+                                      notificationsType: val.data[indexes]
+                                          ['notifications_type'],
+                                      onUpdate: () {
+                                        NotificationsAPI().updateReadTraining(
+                                            val.data[indexes]['_id']);
+                                      },
+                                    ),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                      ),
+                    )),
+    );
   }
+
   Widget _dateTimeLine(int createdAt) {
     String currentYear = DateTime.now().year.toString();
     return Column(
@@ -202,5 +203,4 @@ class _TrainingState extends State<Training> {
       ],
     );
   }
-
 }

@@ -24,10 +24,7 @@ class _HomeWorkState extends State<HomeWork> {
   final ScrollController _scrollController = ScrollController();
 
   _getData() {
-    String year = _mainDataGetProvider.mainData['setting'][0]['setting_year'];
-    String classId = _mainDataGetProvider.mainData['account']
-        ['account_division_current']['_id'];
-    Map _data = {
+    Map data = {
       "study_year": _mainDataGetProvider.mainData['setting'][0]['setting_year'],
       "page": 0,
       "class_school": _mainDataGetProvider.mainData['account']
@@ -35,7 +32,7 @@ class _HomeWorkState extends State<HomeWork> {
       "type": 'واجب بيتي',
       "isRead": null
     };
-    NotificationsAPI().getNotifications(_data);
+    NotificationsAPI().getNotifications(data);
   }
 
   final formatter = NumberFormat.decimalPattern();
@@ -49,7 +46,7 @@ class _HomeWorkState extends State<HomeWork> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar("الواجيات المدرسيه",MyColor.turquoise),
+      appBar: myAppBar("الواجيات المدرسيه", MyColor.turquoise),
       body: GetBuilder<DailyExamsProvider>(builder: (val) {
         return val.isLoading
             ? loading()
