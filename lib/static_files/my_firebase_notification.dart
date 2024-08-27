@@ -4,7 +4,6 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:logger/logger.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../api_connection/student/api_dashboard_data.dart';
 import '../provider/auth_provider.dart';
@@ -23,15 +22,15 @@ import '../screens/student/dashboard_student/student_salary/student_salary.dart'
     as student;
 import '../screens/student/dashboard_student/weekly_schedule.dart' as student;
 import '../screens/kindergarten_teacher/pages/notifications/notification_all.dart'
-    as teacherKindergartion;
+    as teacher_kindergartion;
 import '../screens/kindergarten_teacher/pages/teacher_salary/teacher_salary.dart'
-    as teacherKindergartion;
+    as teacher_kindergartion;
 import '../screens/nursery_teacher/pages/teacher_salary/teacher_salary.dart'
     as teacherNursery;
 import '../screens/nursery_teacher/pages/notifications/notification_all.dart'
     as teacherNursery;
 import '../screens/kindergarten_teacher/pages/teacher_weekly_schedule.dart'
-    as teacherKindergartion;
+    as teacher_kindergartion;
 import '../screens/nursery_teacher/pages/teacher_weekly_schedule.dart'
     as teacherNursery;
 
@@ -41,17 +40,13 @@ class NotificationFirebase {
     await messaging.requestPermission();
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await messaging.subscribeToTopic('test');
-    print('Subscribed to test topic');
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // await messaging.subscribeToTopic('test');
+    // print('Subscribed to test topic');
 
-    String? schoolId = prefs.getString('school_id');
-    print(schoolId);
-    try {
-      await messaging.subscribeToTopic('school_$schoolId');
-    } catch (e) {
-      print(e);
-    }
+    // String? schoolId = prefs.getString('school_id');
+    // await messaging.subscribeToTopic('school_$schoolId');
+
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<
             AndroidFlutterLocalNotificationsPlugin>()
@@ -85,7 +80,6 @@ class NotificationFirebase {
     // }
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print(message.notification!.body);
       RemoteNotification? notification = message.notification;
       AndroidNotification? android = message.notification?.android;
       if (notification != null && android != null && !kIsWeb) {
@@ -153,12 +147,12 @@ receivedMessages(RemoteMessage message) {
   } else if (userData["account_type"] == "teacher") {
     if (userData["is_kindergarten"]) {
       if (message.data['type'] == 'schedule') {
-        Get.to(() => const teacherKindergartion.TeacherWeeklySchedule());
+        Get.to(() => const teacher_kindergartion.TeacherWeeklySchedule());
       } else if (message.data['type'] == 'notification') {
         Get.to(() =>
-            teacherKindergartion.NotificationTeacherAll(userData: userData));
+            teacher_kindergartion.NotificationTeacherAll(userData: userData));
       } else if (message.data['type'] == 'installments') {
-        Get.to(() => const teacherKindergartion.TeacherSalary());
+        Get.to(() => const teacher_kindergartion.TeacherSalary());
       }
     } else {
       if (message.data['type'] == 'schedule') {

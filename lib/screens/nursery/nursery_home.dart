@@ -1,8 +1,10 @@
 import 'package:community_material_icon/community_material_icon.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:secondhome2/screens/nursery/review/review_date.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 
 import '../../api_connection/auth_connection.dart';
@@ -27,6 +29,14 @@ class HomePageNursery extends StatefulWidget {
 
 class HomePageNurseryState extends State<HomePageNursery>
     with AutomaticKeepAliveClientMixin {
+  followTopics() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? schoolId = prefs.getString('school_id');
+    await messaging.subscribeToTopic('school_$schoolId');
+  }
+
   final LatestNewsProvider latestNewsProvider = Get.put(LatestNewsProvider());
   final StudentDashboardProvider nurseryDashboardProvider =
       Get.put(StudentDashboardProvider());
@@ -69,6 +79,7 @@ class HomePageNurseryState extends State<HomePageNursery>
   @override
   void initState() {
     initUserData();
+    followTopics();
     super.initState();
   }
 

@@ -11,9 +11,11 @@ class DailyReviewAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
 
   getDailyReview() async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
-      final response = await get(mainApi + 'student/daily/review', headers: _headers);
+      final response =
+          await get('${mainApi}student/daily/review', headers: headers);
+
       if (response.statusCode == 401) {
         Auth().redirect();
       } else if (response.body["error"] == false) {
@@ -30,12 +32,12 @@ class DailyReviewAPI extends GetConnect {
     }
   }
 
-  addDailyReview(String _text, String reviewId) async {
-    Map _data = {"review_father_note": _text, "review_id": reviewId};
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  addDailyReview(String text, String reviewId) async {
+    Map data = {"review_father_note": text, "review_id": reviewId};
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response =
-      await put(mainApi + 'student/daily/review', _data, headers: _headers);
+          await put('${mainApi}student/daily/review', data, headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else {

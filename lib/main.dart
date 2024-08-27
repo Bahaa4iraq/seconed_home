@@ -6,6 +6,7 @@ import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:secondhome2/screens/gard/gard_home.dart';
 import 'init_data.dart';
 import 'provider/auth_provider.dart';
 import 'screens/auth/login_page.dart';
@@ -91,6 +92,8 @@ Widget _redirectToPage() {
     } else {
       return HomePageNurseryTeacher(userData: userData);
     }
+  } else if (userData["account_type"] == "gard") {
+    return GardHome(userData: userData);
   } else {
     return const LoginPage();
   }

@@ -10,12 +10,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:platform_device_id/platform_device_id.dart';
+import 'package:flutter_device_id/flutter_device_id.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:rounded_loading_button/rounded_loading_button.dart';
 import 'package:secondhome2/api_connection/student/api_notification.dart';
 import 'package:secondhome2/screens/auth/accounts_screen.dart';
+import 'package:secondhome2/screens/gard/gard_home.dart';
 import 'package:secondhome2/screens/kindergarten_teacher/teacher_kindergarten_home.dart';
 import 'package:secondhome2/screens/nursery_teacher/teacher_nursery_home.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -39,6 +40,13 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TokenProvider get tokenProvider => Get.put(TokenProvider());
+  unFollowTopics() async {
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    String? schoolId = prefs.getString('school_id');
+    await messaging.unsubscribeFromTopic('school_$schoolId');
+  }
 
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -100,12 +108,13 @@ class _LoginPageState extends State<LoginPage> {
               Get.offAll(
                   () => HomePageNurseryTeacher(userData: res['results']));
             }
-          } else if (res['results']["account_type"] == "assistance") {
-            // Timer(const Duration(seconds: 1), () {
-            //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-            //     return driver.HomePage(userData: res['results']);
-            //   }));
-            // });
+          } else if (res['results']["account_type"] == "gard") {
+            Timer(const Duration(seconds: 1), () {
+              Navigator.pushReplacement(context,
+                  MaterialPageRoute(builder: (context) {
+                return GardHome(userData: res['results']);
+              }));
+            });
           } else if (res['results']["account_type"] == "manager") {
             // Timer(const Duration(seconds: 1), () {
             //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
@@ -135,7 +144,6 @@ class _LoginPageState extends State<LoginPage> {
       _btnController.reset();
     }
 
-    print('654rtfghfdsdfgchth');
     _getStudentInfo();
   }
 
@@ -173,8 +181,10 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  getPhoneId() async {
-    String? deviceId = await PlatformDeviceId.getDeviceId;
+  Future<String?> getPhoneId() async {
+    final flutterDeviceIdPlugin = FlutterDeviceId();
+
+    String? deviceId = await flutterDeviceIdPlugin.getDeviceId() ?? '';
     return deviceId;
   }
 
@@ -190,6 +200,7 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     getIp();
+    unFollowTopics();
     super.initState();
   }
 

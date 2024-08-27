@@ -14,7 +14,7 @@ import '../../static_files/my_loading.dart';
 
 class ConnectUs extends StatefulWidget {
   final Color color;
-  const ConnectUs({Key? key, required this.color}) : super(key: key);
+  const ConnectUs({super.key, required this.color});
   @override
   _ConnectUsState createState() => _ConnectUsState();
 }
@@ -30,29 +30,27 @@ class _ConnectUsState extends State<ConnectUs> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: myAppBar("اتصل بنا",widget.color),
-      body: GetBuilder<ContactProvider>(
-        builder: (val) {
-          print(val.contact?.keys.toList());
-          return val.isLoading
-              ? loading()
-              : val.contact!.isEmpty
-              ? EmptyWidget(
-            image: null,
-            packageImage: PackageImage.Image_1,
-            title: 'لاتوجد بيانات',
-            subTitle: 'لم يتم اضافة اي بيانات',
-            titleTextStyle: const TextStyle(
-              fontSize: 22,
-              color: Color(0xff9da9c7),
-              fontWeight: FontWeight.w500,
-            ),
-            subtitleTextStyle: const TextStyle(
-              fontSize: 14,
-              color: Color(0xffabb8d6),
-            ),
-          )
-              : Container(
+      appBar: myAppBar("اتصل بنا", widget.color),
+      body: GetBuilder<ContactProvider>(builder: (val) {
+        return val.isLoading
+            ? loading()
+            : val.contact!.isEmpty
+                ? EmptyWidget(
+                    image: null,
+                    packageImage: PackageImage.Image_1,
+                    title: 'لاتوجد بيانات',
+                    subTitle: 'لم يتم اضافة اي بيانات',
+                    titleTextStyle: const TextStyle(
+                      fontSize: 22,
+                      color: Color(0xff9da9c7),
+                      fontWeight: FontWeight.w500,
+                    ),
+                    subtitleTextStyle: const TextStyle(
+                      fontSize: 14,
+                      color: Color(0xffabb8d6),
+                    ),
+                  )
+                : Container(
                     padding: const EdgeInsets.only(right: 20, left: 20),
                     child: ListView(
                       physics: const BouncingScrollPhysics(),
@@ -61,24 +59,27 @@ class _ConnectUsState extends State<ConnectUs> {
                           Container(
                             padding: const EdgeInsets.only(top: 20, bottom: 20),
                             child: ClipRRect(
-                              borderRadius: BorderRadius.circular(10),
-                              ///image cache
-                              child:CachedNetworkImage(
-                                imageUrl: val.contentUrl + val.contact!['school_img'],
-                                placeholder: (context, url) => Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: const [
-                                    CircularProgressIndicator(),
-                                  ],
+                                borderRadius: BorderRadius.circular(10),
+
+                                ///image cache
+                                child: CachedNetworkImage(
+                                  imageUrl: val.contentUrl +
+                                      val.contact!['school_img'],
+                                  placeholder: (context, url) => const Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.center,
+                                    children: [
+                                      CircularProgressIndicator(),
+                                    ],
+                                  ),
+                                  fit: BoxFit.cover,
+                                  errorWidget: (context, url, error) =>
+                                      const Icon(Icons.error),
+                                )
+
+                                //Image.network(val.contact!['school_img']),
                                 ),
-                                fit: BoxFit.cover,
-                                errorWidget: (context, url, error) => const Icon(Icons.error),
-                              )
-
-
-                              //Image.network(val.contact!['school_img']),
-                            ),
                           ),
                         if (val.contact!['school_website'] != null)
                           // Container(
@@ -102,24 +103,36 @@ class _ConnectUsState extends State<ConnectUs> {
                           // ),
                           TextButton(
                             style: ButtonStyle(
-                              backgroundColor:MaterialStateProperty.all(widget.color.withOpacity(0.2),),
-                              overlayColor: MaterialStateProperty.all(widget.color.withOpacity(0.2),),
+                              backgroundColor: WidgetStateProperty.all(
+                                widget.color.withOpacity(0.2),
+                              ),
+                              overlayColor: WidgetStateProperty.all(
+                                widget.color.withOpacity(0.2),
+                              ),
                             ),
                             onPressed: () async {
-                              var _school_website = val.contact!['school_website'];
-                              await canLaunch(_school_website) ? await launch(_school_website) : throw 'Could not launch $_school_website';
+                              var schoolWebsite =
+                                  val.contact!['school_website'];
+                              await canLaunch(schoolWebsite)
+                                  ? await launch(schoolWebsite)
+                                  : throw 'Could not launch $schoolWebsite';
                             },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Text(val.contact!['school_website'],style:  TextStyle(fontSize: 16,color: widget.color),),
+                                Text(
+                                  val.contact!['school_website'],
+                                  style: TextStyle(
+                                      fontSize: 16, color: widget.color),
+                                ),
                               ],
                             ),
                           ),
                         if (val.contact!['school_description'] != null)
                           Text(
                             val.contact!['school_description'],
-                            style: const TextStyle(color: MyColor.grayDark, fontSize: 14),
+                            style: const TextStyle(
+                                color: MyColor.grayDark, fontSize: 14),
                             textAlign: TextAlign.justify,
                           ),
                         Container(
@@ -134,7 +147,7 @@ class _ConnectUsState extends State<ConnectUs> {
                                 Column(
                                   children: [
                                     Container(
-                                      decoration:  BoxDecoration(
+                                      decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: widget.color),
                                       child: IconButton(
@@ -143,12 +156,15 @@ class _ConnectUsState extends State<ConnectUs> {
                                           color: MyColor.white0,
                                         ),
                                         onPressed: () async {
-                                          var _tel = "tel:${val.contact!['school_phone']}";
-                                              await canLaunch(_tel) ? await launch(_tel) : throw 'Could not launch $_tel';
+                                          var tel =
+                                              "tel:${val.contact!['school_phone']}";
+                                          await canLaunch(tel)
+                                              ? await launch(tel)
+                                              : throw 'Could not launch $tel';
                                         },
                                       ),
                                     ),
-                                     Text(
+                                    Text(
                                       "الهاتف",
                                       style: TextStyle(
                                           fontSize: 14, color: widget.color),
@@ -168,8 +184,11 @@ class _ConnectUsState extends State<ConnectUs> {
                                           color: MyColor.white0,
                                         ),
                                         onPressed: () async {
-                                          var _tel = val.contact!['school_telegram'];
-                                          await canLaunch(_tel) ? await launch(_tel) : throw 'Could not launch $_tel';
+                                          var tel =
+                                              val.contact!['school_telegram'];
+                                          await canLaunch(tel)
+                                              ? await launch(tel)
+                                              : throw 'Could not launch $tel';
                                         },
                                       ),
                                     ),
@@ -184,7 +203,7 @@ class _ConnectUsState extends State<ConnectUs> {
                                 Column(
                                   children: [
                                     Container(
-                                      decoration:  BoxDecoration(
+                                      decoration: BoxDecoration(
                                           shape: BoxShape.circle,
                                           color: widget.color),
                                       child: IconButton(
@@ -193,8 +212,11 @@ class _ConnectUsState extends State<ConnectUs> {
                                           color: MyColor.white0,
                                         ),
                                         onPressed: () async {
-                                          var _tel = val.contact!['school_facebook'];
-                                          await canLaunch(_tel) ? await launch(_tel) : throw 'Could not launch $_tel';
+                                          var tel =
+                                              val.contact!['school_facebook'];
+                                          await canLaunch(tel)
+                                              ? await launch(tel)
+                                              : throw 'Could not launch $tel';
                                         },
                                       ),
                                     ),
@@ -219,7 +241,8 @@ class _ConnectUsState extends State<ConnectUs> {
                                         ),
                                         onPressed: () async {
                                           final link = WhatsAppUnilink(
-                                            phoneNumber: '${val.contact!['school_whatsapp']}',
+                                            phoneNumber:
+                                                '${val.contact!['school_whatsapp']}',
                                             text: "",
                                           );
                                           await launch('$link');
@@ -246,8 +269,11 @@ class _ConnectUsState extends State<ConnectUs> {
                                           color: MyColor.white0,
                                         ),
                                         onPressed: () async {
-                                          var _tel = val.contact!['school_website'];
-                                          await canLaunch(_tel) ? await launch(_tel) : throw 'Could not launch $_tel';
+                                          var tel =
+                                              val.contact!['school_website'];
+                                          await canLaunch(tel)
+                                              ? await launch(tel)
+                                              : throw 'Could not launch $tel';
                                         },
                                       ),
                                     ),
@@ -271,8 +297,10 @@ class _ConnectUsState extends State<ConnectUs> {
                                           color: MyColor.white0,
                                         ),
                                         onPressed: () async {
-                                          var _tel = val.contact!['google_map'];
-                                          await canLaunch(_tel) ? await launch(_tel) : throw 'Could not launch $_tel';
+                                          var tel = val.contact!['google_map'];
+                                          await canLaunch(tel)
+                                              ? await launch(tel)
+                                              : throw 'Could not launch $tel';
                                         },
                                       ),
                                     ),
@@ -289,8 +317,7 @@ class _ConnectUsState extends State<ConnectUs> {
                       ],
                     ),
                   );
-        }
-      ),
+      }),
     );
   }
 }
