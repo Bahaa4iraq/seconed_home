@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
-import 'package:intl/intl.dart';
 import 'package:secondhome2/screens/gard/gard_controller.dart';
 import 'package:secondhome2/screens/gard/student_model.dart';
 import 'package:secondhome2/static_files/my_color.dart';
-import 'package:toastification/toastification.dart';
 
 class StudentCard extends StatelessWidget {
   const StudentCard({super.key, required this.student});
@@ -34,52 +33,22 @@ class StudentCard extends StatelessWidget {
                       if (student.inCreatedAt == null) {
                         controller.editStudentStatus(student.sId!, 'دخول');
                       } else {
-                        toastification.show(
-                          context: context,
-                          description: RichText(
-                              text: const TextSpan(
-                                  text: 'تم تسجيل الدخول مسبقاً')),
-                          type: ToastificationType.success,
-                          style: ToastificationStyle.flat,
-                          autoCloseDuration: const Duration(seconds: 2),
-                          alignment: Alignment.topRight,
-                          animationDuration: const Duration(milliseconds: 300),
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 16),
-                          margin: const EdgeInsets.symmetric(
-                              horizontal: 12, vertical: 8),
-                          borderRadius: BorderRadius.circular(12),
-                          boxShadow: const [
-                            BoxShadow(
-                              color: Color(0x07000000),
-                              blurRadius: 16,
-                              offset: Offset(0, 16),
-                              spreadRadius: 0,
-                            )
-                          ],
-                          animationBuilder:
-                              (context, animation, alignment, child) {
-                            return FadeTransition(
-                              opacity: animation,
-                              child: child,
-                            );
-                          },
-                          icon: const Icon(Icons.check),
-                          showIcon: true,
-                          primaryColor: Colors.green,
-                          backgroundColor: Colors.white,
-                        );
+                        EasyLoading.showError('الطالب دخل بالفعل');
                       }
                     },
-                    icon: const Icon(
-                      Icons.check_circle,
-                      color: Colors.green,
-                    )),
+                    icon: student.inCreatedAt != null
+                        ? const Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                          )
+                        : const Icon(
+                            Icons.cancel,
+                            color: Colors.red,
+                          )),
                 student.inCreatedAt == null
                     ? const SizedBox()
                     : Text(
-                        DateFormat('hh:mm')
-                            .format(DateTime.parse(student.inCreatedAt!)),
+                        student.inCreatedAt!,
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 11,
@@ -91,16 +60,27 @@ class StudentCard extends StatelessWidget {
                 child: Column(
               children: [
                 IconButton(
-                    onPressed: () {},
-                    icon: const Icon(
-                      Icons.cancel,
-                      color: Colors.red,
-                    )),
+                    onPressed: () async {
+                      if (student.inCreatedAt == null) {
+                        await controller.editStudentStatus(
+                            student.sId!, 'خروج');
+                      } else {
+                        EasyLoading.showError('الطالب خرج بالفعل');
+                      }
+                    },
+                    icon: student.outCreatedAt != null
+                        ? const Icon(
+                            Icons.check_circle,
+                            color: Colors.green,
+                          )
+                        : const Icon(
+                            Icons.cancel,
+                            color: Colors.red,
+                          )),
                 student.outCreatedAt == null
                     ? const SizedBox()
                     : Text(
-                        DateFormat('hh:mm')
-                            .format(DateTime.parse(student.outCreatedAt!)),
+                        student.outCreatedAt!,
                         style: const TextStyle(
                           color: Colors.grey,
                           fontSize: 11,

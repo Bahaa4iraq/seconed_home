@@ -22,8 +22,6 @@ class Account {
   });
 
   factory Account.fromMap(Map<String, dynamic> json) {
-    print('json');
-    print(json);
     return Account(
       token: json['token'],
       id: json['_id'],
@@ -31,9 +29,10 @@ class Account {
       accountMobile: json['account_mobile'],
       accountType: json['account_type'],
       accountEmail: json['account_email'],
-      accountBirthday: DateTime.parse(json['account_birthday']),
+      accountBirthday:
+          DateTime.parse(json['account_birthday'] ?? DateTime.now().toString()),
       accountAddress: json['account_address'],
-      isKindergarten: json['is_kindergarten']==1,
+      isKindergarten: json['is_kindergarten'] == 1,
     );
   }
 

@@ -33,7 +33,6 @@ subprojects {
             if (it.android.namespace == null) {
                 def manifest = new XmlSlurper().parse(file(it.android.sourceSets.main.manifest.srcFile))
                 def packageName = manifest.@package.text()
-                println("Setting ${packageName} as android namespace")
                 android.namespace = packageName
             }
 
@@ -53,8 +52,6 @@ subprojects {
                         jvmTarget = javaVersion.toString()
                     }
                 }
-                println("Setting java version to ${javaVersion.toString()} which is $javaVersion")
-                println("Setting compileSdkVersion and targetSdkVersion to $androidApiVersion")
             }
         }
 

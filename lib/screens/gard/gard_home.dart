@@ -7,6 +7,7 @@ import 'package:secondhome2/provider/accounts_provider.dart';
 import 'package:secondhome2/screens/auth/login_page.dart';
 import 'package:secondhome2/screens/gard/enter_student.dart';
 import 'package:secondhome2/screens/gard/gard_controller.dart';
+import 'package:secondhome2/screens/gard/report_gard_screen.dart';
 import 'package:secondhome2/static_files/my_color.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -33,6 +34,7 @@ class _GardHomeState extends State<GardHome> {
   void initState() {
     followTopics();
     controller.getStudentNames();
+    controller.getStudentReport();
 
     super.initState();
   }
@@ -41,71 +43,77 @@ class _GardHomeState extends State<GardHome> {
   Widget build(BuildContext context) {
     return DefaultTabController(
       length: 2,
-      child: Scaffold(
-          appBar: AppBar(
-            title: const Text(
-              'الصفحة الرئيسية',
-              style: TextStyle(color: Colors.white),
+      child: GestureDetector(
+        onTap: () {
+          FocusScope.of(context).requestFocus(FocusNode());
+        },
+        child: Scaffold(
+            appBar: AppBar(
+              title: const Text(
+                'الصفحة الرئيسية',
+                style: TextStyle(color: Colors.black),
+              ),
+              backgroundColor: MyColor.turquoise2,
+              centerTitle: true,
+              bottom: const TabBar(
+                  labelColor: Colors.black,
+                  unselectedLabelColor: MyColor.grayDark,
+                  indicatorColor: MyColor.grayDark,
+                  tabs: [
+                    Tab(
+                      text: 'الطلاب',
+                    ),
+                    Tab(
+                      text: 'التقارير',
+                    ),
+                  ]),
+              leading: IconButton(
+                  onPressed: () {
+                    Get.defaultDialog(
+                      title: "تسجيل خروج",
+                      content: const Text(
+                        "هل انت متأكد من عملية تسجيل الخروج؟",
+                      ),
+                      cancel: MaterialButton(
+                        color: MyColor.turquoise,
+                        onPressed: () => Get.back(),
+                        child: const Text(
+                          "الغاء",
+                          style: TextStyle(color: MyColor.white0),
+                        ),
+                      ),
+                      confirm: MaterialButton(
+                        color: MyColor.turquoise,
+                        onPressed: () {
+                          Auth().loginOut().then((res) async {
+                            if (res['error'] == false) {
+                              await accountProvider.deleteAccount(
+                                  widget.userData['account_email']);
+                              Get.offAll(() => const LoginPage());
+                              EasyLoading.showSuccess(
+                                  res['message'].toString());
+                            } else {
+                              EasyLoading.showError(res['message'].toString());
+                            }
+                          });
+                        },
+                        child: const Text(
+                          "تأكيد",
+                          style: TextStyle(color: MyColor.white0),
+                        ),
+                      ),
+                    );
+                  },
+                  icon: const Icon(
+                    Icons.logout,
+                    color: Colors.white,
+                  )),
             ),
-            backgroundColor: MyColor.green,
-            centerTitle: true,
-            bottom: const TabBar(
-                labelColor: Colors.white,
-                unselectedLabelColor: MyColor.grayDark,
-                indicatorColor: MyColor.grayDark,
-                tabs: [
-                  Tab(
-                    text: 'الطلاب',
-                  ),
-                  Tab(
-                    text: 'التقارير',
-                  ),
-                ]),
-            leading: IconButton(
-                onPressed: () {
-                  Get.defaultDialog(
-                    title: "تسجيل خروج",
-                    content: const Text(
-                      "هل انت متأكد من عملية تسجيل الخروج؟",
-                    ),
-                    cancel: MaterialButton(
-                      color: MyColor.turquoise,
-                      onPressed: () => Get.back(),
-                      child: const Text(
-                        "الغاء",
-                        style: TextStyle(color: MyColor.white0),
-                      ),
-                    ),
-                    confirm: MaterialButton(
-                      color: MyColor.turquoise,
-                      onPressed: () {
-                        Auth().loginOut().then((res) async {
-                          if (res['error'] == false) {
-                            await accountProvider.deleteAccount(
-                                widget.userData['account_email']);
-                            Get.offAll(() => const LoginPage());
-                            EasyLoading.showSuccess(res['message'].toString());
-                          } else {
-                            EasyLoading.showError(res['message'].toString());
-                          }
-                        });
-                      },
-                      child: const Text(
-                        "تأكيد",
-                        style: TextStyle(color: MyColor.white0),
-                      ),
-                    ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.logout,
-                  color: Colors.white,
-                )),
-          ),
-          body: const TabBarView(children: [
-            EnterStudent(),
-            EnterStudent(),
-          ])),
+            body: const TabBarView(children: [
+              EnterStudent(),
+              ReportGardScreen(),
+            ])),
+      ),
     );
   }
 }

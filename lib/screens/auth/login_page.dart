@@ -86,6 +86,7 @@ class _LoginPageState extends State<LoginPage> {
 
     if (_formCheck.currentState!.validate() && authData != null) {
       Auth().login(data).then((res) async {
+        print(res);
         if (!res['error']) {
           _btnController.success();
           await box.write('_userData', res['results']);
@@ -109,6 +110,7 @@ class _LoginPageState extends State<LoginPage> {
                   () => HomePageNurseryTeacher(userData: res['results']));
             }
           } else if (res['results']["account_type"] == "gard") {
+            tokenProvider.addAccountToDatabase(res['results']);
             Timer(const Duration(seconds: 1), () {
               Navigator.pushReplacement(context,
                   MaterialPageRoute(builder: (context) {
@@ -144,7 +146,6 @@ class _LoginPageState extends State<LoginPage> {
       _btnController.reset();
     }
 
-    _getStudentInfo();
   }
 
   _getStudentInfo() async {
