@@ -62,8 +62,9 @@ class StudentCard extends StatelessWidget {
                 IconButton(
                     onPressed: () async {
                       if (student.inCreatedAt == null) {
-                        await controller.editStudentStatus(
-                            student.sId!, 'خروج');
+                        EasyLoading.showError('الطالب لم يدخل بعد');
+                      } else if (student.outCreatedAt == null) {
+                        controller.editStudentStatus(student.sId!, 'خروج');
                       } else {
                         EasyLoading.showError('الطالب خرج بالفعل');
                       }

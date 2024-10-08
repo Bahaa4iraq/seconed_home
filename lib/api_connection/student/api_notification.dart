@@ -55,6 +55,7 @@ class NotificationsAPI extends GetConnect {
             .insertData(response.body['results']['data']);
         EasyLoading.dismiss();
       } else {
+        Get.put(NotificationProvider()).changeLoading(false);
         EasyLoading.dismiss();
         return {"error": true};
       }
@@ -126,6 +127,8 @@ class NotificationsAPI extends GetConnect {
     try {
       final response =
           await put('${mainApi}student/notification', data, headers: headers);
+      print(response);
+
       if (response.statusCode == 401) {
         Auth().redirect();
       } else if (!response.body["error"]) {
@@ -394,7 +397,6 @@ class NotificationsAPI extends GetConnect {
         Logger().i("redirect");
         Auth().redirect();
       } else if (!response.body["error"]) {
-        print(response);
         Get.put(SleepNotificationProvider()).editReadMap(id);
       }
     } catch (e) {
@@ -443,7 +445,6 @@ class NotificationsAPI extends GetConnect {
         Logger().i("redirect");
         Auth().redirect();
       } else if (!response.body["error"]) {
-        print(response);
         Get.put(NappyNotificationProvider()).editReadMap(id);
       }
     } catch (e) {
@@ -473,6 +474,7 @@ class NotificationsAPI extends GetConnect {
             .insertData(response.body['results']['data']);
         EasyLoading.dismiss();
       } else {
+        _notificationProviderTraining.changeLoading(false);
         EasyLoading.dismiss();
         return {"error": true};
       }

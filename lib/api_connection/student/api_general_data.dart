@@ -12,22 +12,7 @@ import '../../static_files/my_color.dart';
 import '../../static_files/my_url.dart';
 
 class GeneralData extends GetConnect {
-  getAds(int page) async {
-    try {
-      final response = await get('${mainApi}ads/page/$page');
-      if (!response.body['error']) {
-        Get.put(AdsProvider()).changeLoading(false);
-        Get.put(AdsProvider()).changeContentUrl(response.body['content_url']);
-        Get.put(AdsProvider()).addData(response.body['results']);
-        return true;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
-          colorText: MyColor.white0, backgroundColor: MyColor.red);
-    }
-  }
+
 
   getSchools() async {
     try {

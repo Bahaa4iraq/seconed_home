@@ -3,6 +3,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
+import 'package:secondhome2/screens/nursery/attende.dart';
 import 'package:secondhome2/screens/nursery/review/review_date.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -63,6 +64,7 @@ class HomePageNurseryState extends State<HomePageNursery>
     List<Widget> widgetList = <Widget>[
       Dashboard(userData: widget.userData),
       const ReviewDate(),
+      const Attende(color: MyColor.pink),
       const StudentSalary(),
       StudentProfile(userData: widget.userData),
     ];
@@ -106,6 +108,10 @@ class HomePageNurseryState extends State<HomePageNursery>
             BottomNavigationBarItem(
               icon: Icon(CommunityMaterialIcons.diamond_outline),
               label: "تقييم الطالب",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(CommunityMaterialIcons.location_enter),
+              label: "دخول وخروج",
             ),
             BottomNavigationBarItem(
               icon: Icon(CommunityMaterialIcons.file_outline),

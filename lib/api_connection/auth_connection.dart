@@ -37,6 +37,7 @@ class Auth extends GetConnect {
           Get.put(MainDataGetProvider())
               .changeContentUrl(response.body['content_url']);
           Get.put(MainDataGetProvider()).addData(response.body['results']);
+          followTopics();
           //todo subscribe To Topic firebase
           //await FirebaseMessaging.instance.subscribeToTopic("school_${response.body['results']['account_school']}");
           return response.body['results'];

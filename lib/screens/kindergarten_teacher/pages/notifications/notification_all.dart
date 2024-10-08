@@ -36,7 +36,7 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
       Get.put(TeacherNotificationProvider());
   List accountDivisionList = [];
   int page = 0;
-  String? type;
+  String? typeSelected;
   List typeList = [
     "دروس",
     "اقساط",
@@ -51,7 +51,7 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
       "study_year": _mainDataGetProvider.mainData['setting'][0]['setting_year'],
       "page": page,
       "class_school": accountDivisionList,
-      "type": type,
+      "type": typeSelected,
       "isRead": _notificationProvider.isRead
     };
     NotificationsAPI().getNotifications(_data);
@@ -337,6 +337,8 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
     ];
 
     if (_pageNotifications.contains(_data['notifications_type'])) {
+      Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
+
       Get.to(() => ShowMessage(
           data: _data,
           contentUrl: _contentUrl,
@@ -354,13 +356,13 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
       child: MaterialButton(
         onPressed: () {
           page = 0;
-          type = _type;
+          typeSelected = _type;
           Get.put(TeacherNotificationProvider()).remove();
           EasyLoading.show(status: "جار جلب البيانات");
           initFunction();
         },
-        color: _type == type ? MyColor.turquoise : MyColor.white0,
-        textColor: _type == type ? MyColor.white0 : MyColor.turquoise,
+        color: _type == typeSelected ? MyColor.turquoise : MyColor.white0,
+        textColor: _type == typeSelected ? MyColor.white0 : MyColor.turquoise,
         child: Text(_type ?? "الكل"),
       ),
     );

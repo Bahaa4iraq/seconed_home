@@ -32,7 +32,7 @@ import 'student_salary/student_salary.dart';
 class NotificationAll extends StatefulWidget {
   final Map userData;
 
-  const NotificationAll({Key? key, required this.userData}) : super(key: key);
+  const NotificationAll({super.key, required this.userData});
 
   @override
   _NotificationAllState createState() => _NotificationAllState();
@@ -57,19 +57,20 @@ class _NotificationAllState extends State<NotificationAll> {
     "الميلاد"
   ];
 
-  String? getType(){
-    if(type== "هل تعلم") {
+  String? getType() {
+    if (type == "هل تعلم") {
       return "تقرير";
-    }else if(type == "يوميات"){
+    } else if (type == "يوميات") {
       return "دروس";
-    }else if(type == "واجب اسبوعي"){
+    } else if (type == "واجب اسبوعي") {
       return "واجب بيتي";
-    }else if(type == "ملخص الدروس اليومية"){
+    } else if (type == "ملخص الدروس اليومية") {
       return "ملخص";
-    }else{
+    } else {
       return type;
     }
   }
+
   initFunction() {
     Map _data = {
       "study_year": _mainDataGetProvider.mainData['setting'][0]['setting_year'],
@@ -79,7 +80,7 @@ class _NotificationAllState extends State<NotificationAll> {
       "type": getType(),
       "isRead": _notificationProvider.isRead
     };
-    Logger().i(_data);
+    // Logger().i(_data);
     NotificationsAPI().getNotifications(_data);
   }
 
@@ -137,8 +138,6 @@ class _NotificationAllState extends State<NotificationAll> {
         elevation: 0,
         actions: [
           GetBuilder<NotificationProvider>(builder: (val) {
-            print("all data===============");
-            print('isRead' + '${val.isRead}');
             return IconButton(
               onPressed: () {
                 if (val.isRead == null) {
@@ -163,7 +162,6 @@ class _NotificationAllState extends State<NotificationAll> {
         ],
       ),
       body: GetBuilder<NotificationProvider>(
-
           builder: (val) => Column(
                 children: [
                   SingleChildScrollView(
@@ -239,7 +237,8 @@ class _NotificationAllState extends State<NotificationAll> {
                                         child: LiveList.options(
                                             itemBuilder: animationItemBuilder(
                                               (ind) {
-                                                print('=============================');
+                                                print(
+                                                    '=============================');
                                                 print(val.data);
                                                 return InkWell(
                                                   onTap: () {
@@ -254,13 +253,13 @@ class _NotificationAllState extends State<NotificationAll> {
                                                             bottom: 5,
                                                             top: 5),
                                                     padding: const EdgeInsets
-                                                            .symmetric(
+                                                        .symmetric(
                                                         horizontal: 10,
                                                         vertical: 15),
                                                     decoration: BoxDecoration(
                                                       borderRadius:
                                                           const BorderRadius
-                                                                  .all(
+                                                              .all(
                                                               Radius.circular(
                                                                   20)),
                                                       color: MyColor.white0,
@@ -279,7 +278,7 @@ class _NotificationAllState extends State<NotificationAll> {
                                                         Container(
                                                           padding:
                                                               const EdgeInsets
-                                                                      .only(
+                                                                  .only(
                                                                   left: 5),
                                                           decoration: const BoxDecoration(
                                                               border: Border(
@@ -297,15 +296,24 @@ class _NotificationAllState extends State<NotificationAll> {
                                                           ),
                                                         ),
                                                         Expanded(
-                                                          child: Text(
-                                                            val.data[ind][
-                                                                    "notifications_description"]
-                                                                .toString(),
-                                                            style: const TextStyle(
-                                                                color: MyColor
-                                                                    .grayDark),
-                                                            textAlign: TextAlign
-                                                                .center,
+                                                          child: FittedBox(
+                                                            fit: BoxFit
+                                                                .scaleDown,
+                                                            child: Text(
+                                                              val.data[ind][
+                                                                      "notifications_description"]
+                                                                  .toString(),
+                                                              maxLines: 3,
+                                                              style: const TextStyle(
+                                                                  overflow:
+                                                                      TextOverflow
+                                                                          .ellipsis,
+                                                                  color: MyColor
+                                                                      .grayDark),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            ),
                                                           ),
                                                         ),
                                                         const Icon(
@@ -334,10 +342,9 @@ class _NotificationAllState extends State<NotificationAll> {
                                     itemCount: val.data.length,
                                     itemBuilder: animationItemBuilder(
                                       (indexes) {
-                                        print('+++++++++++++++++++++++++++++++++');
-                                        print(val.data[indexes]["notifications_title"]);
-                                        print(val.data[indexes]["notifications_type"]);
-
+                                        print(
+                                            '==============data================');
+                                        print(val.data[0]);
                                         return TimelineTile(
                                           alignment: TimelineAlign.manual,
                                           lineXY: .2,
@@ -405,7 +412,15 @@ class _NotificationAllState extends State<NotificationAll> {
                                                           "notifications_description"] !=
                                                       null
                                                   ? Text(
-                                                      '${val.data[indexes]["notifications_description"]}',maxLines: 4,overflow: TextOverflow.ellipsis,)
+                                                      '${val.data[indexes]["notifications_description"]}',
+                                                      maxLines: 4,
+                                                      softWrap: true,
+                                                      style: const TextStyle(
+                                                          color:
+                                                              MyColor.grayDark),
+                                                      overflow:
+                                                          TextOverflow.ellipsis,
+                                                    )
                                                   : null,
                                               leading: _notificationsType(
                                                   val.data[indexes]
@@ -473,7 +488,9 @@ class _NotificationAllState extends State<NotificationAll> {
       // Get.to(() => Installments())
     } else if (pageNotifications.contains(_data['notifications_type'])) {
       Logger().i('yest');
-
+      setState(() {
+        NotificationsAPI().updateReadNotifications(_data['_id']);
+      });
       Get.to(() => ShowMessage(
             data: _data,
             contentUrl: _contentUrl,
@@ -482,9 +499,6 @@ class _NotificationAllState extends State<NotificationAll> {
               Logger().i(_data);
             },
           ));
-      setState(() {
-        NotificationsAPI().updateReadNotifications(_data['_id']);
-      });
     } else {}
 
     // else if (_data['notifications_type'] == "البصمة") {
@@ -495,6 +509,7 @@ class _NotificationAllState extends State<NotificationAll> {
   String isSummery = "";
 
   _button(String? _type) {
+    print('here');
     return Padding(
       padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
       child: MaterialButton(
@@ -511,7 +526,6 @@ class _NotificationAllState extends State<NotificationAll> {
           } else {
             isSummery = "";
           }
-          print("my type================");
           if (type == "الحضور") {
             Get.to(() => StudentAttend(
                   userData: widget.userData,

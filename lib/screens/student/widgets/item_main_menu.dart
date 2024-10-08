@@ -11,12 +11,12 @@ class ItemMainMenu extends StatelessWidget {
   final bool features;
 
   const ItemMainMenu({
-    Key? key,
+    super.key,
     this.title = '',
     required this.img,
     required this.nav,
     this.features = true,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

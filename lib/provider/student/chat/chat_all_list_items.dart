@@ -40,13 +40,13 @@ class ChatTeacherListProvider extends GetxController {
     });
   }
 
-  void changeContentUrl(String contentUrl) {
-    contentUrl = contentUrl;
+  void changeContentUrl(String contentUrlR) {
+    contentUrl = contentUrlR;
   }
 
   bool isLoading = true;
-  void changeLoading(bool isLoading) {
-    isLoading = isLoading;
+  void changeLoading(bool isLoadingR) {
+    isLoading = isLoadingR;
   }
 
   void clear() {
@@ -64,13 +64,13 @@ class ChatGroupStudentListProvider extends GetxController {
     update();
   }
 
-  void changeContentUrl(String contentUrl) {
-    contentUrl = contentUrl;
+  void changeContentUrl(String contentUrlR) {
+    contentUrl = contentUrlR;
   }
 
   bool isLoading = true;
-  void changeLoading(bool isLoading) {
-    isLoading = isLoading;
+  void changeLoading(bool isLoadingR) {
+    isLoading = isLoadingR;
   }
 
   void clear() {

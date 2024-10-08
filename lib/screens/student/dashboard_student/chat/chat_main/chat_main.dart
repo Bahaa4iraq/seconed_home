@@ -29,6 +29,10 @@ class _ChatMainState extends State<ChatMain> {
                   floating: true,
                   bottom: TabBar(
                     indicatorColor: MyColor.white0,
+                    labelStyle: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.bold,
+                    ),
                     indicatorWeight: 3,
                     tabs: [
                       Tab(

@@ -10,13 +10,13 @@ import '../../../static_files/my_url.dart';
 class AddChatFilesAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
 
-  addImages(dio.FormData _data) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  addImages(dio.FormData data) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response = await dio.Dio().post(
-        mainApi + 'chat/uploadFile',
-        data: _data,
-        options: dio.Options(headers: _headers),
+        '${mainApi}chat/uploadFile',
+        data: data,
+        options: dio.Options(headers: headers),
         onSendProgress: (int sent, int total) {
           EasyLoading.showProgress(sent / total, status: "جار الرفع...");
           if (sent == total) {
@@ -38,13 +38,13 @@ class AddChatFilesAPI extends GetConnect {
     }
   }
 
-  addImagesGroup(dio.FormData _data) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  addImagesGroup(dio.FormData data) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response = await dio.Dio().post(
-        mainApi + 'chatGroup/uploadFile',
-        data: _data,
-        options: dio.Options(headers: _headers),
+        '${mainApi}chatGroup/uploadFile',
+        data: data,
+        options: dio.Options(headers: headers),
         onSendProgress: (int sent, int total) {
           EasyLoading.showProgress(sent / total, status: "جار الرفع...");
           if (sent == total) {

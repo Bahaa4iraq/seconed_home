@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -188,7 +189,8 @@ Widget _textChatMessage(Map data, int index) {
                 ? true
                 : false,
         text: data['chat_message'],
-        time: toDateAndTime(data['created_at'], 12),
+        time: DateFormat('yyyy-MM-dd hh:mm aa')
+            .format(DateTime.parse(data['createdAt'])),
         isSender: isSender,
         color: isSender
             ? MyColor.yellow.withOpacity(0.15)

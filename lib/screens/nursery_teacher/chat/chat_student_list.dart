@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import '../../../provider/auth_provider.dart';
 import '../../../provider/teacher/chat/chat_all_list_items.dart';
 import '../../../provider/teacher/chat/chat_message.dart';
@@ -9,7 +10,6 @@ import '../../../static_files/debouncer.dart';
 import '../../../static_files/my_chat_static_files.dart';
 import '../../../static_files/my_color.dart';
 import '../../../static_files/my_loading.dart';
-import '../../../static_files/my_times.dart';
 import 'chat_main/chat_page.dart';
 
 class ChatStudentList extends StatefulWidget {
@@ -30,23 +30,23 @@ class _ChatStudentListState extends State<ChatStudentList> {
   final ChatStudentListProvider chatStudentProvider = Get.find();
 
   int page = 0;
-  List _classesId = [];
-  late var _studyYear;
+  List classesId = [];
+  late var studyYear;
 
   search() {
     page = 0;
     EasyLoading.show(status: "جار جلب البيانات");
     chatStudentProvider.getStudent(
-        page, _classesId, _studyYear, searchController.text);
+        page, classesId, studyYear, searchController.text);
   }
 
   _getStudentList() {
-    _studyYear = _mainDataGetProvider.mainData['setting'][0]['setting_year'];
+    studyYear = _mainDataGetProvider.mainData['setting'][0]['setting_year'];
     if (page != 0) {
       EasyLoading.show(status: "جار جلب البيانات");
     }
     chatStudentProvider.getStudent(
-        page, _classesId, _studyYear, searchController.text);
+        page, classesId, studyYear, searchController.text);
   }
 
   @override
@@ -58,7 +58,7 @@ class _ChatStudentListState extends State<ChatStudentList> {
   @override
   void initState() {
     for (Map _data in _classes) {
-      _classesId.add(_data['_id'].toString());
+      classesId.add(_data['_id'].toString());
     }
     _getStudentList();
     _scrollController.addListener(() {
@@ -183,7 +183,7 @@ class _ChatStudentListState extends State<ChatStudentList> {
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           if (_data['chats']['data'].isNotEmpty)
-            _timeText(_data['chats']['data'][0]['created_at']),
+            _timeText(_data['chats']['data'][0]['createdAt']),
           if (_data['chats']['countUnRead'] > 0)
             _messageUnRead(_data['chats']['countUnRead']),
         ],
@@ -205,9 +205,9 @@ class _ChatStudentListState extends State<ChatStudentList> {
   }
 }
 
-Text _timeText(int _time) {
+Text _timeText(_time) {
   return Text(
-    getChatDate(_time, 12),
+    DateFormat('yyyy-MM-dd hh:mm aa').format(DateTime.parse(_time)),
     style: const TextStyle(fontSize: 10),
   );
 }

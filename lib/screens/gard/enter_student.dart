@@ -80,11 +80,6 @@ class _EnterStudentState extends State<EnterStudent> {
                                 filled: true
                                 //fillColor: Colors.green
                                 ),
-                            validator: (value) {
-                              var result =
-                                  value!.length < 3 ? "املئ البيانات" : null;
-                              return result;
-                            },
                           ),
                         ),
                         DefaultTextStyle(

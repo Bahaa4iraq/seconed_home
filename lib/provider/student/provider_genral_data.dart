@@ -1,46 +1,29 @@
 import 'package:get/get.dart';
 
-class AdsProvider extends GetxController {
-  List? ads;
-  String contentUrl = "";
-  bool isLoading = true;
-  void addData(List _list) {
-    ads = _list;
-    update();
-  }
-
-  void changeContentUrl(String _contentUrl) {
-    contentUrl = _contentUrl;
-  }
-
-  void changeLoading(bool _isLoading) {
-    isLoading = _isLoading;
-  }
-}
 
 class SchoolsProvider extends GetxController {
   List? schools;
   bool isLoading = true;
-  void addData(List _list) {
-    schools = _list;
+  void addData(List list) {
+    schools = list;
     update();
   }
 
-  void changeLoading(bool _isLoading) {
-    isLoading = _isLoading;
+  void changeLoading(bool isLoading) {
+    isLoading = isLoading;
   }
 }
 
 class GovernorateProvider extends GetxController {
   List? governorate;
   bool isLoading = true;
-  void addData(List _list) {
-    governorate = _list;
+  void addData(List list) {
+    governorate = list;
     update();
   }
 
-  void changeLoading(bool _isLoading) {
-    isLoading = _isLoading;
+  void changeLoading(bool isLoading) {
+    isLoading = isLoading;
   }
 }
 
@@ -48,17 +31,17 @@ class ContactProvider extends GetxController {
   Map? contact;
   bool isLoading = true;
   String contentUrl = "";
-  void addData(Map _map) {
-    contact = _map;
+  void addData(Map map) {
+    contact = map;
     update();
   }
 
-  void changeLoading(bool _isLoading) {
-    isLoading = _isLoading;
+  void changeLoading(bool isLoading) {
+    isLoading = isLoading;
   }
 
-  void changeContentUrl(String _contentUrl) {
-    contentUrl = _contentUrl;
+  void changeContentUrl(String contentUrl) {
+    contentUrl = contentUrl;
   }
 }
 
@@ -66,13 +49,13 @@ class ContactProvider extends GetxController {
 class SubjectProvider extends GetxController {
   Map? subject;
   String contentUrl = "";
-  void addToSubject(Map _map) {
-    subject = _map;
+  void addToSubject(Map map) {
+    subject = map;
     update();
   }
 
-  void changeContentUrl(String _contentUrl) {
-    contentUrl = _contentUrl;
+  void changeContentUrl(String contentUrl) {
+    contentUrl = contentUrl;
   }
 
   void insertData(body) {}
@@ -81,13 +64,13 @@ class SubjectProvider extends GetxController {
 class TeachersProvider extends GetxController {
   List? teachers;
   String contentUrl = "";
-  void addToTeachers(List _list) {
-    teachers = _list;
+  void addToTeachers(List list) {
+    teachers = list;
     update();
   }
 
-  void changeContentUrl(String _contentUrl) {
-    contentUrl = _contentUrl;
+  void changeContentUrl(String contentUrl) {
+    contentUrl = contentUrl;
   }
 }
 

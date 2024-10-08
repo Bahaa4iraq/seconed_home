@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:community_material_icon/community_material_icon.dart';
 import 'package:secondhome2/screens/auth/connect_us.dart';
+import 'package:secondhome2/screens/nursery/attende.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import '../../api_connection/auth_connection.dart';
@@ -65,6 +66,9 @@ class _HomePageStudentState extends State<HomePageStudent>
     List<Widget> _widget = <Widget>[
       Dashboard(userData: widget.userData),
       const ReviewDate(),
+      const Attende(
+        color: MyColor.turquoise,
+      ),
       const DailyExams(),
       StudentProfile(userData: widget.userData),
     ];
@@ -108,6 +112,10 @@ class _HomePageStudentState extends State<HomePageStudent>
             BottomNavigationBarItem(
               icon: Icon(CommunityMaterialIcons.diamond_outline),
               label: "تقييم الطالب",
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(CommunityMaterialIcons.location_enter),
+              label: "دخول وخروج",
             ),
             BottomNavigationBarItem(
               icon: Icon(CommunityMaterialIcons.file_outline),

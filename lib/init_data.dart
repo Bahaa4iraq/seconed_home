@@ -48,7 +48,6 @@ Future<void> init() async {
   ///general stateManagement
   Get.put(TokenProvider());
   Get.put(MainDataGetProvider());
-  Get.put(AdsProvider());
   Get.put(ContactProvider());
 
   Get.put(AudioPlayerProvider());

@@ -7,6 +7,7 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:secondhome2/screens/gard/gard_home.dart';
+import 'package:secondhome2/screens/update_files/my_splash.dart';
 import 'init_data.dart';
 import 'provider/auth_provider.dart';
 import 'screens/auth/login_page.dart';
@@ -67,7 +68,8 @@ class MyApp extends StatelessWidget {
           },
         ),
         home: Builder(builder: (context) {
-          return _redirectToPage();
+          return const SplashScreenWellcome();
+          // return _redirectToPage();
         }));
   }
 }

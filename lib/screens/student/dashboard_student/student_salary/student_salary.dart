@@ -14,7 +14,7 @@ import '../../../../static_files/my_loading.dart';
 import 'student_salary_details.dart';
 
 class StudentSalary extends StatefulWidget {
-  const StudentSalary({Key? key}) : super(key: key);
+  const StudentSalary({super.key});
 
   @override
   State<StudentSalary> createState() => _StudentSalaryState();
@@ -38,7 +38,7 @@ class _StudentSalaryState extends State<StudentSalary> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar("الاقساط",MyColor.turquoise),
+      appBar: myAppBar("الاقساط", MyColor.turquoise),
       body: GetBuilder<StudentSalaryProvider>(builder: (val) {
         return val.isLoading
             ? loading()
@@ -99,47 +99,47 @@ class _StudentSalaryState extends State<StudentSalary> {
                               decoration: TextDecoration.underline),
                         ),
                       ),
-                      const Align(
-                        alignment: Alignment.topRight,
-                        child: Padding(
-                          padding: EdgeInsets.only(right: 8, left: 8),
-                          child: Text(
-                            "ملاحظة",
-                            textAlign: TextAlign.right,
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                            ),
-                          ),
-                        ),
-                      ),
-                      val.data['forThisYear']['remaining'] <= 0
-                          ? const Align(
-                              alignment: Alignment.topRight,
-                              child: Padding(
-                                  padding: EdgeInsets.only(right: 15, left: 15),
-                                  child: Text("لايوجد ديون مترتبة لهذه السنة")),
-                            )
-                          : Align(
-                              alignment: Alignment.topRight,
-                              child: Padding(
-                                  padding: const EdgeInsets.only(
-                                      right: 15, left: 15),
-                                  child: RichText(
-                                    text: TextSpan(
-                                        text: 'القسط القادم في تاريخ ',
-                                        style: const TextStyle(
-                                            color: Colors.black, fontSize: 15),
-                                        children: <TextSpan>[
-                                          TextSpan(
-                                            text: val.data['forThisYear']
-                                                ["next_payment"],
-                                            style: const TextStyle(
-                                                color: MyColor.turquoise,
-                                                fontSize: 15),
-                                          )
-                                        ]),
-                                  )),
-                            ),
+                      // const Align(
+                      //   alignment: Alignment.topRight,
+                      //   child: Padding(
+                      //     padding: EdgeInsets.only(right: 8, left: 8),
+                      //     child: Text(
+                      //       "ملاحظة",
+                      //       textAlign: TextAlign.right,
+                      //       style: TextStyle(
+                      //         decoration: TextDecoration.underline,
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      // val.data['forThisYear']['remaining'] <= 0
+                      //     ? const Align(
+                      //         alignment: Alignment.topRight,
+                      //         child: Padding(
+                      //             padding: EdgeInsets.only(right: 15, left: 15),
+                      //             child: Text("لايوجد ديون مترتبة لهذه السنة")),
+                      //       )
+                      //     : Align(
+                      //   alignment: Alignment.topRight,
+                      //   child: Padding(
+                      //       padding: const EdgeInsets.only(
+                      //           right: 15, left: 15),
+                      //       child: RichText(
+                      //         text: TextSpan(
+                      //             text: 'القسط القادم في تاريخ ',
+                      //             style: const TextStyle(
+                      //                 color: Colors.black, fontSize: 15),
+                      //             children: <TextSpan>[
+                      //               TextSpan(
+                      //                 text: val.data['forThisYear']
+                      //                     ["next_payment"],
+                      //                 style: const TextStyle(
+                      //                     color: MyColor.turquoise,
+                      //                     fontSize: 15),
+                      //               )
+                      //             ]),
+                      //       )),
+                      // ),
                       const SizedBox(
                         height: 20,
                       )

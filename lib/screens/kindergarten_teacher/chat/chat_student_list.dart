@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import '../../../provider/auth_provider.dart';
 import '../../../provider/teacher/chat/chat_all_list_items.dart';
 import '../../../provider/teacher/chat/chat_message.dart';
@@ -9,11 +10,10 @@ import '../../../static_files/debouncer.dart';
 import '../../../static_files/my_chat_static_files.dart';
 import '../../../static_files/my_color.dart';
 import '../../../static_files/my_loading.dart';
-import '../../../static_files/my_times.dart';
 import 'chat_main/chat_page.dart';
 
 class ChatStudentList extends StatefulWidget {
-  const ChatStudentList({Key? key}) : super(key: key);
+  const ChatStudentList({super.key});
 
   @override
   State<ChatStudentList> createState() => _ChatStudentListState();
@@ -30,23 +30,23 @@ class _ChatStudentListState extends State<ChatStudentList> {
   final ChatStudentListProvider chatStudentProvider = Get.find();
 
   int page = 0;
-  List _classesId = [];
-  late var _studyYear;
+  List classesId = [];
+  late String studyYear;
 
   search() {
     page = 0;
     EasyLoading.show(status: "جار جلب البيانات");
     chatStudentProvider.getStudent(
-        page, _classesId, _studyYear, searchController.text);
+        page, classesId, studyYear, searchController.text);
   }
 
   _getStudentList() {
-    _studyYear = _mainDataGetProvider.mainData['setting'][0]['setting_year'];
+    studyYear = _mainDataGetProvider.mainData['setting'][0]['setting_year'];
     if (page != 0) {
       EasyLoading.show(status: "جار جلب البيانات");
     }
     chatStudentProvider.getStudent(
-        page, _classesId, _studyYear, searchController.text);
+        page, classesId, studyYear, searchController.text);
   }
 
   @override
@@ -57,8 +57,8 @@ class _ChatStudentListState extends State<ChatStudentList> {
 
   @override
   void initState() {
-    for (Map _data in _classes) {
-      _classesId.add(_data['_id'].toString());
+    for (Map data in _classes) {
+      classesId.add(data['_id'].toString());
     }
     _getStudentList();
     _scrollController.addListener(() {
@@ -136,13 +136,13 @@ class _ChatStudentListState extends State<ChatStudentList> {
     });
   }
 
-  _student(Map _data, String _contentUrl) {
+  _student(Map data, String contentUrl) {
     return ListTile(
       title: Text(
-        _data['account_name'].toString(),
+        data['account_name'].toString(),
         style: const TextStyle(fontSize: 14),
       ),
-      subtitle: _data['chats']['data'].length == 0
+      subtitle: data['chats']['data'].length == 0
           ? null
           : Row(
               mainAxisSize: MainAxisSize.min,
@@ -150,7 +150,7 @@ class _ChatStudentListState extends State<ChatStudentList> {
                 Flexible(
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
-                    decoration: _data['chats']['data'][0]
+                    decoration: data['chats']['data'][0]
                             ['chat_message_is_deleted']
                         ? BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -161,13 +161,13 @@ class _ChatStudentListState extends State<ChatStudentList> {
                           )
                         : null,
                     child: Text(
-                        _data['chats']['data'][0]['chat_message_is_deleted']
+                        data['chats']['data'][0]['chat_message_is_deleted']
                             ? "تم مسح الرسالة"
-                            : _data['chats']['data'][0]['chat_message'] ??
+                            : data['chats']['data'][0]['chat_message'] ??
                                 "تم ارسال ملف",
                         style: TextStyle(
                             fontSize: 12,
-                            fontWeight: _data['chats']['data'][0]
+                            fontWeight: data['chats']['data'][0]
                                     ['chat_message_isRead']
                                 ? FontWeight.normal
                                 : FontWeight.bold),
@@ -177,61 +177,61 @@ class _ChatStudentListState extends State<ChatStudentList> {
                 ),
               ],
             ),
-      leading: profileImg(_contentUrl, _data['account_img']),
+      leading: profileImg(contentUrl, data['account_img']),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (_data['chats']['data'].isNotEmpty)
-            _timeText(_data['chats']['data'][0]['created_at']),
-          if (_data['chats']['countUnRead'] > 0)
-            _messageUnRead(_data['chats']['countUnRead']),
+          if (data['chats']['data'].isNotEmpty)
+            _timeText(data['chats']['data'][0]['createdAt']),
+          if (data['chats']['countUnRead'] > 0)
+            _messageUnRead(data['chats']['countUnRead']),
         ],
       ),
       onTap: () async {
         searchController.clear();
         Get.put(ChatMessageProvider()).clear();
-        Get.put(ChatMessageProvider()).addListChat(_data['chats']['data']);
-        await Get.to(() => ChatPage(userInfo: _data, contentUrl: _contentUrl));
-        Get.put(ChatSocketProvider()).socket.emit('readMessage', _data['_id']);
+        Get.put(ChatMessageProvider()).addListChat(data['chats']['data']);
+        await Get.to(() => ChatPage(userInfo: data, contentUrl: contentUrl));
+        Get.put(ChatSocketProvider()).socket.emit('readMessage', data['_id']);
         Get.put(ChatMessageProvider()).isShow(false);
         page = 0;
         _getStudentList();
       },
       onLongPress: () {
-        Get.bottomSheet(_bottomSheet(_data));
+        Get.bottomSheet(_bottomSheet(data));
       },
     );
   }
 }
 
-Text _timeText(int _time) {
+Text _timeText(time) {
   return Text(
-    getChatDate(_time, 12),
+    DateFormat('yyyy-MM-dd hh:mm aa').format(DateTime.parse(time)),
     style: const TextStyle(fontSize: 10),
   );
 }
 
-Widget _messageUnRead(int _count) {
+Widget _messageUnRead(int count) {
   return Container(
     decoration: BoxDecoration(
       borderRadius: BorderRadius.circular(15),
       color: MyColor.green,
     ),
     padding: const EdgeInsets.fromLTRB(7, 3, 7, 3),
-    child: _count > 99
+    child: count > 99
         ? const Text(
             "99+",
             style: TextStyle(fontSize: 10, color: MyColor.white0),
           )
         : Text(
-            _count.toString(),
+            count.toString(),
             style: const TextStyle(fontSize: 10, color: MyColor.white0),
           ),
   );
 }
 
-Widget _bottomSheet(Map _data) {
+Widget _bottomSheet(Map data) {
   return Container(
     decoration: const BoxDecoration(
         color: MyColor.white1,
@@ -241,13 +241,11 @@ Widget _bottomSheet(Map _data) {
       children: [
         ListTile(
           title: Text(
-            _data['account_name'].toString(),
+            data['account_name'].toString(),
             style: const TextStyle(fontSize: 14),
           ),
           subtitle: Text(
-              _data['account_division_current']['class_name'].toString() +
-                  ' - ' +
-                  _data['account_division_current']['leader'].toString(),
+              '${data['account_division_current']['class_name']} - ${data['account_division_current']['leader']}',
               style: const TextStyle(
                 fontSize: 12,
               ),

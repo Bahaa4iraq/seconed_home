@@ -66,258 +66,255 @@ class _TeacherDashboardState extends State<TeacherDashboard>
     super.build(context);
     return Scaffold(
         body: SafeArea(
-      child: Container(
-        // padding: const EdgeInsets.only(right: 20, left: 20),
-        child: GetBuilder<MainDataGetProvider>(
-            builder: (_) => ListView(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(
-                          top: 10, bottom: 10, right: 20, left: 20),
-                      child: Row(
-                        children: [
-                          GetBuilder<MainDataGetProvider>(
-                              builder: (_mainDataProvider) {
-                            return Container(
-                              width: 60,
-                              height: 60,
-                              padding: const EdgeInsets.all(5),
-                              decoration: const BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(10.0)),
-                                  shape: BoxShape.rectangle),
-                              child: _mainDataProvider.mainData.isEmpty
-                                  ? Container()
-                                  : ClipRRect(
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(30.0)),
-                                      child: CachedNetworkImage(
-                                        imageUrl: _mainDataProvider.contentUrl +
-                                            _mainDataProvider
-                                                    .mainData["account"]
-                                                ['school']['school_logo'],
-                                        fit: BoxFit.cover,
-                                        placeholder: (context, url) =>
-                                            const CircularProgressIndicator(),
-                                        errorWidget: (context, url, error) =>
-                                            const Icon(Icons.error),
-                                      )),
-                            );
-                          }),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Column(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                widget.userData['account_name'].toString(),
-                                style: const TextStyle(
-                                    color: MyColor.pink,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.bold),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          GetBuilder<TeacherNotificationProvider>(
-                              builder: (_countNumber) {
-                            FlutterAppBadger.updateBadgeCount(
-                                _countNumber.countUnread);
-                            return GestureDetector(
-                              onTap: () {
-                                Get.to(() => NotificationTeacherAll(
-                                      userData: widget.userData,
-                                    ));
-                              },
-                              child: Container(
-                                  child: _countNumber.countUnread == 0
-                                      ? const Icon(
-                                          LineIcons.bell,
-                                          color: MyColor.red,
-                                          size: 40,
-                                        )
-                                      : Stack(
-                                          children: <Widget>[
-                                            const Icon(
-                                              Icons.notifications,
-                                              color: MyColor.red,
-                                              size: 40,
-                                            ),
-                                            Positioned(
-                                              right: 0,
-                                              child: Container(
-                                                padding:
-                                                    const EdgeInsets.all(1),
-                                                decoration: BoxDecoration(
-                                                  color: MyColor.pink,
-                                                  borderRadius:
-                                                      BorderRadius.circular(6),
-                                                ),
-                                                constraints:
-                                                    const BoxConstraints(
-                                                  minWidth: 12,
-                                                  minHeight: 12,
-                                                ),
-                                                child: Text(
-                                                  _countNumber.countUnread
-                                                      .toString(),
-                                                  style: const TextStyle(
-                                                    color: Colors.white,
-                                                    fontSize: 8,
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        )),
-                            );
-                          })
-                        ],
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    GetBuilder<LatestNewsProvider>(
-                        builder: (_data) => _data.newsData.isEmpty
-                            ? Container()
-                            : Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                mainAxisSize: MainAxisSize.min,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    height: Get.height / 5,
-                                    child: Swiper(
-                                      itemBuilder:
-                                          (BuildContext context, int index) {
-                                        return InkWell(
-                                            onTap: () {
-                                              Get.to(() => ShowLatestNews(
-                                                    data: _data.newsData[index],
-                                                    //tag: _data.newsData[index]['latest_news_img'],
-                                                  ));
-                                            },
-                                            child: Stack(
-                                              children: [
-                                                Center(
-                                                    child: SvgPicture.asset(
-                                                        "assets/img/dashboard/k_background_news.svg",
-                                                        fit: BoxFit.fill)),
-                                                _data.newsData[index][
-                                                            'latest_news_title'] ==
-                                                        null
-                                                    ? Container()
-                                                    : Positioned(
-                                                        width: MediaQuery.of(
-                                                                    context)
-                                                                .size
-                                                                .width /
-                                                            2,
-                                                        right: 16,
-                                                        top: 0,
-                                                        bottom: 0,
-                                                        child: Center(
-                                                          child: SizedBox(
-                                                              width: 120,
-                                                              child: Text(
-                                                                _data.newsData[
-                                                                        index][
-                                                                    'latest_news_title'],
-                                                                style: const TextStyle(
-                                                                    fontSize:
-                                                                        22,
-                                                                    fontWeight:
-                                                                        FontWeight
-                                                                            .bold,
-                                                                    color: MyColor
-                                                                        .white0),
-                                                                textAlign:
-                                                                    TextAlign
-                                                                        .center,
-                                                              )),
-                                                        ),
-                                                      )
-                                              ],
-                                            ));
-                                      },
-                                      loop: false,
-                                      itemCount: _data.newsData.length,
-                                      viewportFraction: 1,
-                                      scale: 0.9,
-                                    ),
-                                  )
-                                ],
-                              )),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const Divider(
-                      thickness: 2,
-                      color: MyColor.pink,
-                      endIndent: 20,
-                      indent: 20,
-                    ),
-                    GridView.count(
-                      shrinkWrap: true,
-                      crossAxisCount: 3,
-                      physics: const BouncingScrollPhysics(),
-                      childAspectRatio: 1.1,
-                      padding:
-                          const EdgeInsets.only(top: 15, right: 20, left: 20),
-                      mainAxisSpacing: 16.0,
-                      crossAxisSpacing: 10.0,
+      child: GetBuilder<MainDataGetProvider>(
+          builder: (_) => ListView(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(
+                        top: 10, bottom: 10, right: 20, left: 20),
+                    child: Row(
                       children: [
-                        ///Announcement()
-                        _gridContainer(
-                            "المحادثة",
-                            "assets/img/dashboard/d-notification.png",
-                            const ChatMain()),
-
-                        ///Salary()
-                        _gridContainer(
-                            "الراتب",
-                            "assets/img/dashboard/salary.png",
-                            const TeacherSalary()),
-
-                        ///TeacherAttend(userData: widget.userData)
-                        _gridContainer(
-                            "الحضور",
-                            "assets/img/dashboard/Attendees.png",
-                            TeacherAttend(userData: widget.userData)),
-
-                        ///ShowNotification()
-                        _gridContainer(
-                            "الاشعارات",
-                            "assets/img/dashboard/s-notification.png",
-                            NotificationTeacherAll(
-                              userData: widget.userData,
-                            )),
-
-                        ///ShowNotification()
-                        _gridContainer(
-                            "تبليغات",
-                            "assets/img/dashboard/s-notification.png",
-                            NotificationTeacherIntimation(
-                              userData: widget.userData,
-                            )),
-
-                        ///HomeWork()
-                        _gridContainer(
-                            "حساب الاستاذ",
-                            "assets/img/graduated.png",
-                            TeacherProfile(
-                              userData: widget.userData,
-                            )),
+                        GetBuilder<MainDataGetProvider>(
+                            builder: (_mainDataProvider) {
+                          return Container(
+                            width: 60,
+                            height: 60,
+                            padding: const EdgeInsets.all(5),
+                            decoration: const BoxDecoration(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(10.0)),
+                                shape: BoxShape.rectangle),
+                            child: _mainDataProvider.mainData.isEmpty
+                                ? Container()
+                                : ClipRRect(
+                                    borderRadius: const BorderRadius.all(
+                                        Radius.circular(30.0)),
+                                    child: CachedNetworkImage(
+                                      imageUrl: _mainDataProvider.contentUrl +
+                                          _mainDataProvider
+                                                  .mainData["account"]
+                                              ['school']['school_logo'],
+                                      fit: BoxFit.cover,
+                                      placeholder: (context, url) =>
+                                          const CircularProgressIndicator(),
+                                      errorWidget: (context, url, error) =>
+                                          const Icon(Icons.error),
+                                    )),
+                          );
+                        }),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.userData['account_name'].toString(),
+                              style: const TextStyle(
+                                  color: MyColor.pink,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        GetBuilder<TeacherNotificationProvider>(
+                            builder: (_countNumber) {
+                          FlutterAppBadger.updateBadgeCount(
+                              _countNumber.countUnread);
+                          return GestureDetector(
+                            onTap: () {
+                              Get.to(() => NotificationTeacherAll(
+                                    userData: widget.userData,
+                                  ));
+                            },
+                            child: Container(
+                                child: _countNumber.countUnread == 0
+                                    ? const Icon(
+                                        LineIcons.bell,
+                                        color: MyColor.red,
+                                        size: 40,
+                                      )
+                                    : Stack(
+                                        children: <Widget>[
+                                          const Icon(
+                                            Icons.notifications,
+                                            color: MyColor.red,
+                                            size: 40,
+                                          ),
+                                          Positioned(
+                                            right: 0,
+                                            child: Container(
+                                              padding:
+                                                  const EdgeInsets.all(1),
+                                              decoration: BoxDecoration(
+                                                color: MyColor.pink,
+                                                borderRadius:
+                                                    BorderRadius.circular(6),
+                                              ),
+                                              constraints:
+                                                  const BoxConstraints(
+                                                minWidth: 12,
+                                                minHeight: 12,
+                                              ),
+                                              child: Text(
+                                                _countNumber.countUnread
+                                                    .toString(),
+                                                style: const TextStyle(
+                                                  color: Colors.white,
+                                                  fontSize: 8,
+                                                ),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ),
+                                          )
+                                        ],
+                                      )),
+                          );
+                        })
                       ],
                     ),
-                    const SizedBox(height: 30)
-                  ],
-                )),
-      ),
+                  ),
+                  const SizedBox(
+                    height: 5,
+                  ),
+                  GetBuilder<LatestNewsProvider>(
+                      builder: (_data) => _data.newsData.isEmpty
+                          ? Container()
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              mainAxisSize: MainAxisSize.min,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                SizedBox(
+                                  height: Get.height / 5,
+                                  child: Swiper(
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return InkWell(
+                                          onTap: () {
+                                            Get.to(() => ShowLatestNews(
+                                                  data: _data.newsData[index],
+                                                  //tag: _data.newsData[index]['latest_news_img'],
+                                                ));
+                                          },
+                                          child: Stack(
+                                            children: [
+                                              Center(
+                                                  child: SvgPicture.asset(
+                                                      "assets/img/dashboard/k_background_news.svg",
+                                                      fit: BoxFit.fill)),
+                                              _data.newsData[index][
+                                                          'latest_news_title'] ==
+                                                      null
+                                                  ? Container()
+                                                  : Positioned(
+                                                      width: MediaQuery.of(
+                                                                  context)
+                                                              .size
+                                                              .width /
+                                                          2,
+                                                      right: 16,
+                                                      top: 0,
+                                                      bottom: 0,
+                                                      child: Center(
+                                                        child: SizedBox(
+                                                            width: 120,
+                                                            child: Text(
+                                                              _data.newsData[
+                                                                      index][
+                                                                  'latest_news_title'],
+                                                              style: const TextStyle(
+                                                                  fontSize:
+                                                                      22,
+                                                                  fontWeight:
+                                                                      FontWeight
+                                                                          .bold,
+                                                                  color: MyColor
+                                                                      .white0),
+                                                              textAlign:
+                                                                  TextAlign
+                                                                      .center,
+                                                            )),
+                                                      ),
+                                                    )
+                                            ],
+                                          ));
+                                    },
+                                    loop: false,
+                                    itemCount: _data.newsData.length,
+                                    viewportFraction: 1,
+                                    scale: 0.9,
+                                  ),
+                                )
+                              ],
+                            )),
+                  const SizedBox(
+                    height: 10,
+                  ),
+                  const Divider(
+                    thickness: 2,
+                    color: MyColor.pink,
+                    endIndent: 20,
+                    indent: 20,
+                  ),
+                  GridView.count(
+                    shrinkWrap: true,
+                    crossAxisCount: 3,
+                    physics: const BouncingScrollPhysics(),
+                    childAspectRatio: 1.1,
+                    padding:
+                        const EdgeInsets.only(top: 15, right: 20, left: 20),
+                    mainAxisSpacing: 16.0,
+                    crossAxisSpacing: 10.0,
+                    children: [
+                      ///Announcement()
+                      _gridContainer(
+                          "المحادثة",
+                          "assets/img/dashboard/d-notification.png",
+                          const ChatMain()),
+      
+                      ///Salary()
+                      _gridContainer(
+                          "الراتب",
+                          "assets/img/dashboard/salary.png",
+                          const TeacherSalary()),
+      
+                      ///TeacherAttend(userData: widget.userData)
+                      _gridContainer(
+                          "الحضور",
+                          "assets/img/dashboard/Attendees.png",
+                          TeacherAttend(userData: widget.userData)),
+      
+                      ///ShowNotification()
+                      _gridContainer(
+                          "الاشعارات",
+                          "assets/img/dashboard/s-notification.png",
+                          NotificationTeacherAll(
+                            userData: widget.userData,
+                          )),
+      
+                      ///ShowNotification()
+                      _gridContainer(
+                          "تبليغات",
+                          "assets/img/dashboard/s-notification.png",
+                          NotificationTeacherIntimation(
+                            userData: widget.userData,
+                          )),
+      
+                      ///HomeWork()
+                      _gridContainer(
+                          "حساب الاستاذ",
+                          "assets/img/graduated.png",
+                          TeacherProfile(
+                            userData: widget.userData,
+                          )),
+                    ],
+                  ),
+                  const SizedBox(height: 30)
+                ],
+              )),
     ));
   }
 

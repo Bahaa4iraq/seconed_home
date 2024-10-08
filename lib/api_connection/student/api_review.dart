@@ -17,17 +17,21 @@ class ReviewAPI extends GetConnect {
     try {
       final response = await get('${mainApi}student/review', headers: headers);
       if (response.statusCode == 401) {
-        Logger().i("redirect");
         Auth().redirect();
       } else if (response.body["error"] == false) {
+        Logger().i(response.body['results']);
         Get.put(ReviewDateProvider()).changeLoading(false);
         Get.put(ReviewDateProvider()).insertData(response.body['results']);
         EasyLoading.dismiss();
       } else {
         EasyLoading.dismiss();
+        Get.put(ReviewDateProvider()).changeLoading(false);
+
         return {"error": true};
       }
     } catch (e) {
+      Get.put(ReviewDateProvider()).changeLoading(false);
+
       Logger().i("error");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);

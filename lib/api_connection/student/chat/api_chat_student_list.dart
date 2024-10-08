@@ -8,11 +8,11 @@ import '../../auth_connection.dart';
 class ChatTeacherListAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
 
-  getStudentList(Map _data) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  getStudentList(Map data) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
-      final response = await post(mainApi + 'student/chat/teachers', _data,
-          headers: _headers);
+      final response =
+          await post('${mainApi}student/chat/teachers', data, headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else {
@@ -24,11 +24,11 @@ class ChatTeacherListAPI extends GetConnect {
     }
   }
 
-  getChatOfTeacher(Map _data) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  getChatOfTeacher(Map data) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response =
-          await post(mainApi + 'student/chat', _data, headers: _headers);
+          await post('${mainApi}student/chat', data, headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else {

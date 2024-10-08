@@ -21,7 +21,7 @@ import 'package:http_parser/http_parser.dart';
 class ChatPage extends StatefulWidget {
   final Map userInfo;
   final String contentUrl;
-  const ChatPage({Key? key, required this.userInfo, required this.contentUrl}) : super(key: key);
+  const ChatPage({super.key, required this.userInfo, required this.contentUrl});
 
   @override
   State<ChatPage> createState() => _ChatPageState();
@@ -29,15 +29,18 @@ class ChatPage extends StatefulWidget {
 
 class _ChatPageState extends State<ChatPage> {
   final ScrollController _scrollController = ScrollController();
-  final ChatMessageBottomBarProvider _chatMessageBottomBarProvider = Get.put(ChatMessageBottomBarProvider());
+  final ChatMessageBottomBarProvider _chatMessageBottomBarProvider =
+      Get.put(ChatMessageBottomBarProvider());
   final player = AudioPlayer();
   final Map? dataProvider = Get.put(TokenProvider()).userData;
 
   int page = 0;
   _getChatOfStudent() {
     EasyLoading.show(status: "جار جلب البيانات");
-    Map _data = {"page": page, "chat_receiver": widget.userInfo['_id']};
-    ChatStudentListAPI().getChatOfStudent(_data).then((res) {
+    Map data = {"page": page + 1, "chat_receiver": widget.userInfo['_id']};
+    ChatStudentListAPI().getChatOfStudent(data).then((res) {
+      print('++++++++++++++++++');
+      print(res);
       EasyLoading.dismiss();
       if (!res['error']) {
         Get.put(ChatMessageProvider()).addListChat(res["results"]);
@@ -48,29 +51,43 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   _checkUserOnline() {
-    String uId = widget.userInfo['_id'];
-    Map _data = {"chat_to": uId};
-    Get.put(ChatSocketProvider()).socket.emit('checkOnline', _data);
+    try {
+      String uId = widget.userInfo['_id'];
+      Map data = {"chat_to": uId};
+      Get.put(ChatSocketProvider()).socket.emit('checkOnline', data);
+    } catch (e) {
+      print('Error in _checkUserOnline: $e');
+    }
   }
 
   @override
   void initState() {
-    Get.put(ChatMessageProvider()).currentChatReciver = widget.userInfo['_id'];
-    Get.put(ChatMessageProvider()).currentChatSender =dataProvider!['_id'];
-    _checkUserOnline();
-    _scrollController.addListener(() {
-      if (_scrollController.position.pixels == _scrollController.position.maxScrollExtent) {
-        page++;
-        _getChatOfStudent();
-      }
-      if (_scrollController.position.pixels >= 200) {
-        Get.put(ChatMessageProvider()).isShow(true);
-      } else {
-        Get.put(ChatMessageProvider()).isShow(false);
-      }
-    });
-    Get.put(ChatSocketProvider()).socket.emit('readMessage', widget.userInfo['_id']);
     super.initState();
+    try {
+      Get.put(ChatMessageProvider()).currentChatReciver =
+          widget.userInfo['_id'];
+      Get.put(ChatMessageProvider()).currentChatSender = dataProvider!['_id'];
+
+      _checkUserOnline();
+      _getChatOfStudent();
+
+      _scrollController.addListener(() {
+        print('in');
+
+        if (_scrollController.position.pixels ==
+            _scrollController.position.maxScrollExtent) {
+          page++;
+          _getChatOfStudent();
+        }
+        if (_scrollController.position.pixels >= 200) {
+          Get.put(ChatMessageProvider()).isShow(true);
+        } else {
+          Get.put(ChatMessageProvider()).isShow(false);
+        }
+      });
+    } catch (e) {
+      print('Error in initState: $e'); // Debugging print statement
+    }
   }
 
   @override
@@ -89,7 +106,8 @@ class _ChatPageState extends State<ChatPage> {
           children: [
             Padding(
               padding: const EdgeInsets.only(top: 5, bottom: 5),
-              child: profileImg(widget.contentUrl, widget.userInfo['account_img']),
+              child:
+                  profileImg(widget.contentUrl, widget.userInfo['account_img']),
             ),
             const SizedBox(
               width: 5,
@@ -114,7 +132,8 @@ class _ChatPageState extends State<ChatPage> {
                               "جار الكتابة...",
                               style: TextStyle(fontSize: 10),
                             )
-                          : _onlineWidgetCheck(val.online, widget.userInfo['_id']),
+                          : _onlineWidgetCheck(
+                              val.online, widget.userInfo['_id']),
                     ],
                   );
                 })
@@ -131,22 +150,28 @@ class _ChatPageState extends State<ChatPage> {
                 body: ListView.builder(
                     itemCount: val.chat.length,
                     controller: _scrollController,
+                    padding: const EdgeInsets.only(top: 10),
+                    physics: const BouncingScrollPhysics(),
                     reverse: true,
-              //       if(widget.data['chat_from']!=null){
-              // await player.setUrl(Get.put(ChatStudentListProvider()).contentUrl + widget.data['chat_url']);
-              // }else{
-              // await player.setUrl(Get.put(ChatStudentListProvider()).contentUrl + widget.data['group_message_url']);
-              // }
-                    itemBuilder: (BuildContext context, int index) => chatMessageBubbles(val.chat[index], index,player)),
-                floatingActionButtonLocation: FloatingActionButtonLocation.miniStartFloat,
+                    //       if(widget.data['chat_from']!=null){
+                    // await player.setUrl(Get.put(ChatStudentListProvider()).contentUrl + widget.data['chat_url']);
+                    // }else{
+                    // await player.setUrl(Get.put(ChatStudentListProvider()).contentUrl + widget.data['group_message_url']);
+                    // }
+                    itemBuilder: (BuildContext context, int index) =>
+                        chatMessageBubbles(val.chat[index], index, player)),
+                floatingActionButtonLocation:
+                    FloatingActionButtonLocation.miniStartFloat,
                 floatingActionButton: val.showFloating
                     ? FloatingActionButton(
                         onPressed: () {
-                          _scrollController.animateTo(0, duration: const Duration(milliseconds: 400), curve: Curves.bounceIn);
+                          _scrollController.animateTo(0,
+                              duration: const Duration(milliseconds: 400),
+                              curve: Curves.bounceIn);
                         },
-                        child: const Icon(Icons.arrow_downward_rounded),
                         mini: true,
                         backgroundColor: MyColor.pink,
+                        child: const Icon(Icons.arrow_downward_rounded),
                       )
                     : null,
               );
@@ -243,7 +268,9 @@ class _ChatPageState extends State<ChatPage> {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   IconButton(
-                      onPressed: val.message.text.trim().isNotEmpty ? _sendTextMessage : val.recordSoundStart,
+                      onPressed: val.message.text.trim().isNotEmpty
+                          ? _sendTextMessage
+                          : val.recordSoundStart,
                       icon: val.message.text.trim().isNotEmpty
                           ? const Icon(
                               Icons.send,
@@ -261,15 +288,16 @@ class _ChatPageState extends State<ChatPage> {
                       ),
                       minLines: 1,
                       maxLines: 3,
-                      onChanged: (_text) {
-                        Map _data = {
+                      onChanged: (text) {
+                        Map data = {
                           "chat_to": widget.userInfo['_id'],
                         };
-                        val.changeTextMessage(_data);
+                        val.changeTextMessage(data);
                       },
                       onTap: val.changeOpen,
                       decoration: InputDecoration(
-                          contentPadding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 12),
+                          contentPadding: const EdgeInsets.symmetric(
+                              vertical: 12.0, horizontal: 12),
                           hintText: "اكتب هنا",
                           errorStyle: const TextStyle(color: MyColor.grayDark),
                           fillColor: MyColor.grayDark.withOpacity(0.05),
@@ -346,7 +374,7 @@ class _ChatPageState extends State<ChatPage> {
 
   _sendTextMessage() {
     final Map? dataProvider = Get.put(TokenProvider()).userData;
-    Map _data = {
+    Map data = {
       "chat_message_type": "text",
       "chat_message_isRead": false,
       "chat_uuid": const Uuid().v1(),
@@ -359,8 +387,8 @@ class _ChatPageState extends State<ChatPage> {
       "chat_url": null,
       "chat_delivered": false,
     };
-    Get.put(ChatMessageProvider()).addSingleChat(_data);
-    Get.put(ChatSocketProvider()).socket.emit('message', _data);
+    Get.put(ChatMessageProvider()).addSingleChat(data);
+    Get.put(ChatSocketProvider()).socket.emit('message', data);
     _chatMessageBottomBarProvider.clearTextMessage();
   }
 
@@ -368,17 +396,19 @@ class _ChatPageState extends State<ChatPage> {
     final ImagePicker picker = ImagePicker();
     final List<XFile> res = await picker.pickMultiImage();
 
-    List<dio.MultipartFile> _localPic = [];
+    List<dio.MultipartFile> localPic = [];
     for (int i = 0; i < res.length; i++) {
       final mimeType = lookupMimeType(res[i].path);
-      if(getFileType(mimeType) != 'video'){
-        _localPic.add(dio.MultipartFile.fromFileSync(res[i].path, filename: 'pic$i.${getFileExtension(mimeType)}', contentType: MediaType(getFileType(mimeType), getFileExtension(mimeType))));
+      if (getFileType(mimeType) != 'video') {
+        localPic.add(dio.MultipartFile.fromFileSync(res[i].path,
+            filename: 'pic$i.${getFileExtension(mimeType)}',
+            contentType:
+                MediaType(getFileType(mimeType), getFileExtension(mimeType))));
       }
     }
-    if(_localPic.isNotEmpty){
-
+    if (localPic.isNotEmpty) {
       final Map? dataProvider = Get.put(TokenProvider()).userData;
-      dio.FormData _data = dio.FormData.fromMap({
+      dio.FormData data = dio.FormData.fromMap({
         // chat/uploadFile  // POST
         // chat_to
         // file :string?
@@ -388,7 +418,7 @@ class _ChatPageState extends State<ChatPage> {
         "chat_message_isRead": false,
         "chat_uuid": const Uuid().v1(),
         "chat_message": null,
-        "chat_message_imgs": _localPic,
+        "chat_message_imgs": localPic,
         "chat_to": widget.userInfo['_id'],
         "chat_from": dataProvider!['_id'],
         "chat_message_is_deleted": false,
@@ -397,38 +427,40 @@ class _ChatPageState extends State<ChatPage> {
         "chat_url": null,
         "chat_delivered": false,
       });
-
-      AddChatFilesAPI().addImages(_data);
+      print('************');
+      print(widget.userInfo['_id']);
+      AddChatFilesAPI().addImages(data);
     }
   }
 
   Future _pickCamera() async {
     final ImagePicker picker = ImagePicker();
     final XFile? res = await picker.pickImage(source: ImageSource.camera);
-    List<dio.MultipartFile> _localPic = [];
-    if(res != null){
-        _localPic.add(dio.MultipartFile.fromFileSync(res.path, filename: 'pic$res.jpg', contentType: MediaType('image', 'jpg')));
-        final Map? dataProvider = Get.put(TokenProvider()).userData;
-        dio.FormData _data = dio.FormData.fromMap({
-          // chat/uploadFile  // POST
-          // chat_to
-          // file :string?
-          // imgs : string[]?
-          //"pdf": _pdf == null ? null:dio.MultipartFile.fromFileSync(_pdf!.path, filename: 'file.pdf', contentType: MediaType('application', 'pdf')),
-          "chat_message_type": "image",
-          "chat_message_isRead": false,
-          "chat_uuid": const Uuid().v1(),
-          "chat_message": null,
-          "chat_message_imgs": _localPic,
-          "chat_to": widget.userInfo['_id'],
-          "chat_from": dataProvider!['_id'],
-          "chat_message_is_deleted": false,
-          "chat_replay": null,
-          "created_at": DateTime.now().millisecond,
-          "chat_url": null,
-          "chat_delivered": false,
-        });
-        AddChatFilesAPI().addImages(_data);
+    List<dio.MultipartFile> localPic = [];
+    if (res != null) {
+      localPic.add(dio.MultipartFile.fromFileSync(res.path,
+          filename: 'pic$res.jpg', contentType: MediaType('image', 'jpg')));
+      final Map? dataProvider = Get.put(TokenProvider()).userData;
+      dio.FormData data = dio.FormData.fromMap({
+        // chat/uploadFile  // POST
+        // chat_to
+        // file :string?
+        // imgs : string[]?
+        //"pdf": _pdf == null ? null:dio.MultipartFile.fromFileSync(_pdf!.path, filename: 'file.pdf', contentType: MediaType('application', 'pdf')),
+        "chat_message_type": "image",
+        "chat_message_isRead": false,
+        "chat_uuid": const Uuid().v1(),
+        "chat_message": null,
+        "chat_message_imgs": localPic,
+        "chat_to": widget.userInfo['_id'],
+        "chat_from": dataProvider!['_id'],
+        "chat_message_is_deleted": false,
+        "chat_replay": null,
+        "created_at": DateTime.now().millisecond,
+        "chat_url": null,
+        "chat_delivered": false,
+      });
+      AddChatFilesAPI().addImages(data);
     }
   }
 
@@ -449,7 +481,7 @@ class _ChatPageState extends State<ChatPage> {
           // Ensure the path is not null before creating the MultipartFile
           final String? filePath = pickedFile.path;
           if (filePath != null) {
-            dio.FormData _data = dio.FormData.fromMap({
+            dio.FormData data = dio.FormData.fromMap({
               // Add your fields here
               "chat_message_type": "pdf",
               "chat_message_isRead": false,
@@ -461,11 +493,13 @@ class _ChatPageState extends State<ChatPage> {
               "chat_message_is_deleted": false,
               "chat_replay": null,
               "created_at": DateTime.now().millisecondsSinceEpoch,
-              "chat_url": dio.MultipartFile.fromFileSync(filePath, filename: 'pdfFile.pdf', contentType: MediaType('application', 'pdf')),
+              "chat_url": dio.MultipartFile.fromFileSync(filePath,
+                  filename: 'pdfFile.pdf',
+                  contentType: MediaType('application', 'pdf')),
               "chat_delivered": false,
             });
 
-            AddChatFilesAPI().addImages(_data);
+            AddChatFilesAPI().addImages(data);
           }
         } else {
           // Show an error message if the selected file is not a PDF.
@@ -473,11 +507,11 @@ class _ChatPageState extends State<ChatPage> {
             context: context,
             builder: (BuildContext context) {
               return AlertDialog(
-                title: Text("خطا في اختيار الملف"),
-                content: Text("يرجى اختيار ملف pdf و ليس صوره"),
+                title: const Text("خطا في اختيار الملف"),
+                content: const Text("يرجى اختيار ملف pdf و ليس صوره"),
                 actions: <Widget>[
                   TextButton(
-                    child: Text("OK"),
+                    child: const Text("OK"),
                     onPressed: () {
                       Navigator.of(context).pop();
                     },
@@ -497,11 +531,10 @@ class _ChatPageState extends State<ChatPage> {
 
   Future _sendSound() async {
     String? recordPath = await _chatMessageBottomBarProvider.recordSoundStop();
-    print(recordPath);
 
-    if(recordPath !=null){
+    if (recordPath != null) {
       final Map? dataProvider = Get.put(TokenProvider()).userData;
-      dio.FormData _data = dio.FormData.fromMap({
+      dio.FormData data = dio.FormData.fromMap({
         // chat/uploadFile  // POST
         // chat_to
         // file :string?
@@ -517,26 +550,26 @@ class _ChatPageState extends State<ChatPage> {
         "chat_message_is_deleted": false,
         "chat_replay": null,
         "created_at": DateTime.now().millisecond,
-        "chat_url": dio.MultipartFile.fromFileSync(recordPath, filename: 'audio.m4a', contentType: MediaType('audio', 'aac')),
+        "chat_url": dio.MultipartFile.fromFileSync(recordPath,
+            filename: 'audio.m4a', contentType: MediaType('audio', 'aac')),
         "chat_delivered": false,
       });
 
-      AddChatFilesAPI().addImages(_data);
+      AddChatFilesAPI().addImages(data);
     }
-
   }
 }
 
-Widget _onlineWidgetCheck(Map _online, String _id) {
-  if (_online.isNotEmpty) {
-    if (_online['isOnline'] && _online['id'] == _id) {
+Widget _onlineWidgetCheck(Map online, String id) {
+  if (online.isNotEmpty) {
+    if (online['isOnline'] && online['id'] == id) {
       return const Text(
         "نشط",
         style: TextStyle(fontSize: 10),
       );
     } else {
       return Text(
-        lastSeenTime(_online['date']),
+        lastSeenTime(online['date']),
         //"اخر ضهور $data ",
         style: const TextStyle(fontSize: 10),
       );
@@ -546,9 +579,9 @@ Widget _onlineWidgetCheck(Map _online, String _id) {
   }
 }
 
-Widget _onlineIconCheck(Map _online, String _id) {
-  if (_online.isNotEmpty) {
-    if (_online['isOnline'] && _online['id'] == _id) {
+Widget _onlineIconCheck(Map online, String id) {
+  if (online.isNotEmpty) {
+    if (online['isOnline'] && online['id'] == id) {
       return const Icon(
         Icons.circle,
         size: 10,

@@ -86,12 +86,13 @@ class _LoginPageState extends State<LoginPage> {
 
     if (_formCheck.currentState!.validate() && authData != null) {
       Auth().login(data).then((res) async {
-        print(res);
         if (!res['error']) {
           _btnController.success();
           await box.write('_userData', res['results']);
           Get.put(TokenProvider()).addToken(res['results']);
           if (res['results']["account_type"] == "student") {
+            Get.put(MainDataGetProvider()).changeType('student');
+
             tokenProvider.addAccountToDatabase(res['results']);
 
             if (res['results']["is_kindergarten"]) {
@@ -100,6 +101,8 @@ class _LoginPageState extends State<LoginPage> {
               Get.offAll(() => HomePageNursery(userData: res['results']));
             }
           } else if (res['results']["account_type"] == "teacher") {
+            Get.put(MainDataGetProvider()).changeType('teacher');
+
             tokenProvider.addAccountToDatabase(res['results']);
 
             if (res['results']["is_kindergarten"]) {
@@ -110,6 +113,8 @@ class _LoginPageState extends State<LoginPage> {
                   () => HomePageNurseryTeacher(userData: res['results']));
             }
           } else if (res['results']["account_type"] == "gard") {
+            Get.put(MainDataGetProvider()).changeType('reception');
+
             tokenProvider.addAccountToDatabase(res['results']);
             Timer(const Duration(seconds: 1), () {
               Navigator.pushReplacement(context,
@@ -145,7 +150,6 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       _btnController.reset();
     }
-
   }
 
   _getStudentInfo() async {
@@ -217,198 +221,203 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     double width = Get.width;
-    return Scaffold(
-      resizeToAvoidBottomInset: true,
-      body: SafeArea(
-        bottom: false,
-        top: false,
-        child: SingleChildScrollView(
-          child: SizedBox(
-            height: Get.height,
-            child: Column(
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(top: Get.height * .05),
-                  child: Image.asset(
-                    "assets/img/main.png",
-                    height: Get.height * 0.3,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: SafeArea(
+          bottom: false,
+          top: false,
+          child: SingleChildScrollView(
+            child: SizedBox(
+              height: Get.height,
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: Get.height * .05),
+                    child: Image.asset(
+                      "assets/img/main.png",
+                      height: Get.height * 0.3,
+                    ),
                   ),
-                ),
 
-                Form(
-                  key: _formCheck,
-                  child: Column(
-                    children: [
-                      // Text(storage.read("isNursery").toString()),
-                      const Icon(
-                        LineIcons.userAlt,
-                        size: 40,
-                        color: MyColor.turquoise,
-                      ),
-                      const Text(
-                        "البريد الالكتروني",
-                        style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: MyColor.turquoise),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(
-                            top: 10, bottom: 10, right: 20, left: 20),
-                        child: TextFormField(
-                          controller: email,
-                          style: const TextStyle(
-                            color: MyColor.black,
-                          ),
-                          decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 18.0, horizontal: 18),
-                              //hintText: "الايميل",
-                              errorStyle:
-                                  const TextStyle(color: MyColor.grayDark),
-                              fillColor: Colors.transparent,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(55.0),
-                                borderSide: const BorderSide(
-                                  color: MyColor.turquoise,
-                                  width: 10,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(100.0),
-                                borderSide: const BorderSide(
-                                    color: MyColor.turquoise, width: 3),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(100.0),
-                                borderSide: const BorderSide(
-                                    color: MyColor.turquoise, width: 3),
-                              ),
-                              //prefixIcon: const Icon(LineIcons.user),
-                              filled: true
-                              //fillColor: Colors.green
-                              ),
-                          validator: (value) {
-                            var result =
-                                value!.length < 3 ? "املئ البيانات" : null;
-                            return result;
-                          },
+                  Form(
+                    key: _formCheck,
+                    child: Column(
+                      children: [
+                        // Text(storage.read("isNursery").toString()),
+                        const Icon(
+                          LineIcons.userAlt,
+                          size: 40,
+                          color: MyColor.turquoise,
                         ),
-                      ),
-                      const Icon(
-                        LineIcons.lock,
-                        size: 40,
-                        color: MyColor.turquoise,
-                      ),
-                      const Text(
-                        "كلمة السر",
-                        style: TextStyle(
-                            fontSize: 25,
-                            fontWeight: FontWeight.bold,
-                            color: MyColor.turquoise),
-                      ),
-                      Container(
-                        padding: const EdgeInsets.only(
-                            top: 10, bottom: 10, right: 20, left: 20),
-                        child: TextFormField(
-                          controller: pass,
-                          style: const TextStyle(
-                            color: MyColor.black,
-                          ),
-                          decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(
-                                  vertical: 18.0, horizontal: 18),
-                              errorStyle:
-                                  const TextStyle(color: MyColor.grayDark),
-                              fillColor: Colors.transparent,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(55.0),
-                                borderSide: const BorderSide(
-                                  color: MyColor.turquoise,
-                                  width: 10,
-                                ),
-                              ),
-                              enabledBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(100.0),
-                                borderSide: const BorderSide(
-                                    color: MyColor.turquoise, width: 3),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(100.0),
-                                borderSide: const BorderSide(
-                                    color: MyColor.turquoise, width: 3),
-                              ),
-                              //prefixIcon: const Icon(LineIcons.user),
-                              filled: true
-                              //fillColor: Colors.green
-                              ),
-                          obscureText: _obscurePassword,
-                          validator: (value) {
-                            var result =
-                                value!.length < 4 ? "املئ البيانات" : null;
-                            return result;
-                          },
+                        const Text(
+                          "البريد الالكتروني",
+                          style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: MyColor.turquoise),
                         ),
-                      ),
-                    ],
+                        Container(
+                          padding: const EdgeInsets.only(
+                              top: 10, bottom: 10, right: 20, left: 20),
+                          child: TextFormField(
+                            controller: email,
+                            style: const TextStyle(
+                              color: MyColor.black,
+                            ),
+                            decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 18.0, horizontal: 18),
+                                //hintText: "الايميل",
+                                errorStyle:
+                                    const TextStyle(color: MyColor.grayDark),
+                                fillColor: Colors.transparent,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(55.0),
+                                  borderSide: const BorderSide(
+                                    color: MyColor.turquoise,
+                                    width: 10,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100.0),
+                                  borderSide: const BorderSide(
+                                      color: MyColor.turquoise, width: 3),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100.0),
+                                  borderSide: const BorderSide(
+                                      color: MyColor.turquoise, width: 3),
+                                ),
+                                //prefixIcon: const Icon(LineIcons.user),
+                                filled: true
+                                //fillColor: Colors.green
+                                ),
+                            validator: (value) {
+                              var result =
+                                  value!.length < 3 ? "املئ البيانات" : null;
+                              return result;
+                            },
+                          ),
+                        ),
+                        const Icon(
+                          LineIcons.lock,
+                          size: 40,
+                          color: MyColor.turquoise,
+                        ),
+                        const Text(
+                          "كلمة السر",
+                          style: TextStyle(
+                              fontSize: 25,
+                              fontWeight: FontWeight.bold,
+                              color: MyColor.turquoise),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.only(
+                              top: 10, bottom: 10, right: 20, left: 20),
+                          child: TextFormField(
+                            controller: pass,
+                            style: const TextStyle(
+                              color: MyColor.black,
+                            ),
+                            decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.symmetric(
+                                    vertical: 18.0, horizontal: 18),
+                                errorStyle:
+                                    const TextStyle(color: MyColor.grayDark),
+                                fillColor: Colors.transparent,
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(55.0),
+                                  borderSide: const BorderSide(
+                                    color: MyColor.turquoise,
+                                    width: 10,
+                                  ),
+                                ),
+                                enabledBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100.0),
+                                  borderSide: const BorderSide(
+                                      color: MyColor.turquoise, width: 3),
+                                ),
+                                focusedBorder: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(100.0),
+                                  borderSide: const BorderSide(
+                                      color: MyColor.turquoise, width: 3),
+                                ),
+                                //prefixIcon: const Icon(LineIcons.user),
+                                filled: true
+                                //fillColor: Colors.green
+                                ),
+                            obscureText: _obscurePassword,
+                            validator: (value) {
+                              var result =
+                                  value!.length < 4 ? "املئ البيانات" : null;
+                              return result;
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ),
 
-                Padding(
-                  padding: const EdgeInsets.only(top: 20),
-                  child: SizedBox(
-                    width: width / 2,
-                    child: RoundedLoadingButton(
-                      height: 56,
-                      color: MyColor.turquoise,
-                      valueColor: MyColor.white0,
-                      successColor: MyColor.turquoise,
-                      controller: _btnController,
-                      onPressed: _login,
-                      borderRadius: 50,
-                      child: const Text(
-                        "تسجيل الدخول",
-                        style: TextStyle(
-                            color: MyColor.white0,
-                            fontSize: 20,
-                            fontWeight: FontWeight.bold),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: SizedBox(
+                      width: width / 2,
+                      child: RoundedLoadingButton(
+                        height: 56,
+                        color: MyColor.turquoise,
+                        valueColor: MyColor.white0,
+                        successColor: MyColor.turquoise,
+                        controller: _btnController,
+                        onPressed: _login,
+                        borderRadius: 50,
+                        child: const Text(
+                          "تسجيل الدخول",
+                          style: TextStyle(
+                              color: MyColor.white0,
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold),
+                        ),
                       ),
                     ),
                   ),
-                ),
-                SizedBox(height: Get.height * 0.06),
-                Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: _buttons(
-                    "حساباتي",
-                    const AccountsScreen(),
-                    'assets/img/dashboard/k_logo.svg',
+                  SizedBox(height: Get.height * 0.06),
+                  Padding(
+                    padding: const EdgeInsets.all(10),
+                    child: _buttons(
+                      "حساباتي",
+                      const AccountsScreen(),
+                      'assets/img/dashboard/k_logo.svg',
+                    ),
                   ),
-                ),
 
-                // Container(
-                //   padding:
-                //       const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                //   child: Container(
-                //     child: GestureDetector(
-                //       onTap: () {
-                //         print("forget password");
-                //       },
-                //       child: const Align(
-                //         alignment: Alignment.centerLeft,
-                //         child: Text(
-                //           "نسيت كلمة المرور؟",
-                //           style: TextStyle(
-                //               color: MyColor.turquoise,
-                //               fontSize: 20,
-                //               fontWeight: FontWeight.bold),
-                //         ),
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // const SizedBox(height: 20),
-              ],
+                  // Container(
+                  //   padding:
+                  //       const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                  //   child: Container(
+                  //     child: GestureDetector(
+                  //       onTap: () {
+                  //         print("forget password");
+                  //       },
+                  //       child: const Align(
+                  //         alignment: Alignment.centerLeft,
+                  //         child: Text(
+                  //           "نسيت كلمة المرور؟",
+                  //           style: TextStyle(
+                  //               color: MyColor.turquoise,
+                  //               fontSize: 20,
+                  //               fontWeight: FontWeight.bold),
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
+                  // const SizedBox(height: 20),
+                ],
+              ),
             ),
           ),
         ),

@@ -13,17 +13,16 @@ class ChatGroupListAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
 
   getGroupList() async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response =
-          await get(mainApi + 'student/chatGroup', headers: _headers);
+          await get('${mainApi}student/chatGroup', headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else {
         Logger().i(response.body);
 
         return response.body;
-
       }
     } catch (e) {
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
@@ -31,12 +30,12 @@ class ChatGroupListAPI extends GetConnect {
     }
   }
 
-  getChatOfGroup(String _groupId, int page) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  getChatOfGroup(String groupId, int page) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response = await get(
-          mainApi + 'student/chatGroup/messages/groupId/$_groupId/page/$page',
-          headers: _headers);
+          '${mainApi}student/chatGroup/messages/groupId/$groupId/page/$page',
+          headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else {
@@ -48,13 +47,13 @@ class ChatGroupListAPI extends GetConnect {
     }
   }
 
-  createGroup(dio.FormData _data) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  createGroup(dio.FormData data) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response = await dio.Dio().post(
-        mainApi + 'teacher/chatGroup/create',
-        data: _data,
-        options: dio.Options(headers: _headers),
+        '${mainApi}teacher/chatGroup/create',
+        data: data,
+        options: dio.Options(headers: headers),
         onSendProgress: (int sent, int total) {
           EasyLoading.showProgress(sent / total, status: "جار الرفع...");
           if (sent == total) {

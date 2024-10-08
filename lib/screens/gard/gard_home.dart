@@ -67,6 +67,14 @@ class _GardHomeState extends State<GardHome> {
                       text: 'التقارير',
                     ),
                   ]),
+              actions: [
+                IconButton(
+                    onPressed: () {
+                      controller.getStudentNames();
+                      controller.getStudentReport();
+                    },
+                    icon: const Icon(Icons.refresh))
+              ],
               leading: IconButton(
                   onPressed: () {
                     Get.defaultDialog(

@@ -32,22 +32,22 @@ class _ChatTeacherListState extends State<ChatTeacherList> {
 
   final String _classesId = Get.put(MainDataGetProvider()).mainData['account']
       ['account_division_current']['_id'];
-  late var _studyYear;
+  late var studyYear;
 
   search() {
     page = 0;
     EasyLoading.show(status: "جار جلب البيانات");
     chatTeacherProvider.getStudent(
-        page, _classesId, _studyYear, searchController.text);
+        page, _classesId, studyYear, searchController.text);
   }
 
   _getTeacherList() {
-    _studyYear = _mainDataGetProvider.mainData['setting'][0]['setting_year'];
+    studyYear = _mainDataGetProvider.mainData['setting'][0]['setting_year'];
     if (page != 0) {
       EasyLoading.show(status: "جار جلب البيانات");
     }
     chatTeacherProvider.getStudent(
-        page, _classesId, _studyYear, searchController.text);
+        page, _classesId, studyYear, searchController.text);
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:secondhome2/local_database/sql_database.dart';
 
 // class Auth extends GetxController{
@@ -6,8 +7,8 @@ import 'package:secondhome2/local_database/sql_database.dart';
 // }
 class TokenProvider extends GetxController {
   Map? userData;
-  void addToken(userData) {
-    this.userData = userData;
+  void addToken(userDataR) {
+    userData = userDataR;
     update();
   }
 
@@ -15,21 +16,26 @@ class TokenProvider extends GetxController {
     userData = null;
   }
 
-  addAccountToDatabase(Map<String,dynamic> account) async {
+  addAccountToDatabase(Map<String, dynamic> account) async {
     await SqlDatabase.db.insertAccountAsMap(account);
   }
 }
 
 class MainDataGetProvider extends GetxController {
   Map mainData = {};
-  void addData(Map userData) {
-    mainData = userData;
+  void addData(Map userDataR) {
+    mainData = userDataR;
     update();
   }
 
+  void changeType(String comingType) {
+    GetStorage box = GetStorage();
+    box.write('type', comingType);
+  }
+
   String contentUrl = "";
-  void changeContentUrl(String contentUrl) {
-    this.contentUrl = contentUrl;
+  void changeContentUrl(String contentUrlR) {
+    contentUrl = contentUrlR;
   }
 }
 

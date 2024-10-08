@@ -5,8 +5,6 @@ PODS:
     - Flutter
   - background_location (0.0.1):
     - Flutter
-  - device_info (0.0.1):
-    - Flutter
   - device_info_plus (0.0.1):
     - Flutter
   - DKImagePickerController/Core (4.3.9):
@@ -43,46 +41,46 @@ PODS:
   - file_picker (0.0.1):
     - DKImagePickerController/PhotoGallery
     - Flutter
-  - Firebase/Analytics (10.18.0):
+  - Firebase/Analytics (10.29.0):
     - Firebase/Core
-  - Firebase/Core (10.18.0):
+  - Firebase/Core (10.29.0):
     - Firebase/CoreOnly
-    - FirebaseAnalytics (~> 10.18.0)
-  - Firebase/CoreOnly (10.18.0):
-    - FirebaseCore (= 10.18.0)
-  - Firebase/Messaging (10.18.0):
+    - FirebaseAnalytics (~> 10.29.0)
+  - Firebase/CoreOnly (10.29.0):
+    - FirebaseCore (= 10.29.0)
+  - Firebase/Messaging (10.29.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 10.18.0)
-  - firebase_analytics (10.8.0):
-    - Firebase/Analytics (= 10.18.0)
+    - FirebaseMessaging (~> 10.29.0)
+  - firebase_analytics (11.2.1):
+    - Firebase/Analytics (= 10.29.0)
     - firebase_core
     - Flutter
-  - firebase_core (2.24.2):
-    - Firebase/CoreOnly (= 10.18.0)
+  - firebase_core (3.3.0):
+    - Firebase/CoreOnly (= 10.29.0)
     - Flutter
-  - firebase_messaging (14.7.10):
-    - Firebase/Messaging (= 10.18.0)
+  - firebase_messaging (15.0.4):
+    - Firebase/Messaging (= 10.29.0)
     - firebase_core
     - Flutter
-  - FirebaseAnalytics (10.18.0):
-    - FirebaseAnalytics/AdIdSupport (= 10.18.0)
+  - FirebaseAnalytics (10.29.0):
+    - FirebaseAnalytics/AdIdSupport (= 10.29.0)
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseAnalytics/AdIdSupport (10.18.0):
+    - nanopb (< 2.30911.0, >= 2.30908.0)
+  - FirebaseAnalytics/AdIdSupport (10.29.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
-    - GoogleAppMeasurement (= 10.18.0)
+    - GoogleAppMeasurement (= 10.29.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - FirebaseCore (10.18.0):
+    - nanopb (< 2.30911.0, >= 2.30908.0)
+  - FirebaseCore (10.29.0):
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.12)
     - GoogleUtilities/Logger (~> 7.12)
@@ -93,17 +91,19 @@ PODS:
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - PromisesObjC (~> 2.1)
-  - FirebaseMessaging (10.18.0):
+  - FirebaseMessaging (10.29.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
-    - GoogleDataTransport (~> 9.2)
+    - GoogleDataTransport (~> 9.3)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/Reachability (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
-    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - nanopb (< 2.30911.0, >= 2.30908.0)
   - Flutter (1.0.0)
   - flutter_app_badger (1.3.0):
+    - Flutter
+  - flutter_device_id (0.0.1):
     - Flutter
   - flutter_image_compress_common (1.0.0):
     - Flutter
@@ -124,26 +124,26 @@ PODS:
     - Flutter
     - Google-Maps-iOS-Utils (< 7.0, >= 5.0)
     - GoogleMaps (< 10.0, >= 8.4)
-  - GoogleAppMeasurement (10.18.0):
-    - GoogleAppMeasurement/AdIdSupport (= 10.18.0)
+  - GoogleAppMeasurement (10.29.0):
+    - GoogleAppMeasurement/AdIdSupport (= 10.29.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleAppMeasurement/AdIdSupport (10.18.0):
-    - GoogleAppMeasurement/WithoutAdIdSupport (= 10.18.0)
+    - nanopb (< 2.30911.0, >= 2.30908.0)
+  - GoogleAppMeasurement/AdIdSupport (10.29.0):
+    - GoogleAppMeasurement/WithoutAdIdSupport (= 10.29.0)
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
-  - GoogleAppMeasurement/WithoutAdIdSupport (10.18.0):
+    - nanopb (< 2.30911.0, >= 2.30908.0)
+  - GoogleAppMeasurement/WithoutAdIdSupport (10.29.0):
     - GoogleUtilities/AppDelegateSwizzler (~> 7.11)
     - GoogleUtilities/MethodSwizzler (~> 7.11)
     - GoogleUtilities/Network (~> 7.11)
     - "GoogleUtilities/NSData+zlib (~> 7.11)"
-    - nanopb (< 2.30910.0, >= 2.30908.0)
+    - nanopb (< 2.30911.0, >= 2.30908.0)
   - GoogleDataTransport (9.4.1):
     - GoogleUtilities/Environment (~> 7.7)
     - nanopb (< 2.30911.0, >= 2.30908.0)
@@ -207,19 +207,19 @@ PODS:
     - Mantle/extobjc (= 2.2.0)
   - Mantle/extobjc (2.2.0)
   - MTBBarcodeScanner (5.0.11)
-  - nanopb (2.30909.1):
-    - nanopb/decode (= 2.30909.1)
-    - nanopb/encode (= 2.30909.1)
-  - nanopb/decode (2.30909.1)
-  - nanopb/encode (2.30909.1)
+  - nanopb (2.30910.0):
+    - nanopb/decode (= 2.30910.0)
+    - nanopb/encode (= 2.30910.0)
+  - nanopb/decode (2.30910.0)
+  - nanopb/encode (2.30910.0)
+  - open_file_ios (0.0.1):
+    - Flutter
   - package_info_plus (0.4.5):
     - Flutter
   - path_provider_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
   - permission_handler_apple (9.3.0):
-    - Flutter
-  - platform_device_id (0.0.1):
     - Flutter
   - PromisesObjC (2.4.0)
   - qr_code_scanner (0.2.0):
@@ -228,9 +228,9 @@ PODS:
   - record_darwin (1.0.0):
     - Flutter
     - FlutterMacOS
-  - SDWebImage (5.19.6):
-    - SDWebImage/Core (= 5.19.6)
-  - SDWebImage/Core (5.19.6)
+  - SDWebImage (5.19.7):
+    - SDWebImage/Core (= 5.19.7)
+  - SDWebImage/Core (5.19.7)
   - SDWebImageWebPCoder (0.14.6):
     - libwebp (~> 1.0)
     - SDWebImage/Core (~> 5.17)
@@ -250,7 +250,6 @@ DEPENDENCIES:
   - another_audio_recorder (from `.symlinks/plugins/another_audio_recorder/ios`)
   - audio_session (from `.symlinks/plugins/audio_session/ios`)
   - background_location (from `.symlinks/plugins/background_location/ios`)
-  - device_info (from `.symlinks/plugins/device_info/ios`)
   - device_info_plus (from `.symlinks/plugins/device_info_plus/ios`)
   - file_picker (from `.symlinks/plugins/file_picker/ios`)
   - firebase_analytics (from `.symlinks/plugins/firebase_analytics/ios`)
@@ -258,6 +257,7 @@ DEPENDENCIES:
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
   - Flutter (from `Flutter`)
   - flutter_app_badger (from `.symlinks/plugins/flutter_app_badger/ios`)
+  - flutter_device_id (from `.symlinks/plugins/flutter_device_id/ios`)
   - flutter_image_compress_common (from `.symlinks/plugins/flutter_image_compress_common/ios`)
   - flutter_local_notifications (from `.symlinks/plugins/flutter_local_notifications/ios`)
   - flutter_native_splash (from `.symlinks/plugins/flutter_native_splash/ios`)
@@ -269,10 +269,10 @@ DEPENDENCIES:
   - just_audio (from `.symlinks/plugins/just_audio/ios`)
   - just_waveform (from `.symlinks/plugins/just_waveform/ios`)
   - location (from `.symlinks/plugins/location/ios`)
+  - open_file_ios (from `.symlinks/plugins/open_file_ios/ios`)
   - package_info_plus (from `.symlinks/plugins/package_info_plus/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
-  - platform_device_id (from `.symlinks/plugins/platform_device_id/ios`)
   - qr_code_scanner (from `.symlinks/plugins/qr_code_scanner/ios`)
   - record_darwin (from `.symlinks/plugins/record_darwin/ios`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
@@ -311,8 +311,6 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/audio_session/ios"
   background_location:
     :path: ".symlinks/plugins/background_location/ios"
-  device_info:
-    :path: ".symlinks/plugins/device_info/ios"
   device_info_plus:
     :path: ".symlinks/plugins/device_info_plus/ios"
   file_picker:
@@ -327,6 +325,8 @@ EXTERNAL SOURCES:
     :path: Flutter
   flutter_app_badger:
     :path: ".symlinks/plugins/flutter_app_badger/ios"
+  flutter_device_id:
+    :path: ".symlinks/plugins/flutter_device_id/ios"
   flutter_image_compress_common:
     :path: ".symlinks/plugins/flutter_image_compress_common/ios"
   flutter_local_notifications:
@@ -349,14 +349,14 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/just_waveform/ios"
   location:
     :path: ".symlinks/plugins/location/ios"
+  open_file_ios:
+    :path: ".symlinks/plugins/open_file_ios/ios"
   package_info_plus:
     :path: ".symlinks/plugins/package_info_plus/ios"
   path_provider_foundation:
     :path: ".symlinks/plugins/path_provider_foundation/darwin"
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
-  platform_device_id:
-    :path: ".symlinks/plugins/platform_device_id/ios"
   qr_code_scanner:
     :path: ".symlinks/plugins/qr_code_scanner/ios"
   record_darwin:
@@ -374,22 +374,22 @@ SPEC CHECKSUMS:
   another_audio_recorder: dee1fef684a64f55beda4b16b847d264455b5de9
   audio_session: 088d2483ebd1dc43f51d253d4a1c517d9a2e7207
   background_location: 1b80c1fe3abd9912bca298618f6e365abf6f588f
-  device_info: d7d233b645a32c40dfdc212de5cf646ca482f175
   device_info_plus: 97af1d7e84681a90d0693e63169a5d50e0839a0d
   DKImagePickerController: 946cec48c7873164274ecc4624d19e3da4c1ef3c
   DKPhotoGallery: b3834fecb755ee09a593d7c9e389d8b5d6deed60
   file_picker: 09aa5ec1ab24135ccd7a1621c46c84134bfd6655
-  Firebase: 414ad272f8d02dfbf12662a9d43f4bba9bec2a06
-  firebase_analytics: b3d6dd14c61549a29abb10e9843446a4d8bb53eb
-  firebase_core: 0af4a2b24f62071f9bf283691c0ee41556dcb3f5
-  firebase_messaging: 90e8a6db84b6e1e876cebce4f30f01dc495e7014
-  FirebaseAnalytics: 4d310b35c48eaa4a058ddc04bdca6bdb5dc0fe80
-  FirebaseCore: 2322423314d92f946219c8791674d2f3345b598f
+  Firebase: cec914dab6fd7b1bd8ab56ea07ce4e03dd251c2d
+  firebase_analytics: 04491d1ee74c8e7c2330c96afc54188a969b06ee
+  firebase_core: 57aeb91680e5d5e6df6b888064be7c785f146efb
+  firebase_messaging: c862b3d2b973ecc769194dc8de09bd22c77ae757
+  FirebaseAnalytics: 23717de130b779aa506e757edb9713d24b6ffeda
+  FirebaseCore: 30e9c1cbe3d38f5f5e75f48bfcea87d7c358ec16
   FirebaseCoreInternal: df84dd300b561c27d5571684f389bf60b0a5c934
   FirebaseInstallations: 913cf60d0400ebd5d6b63a28b290372ab44590dd
-  FirebaseMessaging: 9bc34a98d2e0237e1b121915120d4d48ddcf301e
+  FirebaseMessaging: 7b5d8033e183ab59eb5b852a53201559e976d366
   Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
   flutter_app_badger: b87fc231847b03b92ce1412aa351842e7e97932f
+  flutter_device_id: 5e08c59a130f06c4fcc14e4b68724883c879fb85
   flutter_image_compress_common: ec1d45c362c9d30a3f6a0426c297f47c52007e3e
   flutter_local_notifications: 4cde75091f6327eb8517fa068a0a5950212d2086
   flutter_native_splash: edf599c81f74d093a4daf8e17bd7a018854bc778
@@ -397,7 +397,7 @@ SPEC CHECKSUMS:
   geolocator_apple: 6cbaf322953988e009e5ecb481f07efece75c450
   Google-Maps-iOS-Utils: 66d6de12be1ce6d3742a54661e7a79cb317a9321
   google_maps_flutter_ios: e31555a04d1986ab130f2b9f24b6cdc861acc6d3
-  GoogleAppMeasurement: 70ce9aa438cff1cfb31ea3e660bcc67734cb716e
+  GoogleAppMeasurement: f9de05ee17401e3355f68e8fc8b5064d429f5918
   GoogleDataTransport: 6c09b596d841063d76d4288cc2d2f42cc36e1e2a
   GoogleMaps: 8939898920281c649150e0af74aa291c60f2e77d
   GoogleUtilities: ea963c370a38a8069cc5f7ba4ca849a60b6d7d15
@@ -409,15 +409,15 @@ SPEC CHECKSUMS:
   location: d5cf8598915965547c3f36761ae9cc4f4e87d22e
   Mantle: c5aa8794a29a022dfbbfc9799af95f477a69b62d
   MTBBarcodeScanner: f453b33c4b7dfe545d8c6484ed744d55671788cb
-  nanopb: d4d75c12cd1316f4a64e3c6963f879ecd4b5e0d5
+  nanopb: 438bc412db1928dac798aa6fd75726007be04262
+  open_file_ios: 461db5853723763573e140de3193656f91990d9e
   package_info_plus: 58f0028419748fad15bf008b270aaa8e54380b1c
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
-  platform_device_id: 81b3e2993881f87d0c82ef151dc274df4869aef5
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
   qr_code_scanner: bb67d64904c3b9658ada8c402e8b4d406d5d796e
   record_darwin: df0a677188e5fed18472550298e675f19ddaffbe
-  SDWebImage: a79252b60f4678812d94316c91da69ec83089c9f
+  SDWebImage: 8a6b7b160b4d710e2a22b6900e25301075c34cb3
   SDWebImageWebPCoder: e38c0a70396191361d60c092933e22c20d5b1380
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
   sqflite: 673a0e54cc04b7d6dba8d24fb8095b31c3a99eec

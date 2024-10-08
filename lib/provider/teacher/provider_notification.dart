@@ -8,34 +8,35 @@ class TeacherNotificationProvider extends GetxController {
   int countAll = 0;
   bool isLoading = true;
   String contentUrl = "";
-  void insertData(_data) {
-    data.addAll(_data);
+  void insertData(datax) {
+    data.addAll(datax);
     update();
   }
 
-  void changeRead(_isRead) {
-    isRead = _isRead;
-    //update();
+  void changeRead(isReadx) {
+    isRead = isReadx;
+    update();
   }
 
-  void editReadMap(String _id) {
-    int _indexItem = data.indexWhere((element) => element['_id'] == _id);
-    if(!data[_indexItem]['isRead']){
+  void editReadMap(String id) {
+    int indexItem = data.indexWhere((element) => element['_id'] == id);
+    if (!data[indexItem]['isRead']) {
       countRead++;
       countUnread--;
-      data[_indexItem]['isRead'] = true;
+      data[indexItem]['isRead'] = true;
       update();
     }
   }
-  void deleteNotification(String _id) {
-    data.removeWhere((element) => element['_id'] == _id);
+
+  void deleteNotification(String id) {
+    data.removeWhere((element) => element['_id'] == id);
     update();
   }
 
-  void changeCount(int _countAll, int _countRead, int _countUnread) {
-    countAll = _countAll;
-    countRead = _countRead;
-    countUnread = _countUnread;
+  void changeCount(int countAllx, int countReadx, int countUnreadx) {
+    countAll = countAllx;
+    countRead = countReadx;
+    countUnread = countUnreadx;
     update();
   }
 
@@ -44,12 +45,13 @@ class TeacherNotificationProvider extends GetxController {
     isLoading = true;
   }
 
-  void changeLoading(bool _isLoading) {
-    isLoading = _isLoading;
+  void changeLoading(bool isLoadingx) {
+    isLoading = isLoadingx;
+    update();
   }
 
-  void changeContentUrl(String _contentUrl) {
-    contentUrl = _contentUrl;
+  void changeContentUrl(String contentUrlx) {
+    contentUrl = contentUrlx;
   }
 }
 
@@ -58,13 +60,13 @@ class TeacherHomeworkAnswersProvider extends GetxController {
 
   bool isLoading = true;
   String contentUrl = "";
-  void insertData(_data) {
-    data.addAll(_data);
+  void insertData(datax) {
+    data.addAll(datax);
     update();
   }
 
-  void deleteNotification(String _id) {
-    data.removeWhere((element) => element['_id'] == _id);
+  void deleteNotification(String id) {
+    data.removeWhere((element) => element['_id'] == id);
     update();
   }
 
@@ -73,12 +75,13 @@ class TeacherHomeworkAnswersProvider extends GetxController {
     isLoading = true;
   }
 
-  void changeLoading(bool _isLoading) {
-    isLoading = _isLoading;
+  void changeLoading(bool isLoadingx) {
+    isLoading = isLoadingx;
+    update();
   }
 
-  void changeContentUrl(String _contentUrl) {
-    contentUrl = _contentUrl;
+  void changeContentUrl(String contentUrlx) {
+    contentUrl = contentUrlx;
   }
 }
 
@@ -91,7 +94,6 @@ class SelectSwitchProvider extends GetxController {
   }
 }
 
-
 class NotificationProviderIntimation extends GetxController {
   List data = [];
   int countRead = 0;
@@ -100,31 +102,31 @@ class NotificationProviderIntimation extends GetxController {
   int countAll = 0;
   bool isLoading = true;
   String contentUrl = "";
-  void insertData(_data) {
+  void insertData(datax) {
     data.clear();
-    data.addAll(_data);
+    data.addAll(datax);
     update();
   }
 
-  void changeRead(_isRead) {
-    isRead = _isRead;
-    //update();
+  void changeRead(isReadx) {
+    isRead = isReadx;
+    update();
   }
 
-  void editReadMap(String _id) {
-    int _indexItem = data.indexWhere((element) => element['_id'] == _id);
-    if(!data[_indexItem]['isRead']){
+  void editReadMap(String id) {
+    int indexItem = data.indexWhere((element) => element['_id'] == id);
+    if (!data[indexItem]['isRead']) {
       countRead++;
       countUnread--;
-      data[_indexItem]['isRead'] = true;
+      data[indexItem]['isRead'] = true;
       update();
     }
   }
 
-  void changeCount(int _countAll, int _countRead, int _countUnread) {
-    countAll = _countAll;
-    countRead = _countRead;
-    countUnread = _countUnread;
+  void changeCount(int countAllx, int countReadx, int countUnreadx) {
+    countAll = countAllx;
+    countRead = countReadx;
+    countUnread = countUnreadx;
     update();
   }
 
@@ -133,11 +135,12 @@ class NotificationProviderIntimation extends GetxController {
     isLoading = true;
   }
 
-  void changeLoading(bool _isLoading) {
-    isLoading = _isLoading;
+  void changeLoading(bool isLoadingx) {
+    isLoading = isLoadingx;
+    update();
   }
 
-  void changeContentUrl(String _contentUrl) {
-    contentUrl = _contentUrl;
+  void changeContentUrl(String contentUrlx) {
+    contentUrl = contentUrlx;
   }
 }

@@ -6,7 +6,6 @@ import 'package:flutter_app_badger/flutter_app_badger.dart';
 import 'package:flutter_staggered_animations/flutter_staggered_animations.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-
 import '../../../api_connection/student/api_dashboard_data.dart';
 import '../../../api_connection/student/api_notification.dart';
 import '../../../provider/auth_provider.dart';

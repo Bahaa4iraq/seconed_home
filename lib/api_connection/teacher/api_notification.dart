@@ -12,17 +12,14 @@ import '../auth_connection.dart';
 class NotificationsAPI extends GetConnect {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
 
-
-
-
   final NotificationProviderIntimation _notificationProviderIntimation =
-  Get.put(NotificationProviderIntimation());
+      Get.put(NotificationProviderIntimation());
 
-  getNotifications(Map _data) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  getNotifications(Map data) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
-      final response = await post(mainApi + 'teacher/notification', _data,
-          headers: _headers);
+      final response =
+          await post('${mainApi}teacher/notification', data, headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else if (!response.body["error"]) {
@@ -35,27 +32,32 @@ class NotificationsAPI extends GetConnect {
             response.body['results']['count_unread']);
         Get.put(TeacherNotificationProvider())
             .insertData(response.body['results']['data']);
+
         EasyLoading.dismiss();
       } else {
         EasyLoading.dismiss();
         return {"error": true};
       }
     } catch (e) {
+      EasyLoading.dismiss();
+
+      Logger().i("error $data");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
   }
 
-  updateReadNotifications(String _id) async {
-    Map _data = {"notification_id": _id};
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  updateReadNotifications(String id) async {
+    Map data = {"notification_id": id};
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response =
-          await put(mainApi + 'teacher/notification', _data, headers: _headers);
+          await put('${mainApi}teacher/notification', data, headers: headers);
+      print(response);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else if (!response.body["error"]) {
-        Get.put(TeacherNotificationProvider()).editReadMap(_id);
+        Get.put(TeacherNotificationProvider()).editReadMap(id);
       }
     } catch (e) {
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
@@ -63,13 +65,13 @@ class NotificationsAPI extends GetConnect {
     }
   }
 
-  addNotification(dio.FormData _data) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  addNotification(dio.FormData data) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response = await dio.Dio().post(
-        mainApi + 'teacher/notification/add',
-        data: _data,
-        options: dio.Options(headers: _headers),
+        '${mainApi}teacher/notification/add',
+        data: data,
+        options: dio.Options(headers: headers),
         onSendProgress: (int sent, int total) {
           EasyLoading.showProgress(sent / total, status: "جار الرفع...");
           if (sent == total) {
@@ -91,17 +93,16 @@ class NotificationsAPI extends GetConnect {
     }
   }
 
-  deleteNotification(Map _data) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  deleteNotification(Map data) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
-      final response = await post(
-          mainApi + 'teacher/notification/remove', _data,
-          headers: _headers);
+      final response = await post('${mainApi}teacher/notification/remove', data,
+          headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else if (!response.body["error"]) {
         Get.put(TeacherNotificationProvider())
-            .deleteNotification(_data["notifications_id"]);
+            .deleteNotification(data["notifications_id"]);
         EasyLoading.showSuccess("تم حذف الاشعار بنجاح");
       } else {
         EasyLoading.dismiss();
@@ -113,13 +114,12 @@ class NotificationsAPI extends GetConnect {
     }
   }
 
-  getHomeworkAnswers(String _notificationId, int page) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  getHomeworkAnswers(String notificationId, int page) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response = await get(
-          mainApi +
-              'teacher/homeworkAnswers/notification_id/$_notificationId/page/$page',
-          headers: _headers);
+          '${mainApi}teacher/homeworkAnswers/notification_id/$notificationId/page/$page',
+          headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else if (!response.body["error"]) {
@@ -139,46 +139,48 @@ class NotificationsAPI extends GetConnect {
     }
   }
 
-  getNotificationsIntimation(Map _data) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  getNotificationsIntimation(Map data) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
-      final response = await post('${mainApi}teacher/notification', _data,
-          headers: _headers);
+      final response =
+          await post('${mainApi}teacher/notification', data, headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
         //NotificationProviderE
       } else if (!response.body["error"]) {
         _notificationProviderIntimation.changeLoading(false);
-        _notificationProviderIntimation.changeContentUrl(response.body['content_url']);
+        _notificationProviderIntimation
+            .changeContentUrl(response.body['content_url']);
         _notificationProviderIntimation.changeCount(
             response.body['results']['count_all'],
             response.body['results']['count_read'],
             response.body['results']['count_unread']);
-        _notificationProviderIntimation.insertData(response.body['results']['data']);
+        _notificationProviderIntimation
+            .insertData(response.body['results']['data']);
         EasyLoading.dismiss();
       } else {
         EasyLoading.dismiss();
         return {"error": true};
       }
     } catch (e) {
-      Logger().i("error $_data");
+      Logger().i("error $data");
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
   }
 
-  updateReadNotificationsIntimation(String _id) async {
-    Map _data = {"notification_id": _id};
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  updateReadNotificationsIntimation(String id) async {
+    Map data = {"notification_id": id};
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
       final response =
-      await put('${mainApi}teacher/notification', _data, headers: _headers);
+          await put('${mainApi}teacher/notification', data, headers: headers);
       if (response.statusCode == 401) {
         Logger().i("redirect");
         Auth().redirect();
       } else if (!response.body["error"]) {
         print(response);
-        Get.put(NotificationProviderIntimation()).editReadMap(_id);
+        Get.put(NotificationProviderIntimation()).editReadMap(id);
       }
     } catch (e) {
       Logger().i("error");
@@ -187,13 +189,11 @@ class NotificationsAPI extends GetConnect {
     }
   }
 
-
-
-  addCorrect(Map _data) async {
-    Map<String, String> _headers = {"Authorization": dataProvider!['token']};
+  addCorrect(Map data) async {
+    Map<String, String> headers = {"Authorization": dataProvider!['token']};
     try {
-      final response = await put(mainApi + 'teacher/homeworkAnswers', _data,
-          headers: _headers);
+      final response = await put('${mainApi}teacher/homeworkAnswers', data,
+          headers: headers);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else {

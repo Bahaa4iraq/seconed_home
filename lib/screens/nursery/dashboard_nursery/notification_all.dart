@@ -37,7 +37,7 @@ class _NotificationAllState extends State<NotificationAll> {
   final NotificationProvider _notificationProvider =
       Get.put(NotificationProvider());
   int page = 0;
-  String? type;
+  String? typeSelected;
   List typeList = [
     "رسالة",
     "ملابس",
@@ -51,16 +51,16 @@ class _NotificationAllState extends State<NotificationAll> {
     "الميلاد"
   ];
   String? getType() {
-    Logger().i(type);
+    Logger().i(typeSelected);
 
-    if (type == "هل تعلم") {
+    if (typeSelected == "هل تعلم") {
       return "تقرير";
-    } else if (type == "يوميات") {
+    } else if (typeSelected == "يوميات") {
       return "دروس";
-    } else if (type == "العناية بالطفل") {
+    } else if (typeSelected == "العناية بالطفل") {
       return "الحفاض";
     } else {
-      return type;
+      return typeSelected;
     }
   }
 
@@ -253,6 +253,7 @@ class _NotificationAllState extends State<NotificationAll> {
                                                           "notifications_description"]
                                                       .toString(),
                                                   maxLines: 4,
+                                                  textAlign: TextAlign.justify,
                                                   overflow:
                                                       TextOverflow.ellipsis,
                                                 )
@@ -274,8 +275,6 @@ class _NotificationAllState extends State<NotificationAll> {
   }
 
   _navPage(Map data, String contentUrl) {
-    print('=============================================');
-    print(data);
     List pageNotifications = [
       "رسالة",
       "ملابس",
@@ -349,13 +348,13 @@ class _NotificationAllState extends State<NotificationAll> {
       child: MaterialButton(
         onPressed: () {
           page = 0;
-          type = type;
+          typeSelected = type;
           Get.put(NotificationProvider()).remove();
           EasyLoading.show(status: "جار جلب البيانات");
           initFunction();
         },
-        color: type == type ? MyColor.pink : MyColor.white0,
-        textColor: type == type ? MyColor.white0 : MyColor.pink,
+        color: typeSelected == type ? MyColor.pink : MyColor.white0,
+        textColor: typeSelected == type ? MyColor.white0 : MyColor.pink,
         child: Text(type ?? "الكل"),
       ),
     );
