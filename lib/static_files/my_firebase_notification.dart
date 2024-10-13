@@ -37,11 +37,22 @@ import '../screens/nursery_teacher/pages/teacher_weekly_schedule.dart'
 class NotificationFirebase {
   initializeCloudMessage() async {
     FirebaseMessaging messaging = FirebaseMessaging.instance;
-    await messaging.requestPermission();
+    await messaging.requestPermission(
+      alert: true,
+      announcement: false,
+      badge: true,
+      carPlay: false,
+      criticalAlert: false,
+      provisional: false,
+      sound: true,
+    );
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
     // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await messaging.subscribeToTopic('test');
+    // await messaging.subscribeToTopic('mmbb');
+    // await messaging.getToken().then((tok) {
+    //   print(tok);
+    // });
     // print('Subscribed to test topic');
 
     // String? schoolId = prefs.getString('school_id');
@@ -123,15 +134,13 @@ const AndroidNotificationChannel channel = AndroidNotificationChannel(
 );
 
 receivedMessages(RemoteMessage message) {
+  Logger().i('receivedMessages: ${message.notification?.body}');
   final box = GetStorage();
   Map? userData = box.read('_userData');
   if (userData != null) {
     Get.put(TokenProvider()).addToken(userData);
   }
 
-  Logger().i(message.messageType);
-  Logger().i(message.category);
-  Logger().i(message.notification?.title);
   if (userData == null) {
     return const LoginPage();
   } else if (userData["account_type"] == "student") {

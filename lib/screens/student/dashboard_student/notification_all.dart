@@ -47,9 +47,9 @@ class _NotificationAllState extends State<NotificationAll> {
   int page = 0;
   String? type;
   dynamic typeList = [
-    "رسالة",
+    "تبليغات",
     "ملخص الدروس اليومية",
-    "واجب اسبوعي",
+    "واجب يومي",
     "امتحان يومي",
     "يوميات",
     "هل تعلم",
@@ -62,10 +62,12 @@ class _NotificationAllState extends State<NotificationAll> {
       return "تقرير";
     } else if (type == "يوميات") {
       return "دروس";
-    } else if (type == "واجب اسبوعي") {
+    } else if (type == "واجب يومي") {
       return "واجب بيتي";
     } else if (type == "ملخص الدروس اليومية") {
       return "ملخص";
+    } else if (type == "تبليغات") {
+      return "رسالة";
     } else {
       return type;
     }

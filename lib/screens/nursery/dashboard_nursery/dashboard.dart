@@ -13,7 +13,6 @@ import '../../../provider/student/provider_notification.dart';
 import '../../../provider/student/student_provider.dart';
 import '../../../static_files/my_color.dart';
 import '../../../static_files/my_loading.dart';
-import '../profile/nursery_profile.dart';
 import '../review/daily_review_date.dart';
 import 'chat/chat_main/chat_main.dart';
 import 'chothes.dart';
@@ -71,14 +70,6 @@ class DashboardState extends State<Dashboard>
                 children: [
                   GetBuilder<MainDataGetProvider>(builder: (mainDataProvider) {
                     return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  StudentProfile(userData: widget.userData)),
-                        );
-                      },
                       child: Container(
                         width: 55,
                         height: 55,

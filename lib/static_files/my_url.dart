@@ -14,33 +14,40 @@ String mainApi = kinderURL;
 String socketURL = socketURLKindergarten;
 
 followTopics() async {
-  String id =
-      Get.put(MainDataGetProvider()).mainData['account']['school']['_id'];
-  String type = '';
-  GetStorage box = GetStorage();
-  type = box.read('type');
+  try {
+    String id =
+        Get.put(MainDataGetProvider()).mainData['account']['school']['_id'];
+    String type = '';
+    GetStorage box = GetStorage();
+    type = box.read('type');
 
-  FirebaseMessaging messaging = FirebaseMessaging.instance;
-  await messaging.subscribeToTopic('school_$id');
-  if (type == 'student') {
-    await messaging.subscribeToTopic('all_students_$id');
-    await messaging.unsubscribeFromTopic('all_teachers_$id');
-    await messaging.unsubscribeFromTopic('all_drivers_$id');
-    await messaging.unsubscribeFromTopic('all_receptions_$id');
-  } else if (type == 'teacher') {
-    await messaging.subscribeToTopic('all_teachers_$id');
-    await messaging.unsubscribeFromTopic('all_students_$id');
-    await messaging.unsubscribeFromTopic('all_drivers_$id');
-    await messaging.unsubscribeFromTopic('all_receptions_$id');
-  } else if (type == 'driver') {
-    await messaging.subscribeToTopic('all_drivers_$id');
-    await messaging.unsubscribeFromTopic('all_students_$id');
-    await messaging.unsubscribeFromTopic('all_teachers_$id');
-    await messaging.unsubscribeFromTopic('all_receptions_$id');
-  } else if (type == 'reception') {
-    await messaging.subscribeToTopic('all_receptions_$id');
-    await messaging.unsubscribeFromTopic('all_students_$id');
-    await messaging.unsubscribeFromTopic('all_teachers_$id');
-    await messaging.unsubscribeFromTopic('all_drivers_$id');
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    await messaging.subscribeToTopic('school_$id');
+    print('school_$id');
+
+    if (type == 'student') {
+      await messaging.subscribeToTopic('all_students_$id');
+      await messaging.subscribeToTopic('students');
+      await messaging.unsubscribeFromTopic('all_teachers_$id');
+      await messaging.unsubscribeFromTopic('all_drivers_$id');
+      await messaging.unsubscribeFromTopic('all_receptions_$id');
+    } else if (type == 'teacher') {
+      await messaging.subscribeToTopic('all_teachers_$id');
+      await messaging.unsubscribeFromTopic('all_students_$id');
+      await messaging.unsubscribeFromTopic('all_drivers_$id');
+      await messaging.unsubscribeFromTopic('all_receptions_$id');
+    } else if (type == 'driver') {
+      await messaging.subscribeToTopic('all_drivers_$id');
+      await messaging.unsubscribeFromTopic('all_students_$id');
+      await messaging.unsubscribeFromTopic('all_teachers_$id');
+      await messaging.unsubscribeFromTopic('all_receptions_$id');
+    } else if (type == 'reception') {
+      await messaging.subscribeToTopic('all_receptions_$id');
+      await messaging.unsubscribeFromTopic('all_students_$id');
+      await messaging.unsubscribeFromTopic('all_teachers_$id');
+      await messaging.unsubscribeFromTopic('all_drivers_$id');
+    }
+  } catch (e) {
+    print('error in followTopics $e');
   }
 }

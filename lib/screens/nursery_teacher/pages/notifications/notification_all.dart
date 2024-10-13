@@ -44,7 +44,10 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
     "تبليغ",
     "تدريب",
     "هل تعلم",
-    "الميلاد"
+    "الميلاد",
+    // 'امتحان يومي',
+    // 'ملخص',
+    // 'واجب بيتي'
   ];
   initFunction() {
     Map _data = {
@@ -317,33 +320,34 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
   }
 
   _navPage(Map _data, String _contentUrl) {
-    List _pageNotifications = [
-      "رسالة",
-      "ملابس",
-      "غذاء",
-      "دروس",
-      "تدريب",
-      "غفوة",
-      "الحفاض",
-      "واجب بيتي",
-      "امتحان يومي",
-      "تقرير",
-      "تبليغ",
-      "اقساط",
-      "ملخص",
-      "البصمة",
-      'اشعار'
-    ];
+    // List _pageNotifications = [
+    //   "رسالة",
+    //   "ملابس",
+    //   "غذاء",
+    //   "دروس",
+    //   "تدريب",
+    //   "غفوة",
+    //   "الحفاض",
+    //   "واجب بيتي",
+    //   "امتحان يومي",
+    //   "تقرير",
+    //   "تبليغ",
+    //   "اقساط",
+    //   "ملخص",
+    //   "البصمة",
+    //   'اشعار'
+    // ];
+    Get.put(NotificationsAPI()).updateReadNotifications(_data["_id"]);
 
-    if (_pageNotifications.contains(_data['notifications_type'])) {
+    if (_data['notifications_type'] == "الحضور") {
+      Get.to(() => TeacherAttend(
+            userData: widget.userData,
+          ));
+    } else {
       Get.to(() => ShowMessage(
           data: _data,
           contentUrl: _contentUrl,
           notificationsType: _data['notifications_type']));
-    } else if (_data['notifications_type'] == "الحضور") {
-      Get.to(() => TeacherAttend(
-            userData: widget.userData,
-          ));
     }
   }
 

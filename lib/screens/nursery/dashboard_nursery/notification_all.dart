@@ -39,7 +39,7 @@ class _NotificationAllState extends State<NotificationAll> {
   int page = 0;
   String? typeSelected;
   List typeList = [
-    "رسالة",
+    "تبليغات",
     "ملابس",
     "غذاء",
     "يوميات",
@@ -59,6 +59,8 @@ class _NotificationAllState extends State<NotificationAll> {
       return "دروس";
     } else if (typeSelected == "العناية بالطفل") {
       return "الحفاض";
+    } else if (typeSelected == "تبليغات") {
+      return "رسالة";
     } else {
       return typeSelected;
     }
@@ -137,7 +139,7 @@ class _NotificationAllState extends State<NotificationAll> {
                 if (val.isRead == null) {
                   val.changeRead(true);
                 } else if (val.isRead == true) {
-                  val.changeRead(false);
+                  val.changeRead(null);
                 }
                 page = 0;
                 val.remove();

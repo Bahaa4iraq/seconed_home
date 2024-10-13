@@ -44,7 +44,10 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
     "تبليغ",
     "تدريب",
     "هل تعلم",
-    "الميلاد"
+    "الميلاد",
+    'امتحان يومي',
+    'ملخص',
+    'واجب بيتي'
   ];
   initFunction() {
     Map _data = {

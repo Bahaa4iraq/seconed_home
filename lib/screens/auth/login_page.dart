@@ -86,6 +86,11 @@ class _LoginPageState extends State<LoginPage> {
 
     if (_formCheck.currentState!.validate() && authData != null) {
       Auth().login(data).then((res) async {
+        if (res == null) {
+          EasyLoading.showError("يوجد خطأ, الرجاء المحاولة مرة اخرى");
+          _btnController.reset();
+          return;
+        }
         if (!res['error']) {
           _btnController.success();
           await box.write('_userData', res['results']);

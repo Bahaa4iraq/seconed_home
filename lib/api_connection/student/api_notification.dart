@@ -411,6 +411,7 @@ class NotificationsAPI extends GetConnect {
     try {
       final response =
           await post('${mainApi}student/notification', data, headers: headers);
+      print(response.body);
       if (response.statusCode == 401) {
         Auth().redirect();
         //NotificationProviderE
