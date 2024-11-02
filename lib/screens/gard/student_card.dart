@@ -6,8 +6,9 @@ import 'package:secondhome2/screens/gard/student_model.dart';
 import 'package:secondhome2/static_files/my_color.dart';
 
 class StudentCard extends StatelessWidget {
-  const StudentCard({super.key, required this.student});
+  const StudentCard({super.key, required this.student, required this.token});
   final StudentGardModel student;
+  final String token;
   static GardController controller = Get.put(GardController());
 
   @override
@@ -31,7 +32,10 @@ class StudentCard extends StatelessWidget {
                 IconButton(
                     onPressed: () {
                       if (student.inCreatedAt == null) {
-                        controller.editStudentStatus(student.sId!, 'دخول');
+                        controller.editStudentStatus(
+                          student.sId!,
+                          'دخول',token
+                        );
                       } else {
                         EasyLoading.showError('الطالب دخل بالفعل');
                       }
@@ -64,7 +68,7 @@ class StudentCard extends StatelessWidget {
                       if (student.inCreatedAt == null) {
                         EasyLoading.showError('الطالب لم يدخل بعد');
                       } else if (student.outCreatedAt == null) {
-                        controller.editStudentStatus(student.sId!, 'خروج');
+                        controller.editStudentStatus(student.sId!, 'خروج',token);
                       } else {
                         EasyLoading.showError('الطالب خرج بالفعل');
                       }

@@ -19,13 +19,13 @@ import 'package:secondhome2/screens/auth/accounts_screen.dart';
 import 'package:secondhome2/screens/gard/gard_home.dart';
 import 'package:secondhome2/screens/kindergarten_teacher/teacher_kindergarten_home.dart';
 import 'package:secondhome2/screens/nursery_teacher/teacher_nursery_home.dart';
+import 'package:secondhome2/screens/student/home_page_student.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../api_connection/auth_connection.dart';
 import '../../provider/auth_provider.dart';
 import '../../static_files/my_color.dart';
 import '../nursery/nursery_home.dart';
-import '../student/home_page_student.dart';
 
 // import 'connectUs.dart';
 // import 'requestCer.dart';
@@ -40,13 +40,6 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   TokenProvider get tokenProvider => Get.put(TokenProvider());
-  unFollowTopics() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String? schoolId = prefs.getString('school_id');
-    await messaging.unsubscribeFromTopic('school_$schoolId');
-  }
 
   FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
@@ -81,7 +74,7 @@ class _LoginPageState extends State<LoginPage> {
       "auth_lat": authData!['lat'].toString(),
       "auth_phone_details": await getDeviceInfo(),
       "auth_phone_id": await getPhoneId(),
-      "auth_firebase": await FirebaseMessaging.instance.getToken()
+      "auth_firebase": 'await FirebaseMessaging.instance.getToken()'
     };
 
     if (_formCheck.currentState!.validate() && authData != null) {
@@ -118,21 +111,21 @@ class _LoginPageState extends State<LoginPage> {
                   () => HomePageNurseryTeacher(userData: res['results']));
             }
           } else if (res['results']["account_type"] == "gard") {
-            Get.put(MainDataGetProvider()).changeType('reception');
+            try {
+              Get.put(MainDataGetProvider()).changeType('reception');
 
-            tokenProvider.addAccountToDatabase(res['results']);
-            Timer(const Duration(seconds: 1), () {
-              Navigator.pushReplacement(context,
-                  MaterialPageRoute(builder: (context) {
-                return GardHome(userData: res['results']);
-              }));
-            });
+              tokenProvider.addAccountToDatabase(res['results']);
+
+              Timer(const Duration(seconds: 2), () {
+                Navigator.pushReplacement(context,
+                    MaterialPageRoute(builder: (context) {
+                  return GardHome(userData: res['results']);
+                }));
+              });
+            } catch (e) {
+              print(e);
+            }
           } else if (res['results']["account_type"] == "manager") {
-            // Timer(const Duration(seconds: 1), () {
-            //   Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) {
-            //     return manager.HomePage(userData: res['results']);
-            //   }));
-            // });
           } else {
             _btnController.error();
             EasyLoading.showError(res['message'].toString());
@@ -210,7 +203,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void initState() {
     getIp();
-    unFollowTopics();
     super.initState();
   }
 

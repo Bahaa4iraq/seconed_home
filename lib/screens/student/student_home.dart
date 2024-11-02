@@ -22,9 +22,9 @@ import 'profile/student_profile.dart';
 import 'review/review_date.dart';
 
 class HomePageStudentOld extends StatefulWidget {
+  const HomePageStudentOld({super.key, required this.userData});
   final Map userData;
-  const HomePageStudentOld({Key? key, required this.userData})
-      : super(key: key);
+
   @override
   _HomePageStudentOldState createState() => _HomePageStudentOldState();
 }

@@ -49,7 +49,7 @@ class _NotificationAllState extends State<NotificationAll> {
   dynamic typeList = [
     "تبليغات",
     "ملخص الدروس اليومية",
-    "واجب يومي",
+    "واجب اسبوعي",
     "امتحان يومي",
     "يوميات",
     "هل تعلم",
@@ -62,7 +62,7 @@ class _NotificationAllState extends State<NotificationAll> {
       return "تقرير";
     } else if (type == "يوميات") {
       return "دروس";
-    } else if (type == "واجب يومي") {
+    } else if (type == "واجب اسبوعي") {
       return "واجب بيتي";
     } else if (type == "ملخص الدروس اليومية") {
       return "ملخص";
@@ -82,7 +82,7 @@ class _NotificationAllState extends State<NotificationAll> {
       "type": getType(),
       "isRead": _notificationProvider.isRead
     };
-    // Logger().i(_data);
+    Logger().i(_data);
     NotificationsAPI().getNotifications(_data);
   }
 
@@ -239,9 +239,6 @@ class _NotificationAllState extends State<NotificationAll> {
                                         child: LiveList.options(
                                             itemBuilder: animationItemBuilder(
                                               (ind) {
-                                                print(
-                                                    '=============================');
-                                                print(val.data);
                                                 return InkWell(
                                                   onTap: () {
                                                     _navPage(val.data[ind],
@@ -344,9 +341,6 @@ class _NotificationAllState extends State<NotificationAll> {
                                     itemCount: val.data.length,
                                     itemBuilder: animationItemBuilder(
                                       (indexes) {
-                                        print(
-                                            '==============data================');
-                                        print(val.data[0]);
                                         return TimelineTile(
                                           alignment: TimelineAlign.manual,
                                           lineXY: .2,
@@ -511,7 +505,6 @@ class _NotificationAllState extends State<NotificationAll> {
   String isSummery = "";
 
   _button(String? _type) {
-    print('here');
     return Padding(
       padding: const EdgeInsets.fromLTRB(5, 5, 5, 5),
       child: MaterialButton(

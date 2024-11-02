@@ -67,9 +67,10 @@ class SqlDatabase extends BaseDatabase {
       'account_mobile': account['account_mobile'],
       'account_type': account['account_type'],
       'account_email': account['account_email'],
-      'account_birthday': account['account_birthday'],
+      'account_birthday':
+          account['account_birthday'] ?? DateTime.now().toString(),
       'account_address': account['account_address'],
-      'is_kindergarten': account['is_kindergarten'] ? 1 : 0,
+      //'is_kindergarten': account['is_kindergarten'] ? 1 : 0,
     };
     final database = await this.database;
     var result = await database.query('accounts',

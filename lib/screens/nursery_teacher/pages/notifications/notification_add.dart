@@ -21,7 +21,7 @@ import '../../../../static_files/my_color.dart';
 import '../../../../static_files/my_random.dart';
 
 class NotificationAdd extends StatefulWidget {
-  const NotificationAdd({Key? key}) : super(key: key);
+  const NotificationAdd({super.key});
 
   @override
   _NotificationAddState createState() => _NotificationAddState();
@@ -250,7 +250,7 @@ class _NotificationAddState extends State<NotificationAdd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: myAppBar("اضافة اشعار",MyColor.pink),
+      appBar: myAppBar("اضافة اشعار", MyColor.pink),
       body: Column(
         children: [
           Expanded(
@@ -302,6 +302,8 @@ class _NotificationAddState extends State<NotificationAdd> {
                               color: MyColor.white1,
                             ),
                             child: SmartSelect<String>.multiple(
+                              modalHeaderStyle: const S2ModalHeaderStyle(
+                                  backgroundColor: MyColor.pink),
                               title: "الطلاب",
                               placeholder: 'اختر',
                               selectedValue: _student,
@@ -311,7 +313,7 @@ class _NotificationAddState extends State<NotificationAdd> {
                                 //_showData(selected.value);
                               },
                               groupHeaderStyle: const S2GroupHeaderStyle(
-                                  backgroundColor: MyColor.white4),
+                                  backgroundColor: MyColor.pink),
                               choiceItems: student,
                               modalFilter: true,
                               modalFilterAuto: true,
@@ -333,6 +335,8 @@ class _NotificationAddState extends State<NotificationAdd> {
                               color: MyColor.white1,
                             ),
                             child: SmartSelect<String>.multiple(
+                              modalHeaderStyle: const S2ModalHeaderStyle(
+                                  backgroundColor: MyColor.pink),
                               title: "الصف والشعبة",
                               placeholder: 'اختر',
                               selectedValue: _classes,
@@ -426,8 +430,7 @@ class _NotificationAddState extends State<NotificationAdd> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Container(
-                            padding:
-                                const EdgeInsets.only(right: 15, left: 15),
+                            padding: const EdgeInsets.only(right: 15, left: 15),
                             child: const Text(
                               "المحتوى",
                               style: TextStyle(fontSize: 17),

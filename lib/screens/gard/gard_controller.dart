@@ -31,10 +31,10 @@ class GardController extends GetxController {
     }
   }
 
-  Future getStudentNames() async {
+  Future getStudentNames(String token) async {
     try {
       isLoading.value = true;
-      Map<String, String> headers = {"Authorization": dataProvider?['token']};
+      Map<String, String> headers = {"Authorization": token};
 
       var response = await http.get(
           Uri.parse('$mainApi/guard/absence_registry/students?limit=1000'),
@@ -49,6 +49,7 @@ class GardController extends GetxController {
         filterdStudentList.addAll(studentList);
         isLoading.value = false;
       } else if (response.statusCode == 401) {
+        print('401');
         Auth().redirect();
       } else {
         isLoading.value = false;
@@ -61,17 +62,17 @@ class GardController extends GetxController {
     }
   }
 
-  Future editStudentStatus(String studentId, String type) async {
+  Future editStudentStatus(String studentId, String type, String token) async {
     try {
       isLoading.value = true;
       Map data = {'student_id': studentId, 'type': type};
-      Map<String, String> headers = {"Authorization": dataProvider?['token']};
+      Map<String, String> headers = {"Authorization": token};
       var response = await http.post(
           Uri.parse('$mainApi/guard/absence_registry'),
           headers: headers,
           body: data);
       if (response.statusCode == 200) {
-        getStudentNames();
+        getStudentNames(token);
       } else if (response.statusCode == 401) {
         Auth().redirect();
       } else {
@@ -85,10 +86,10 @@ class GardController extends GetxController {
     }
   }
 
-  Future getStudentReport() async {
+  Future getStudentReport(String token) async {
     try {
       isLoading.value = true;
-      Map<String, String> headers = {"Authorization": dataProvider?['token']};
+      Map<String, String> headers = {"Authorization": token};
 
       var response = await http.get(
           Uri.parse('$mainApi/guard/absence_registry/statics'),

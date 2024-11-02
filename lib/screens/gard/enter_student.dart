@@ -6,7 +6,8 @@ import 'package:secondhome2/screens/gard/student_card.dart';
 import 'package:secondhome2/static_files/my_color.dart';
 
 class EnterStudent extends StatefulWidget {
-  const EnterStudent({super.key});
+  const EnterStudent({super.key, required this.token});
+  final String token;
 
   @override
   State<EnterStudent> createState() => _EnterStudentState();
@@ -117,7 +118,9 @@ class _EnterStudentState extends State<EnterStudent> {
                           itemCount: controller.filterdStudentList.length,
                           itemBuilder: (context, index) {
                             return StudentCard(
-                                student: controller.filterdStudentList[index]);
+                              student: controller.filterdStudentList[index],
+                              token: widget.token,
+                            );
                           },
                         ))
                       ],

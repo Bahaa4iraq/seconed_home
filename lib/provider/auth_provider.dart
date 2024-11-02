@@ -23,8 +23,9 @@ class TokenProvider extends GetxController {
 
 class MainDataGetProvider extends GetxController {
   Map mainData = {};
-  void addData(Map userDataR) {
+  addData(Map userDataR) async {
     mainData = userDataR;
+
     update();
   }
 

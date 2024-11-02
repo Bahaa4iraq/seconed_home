@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:line_icons/line_icons.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:logger/logger.dart';
 import '../provider/auth_provider.dart';
 import '../provider/teacher/chat/chat_all_list_items.dart';
 import '../provider/teacher/chat/chat_socket.dart';
@@ -150,6 +151,7 @@ Widget _deletedMessage(Map data) {
 Widget _textChatMessage(Map data, int index) {
   final Map? dataProvider = Get.put(TokenProvider()).userData;
   bool isSender = data['chat_from'] == dataProvider!['_id'];
+  Logger().i(data['chat_message_isRead']);
   return GestureDetector(
     onLongPress: () {
       isSender
@@ -189,8 +191,8 @@ Widget _textChatMessage(Map data, int index) {
                 ? true
                 : false,
         text: data['chat_message'],
-        time: DateFormat('yyyy-MM-dd hh:mm aa')
-            .format(DateTime.parse(data['createdAt'])),
+        time: DateFormat('yyyy-MM-dd hh:mm aa').format(
+            DateTime.parse(data['createdAt']).add(const Duration(hours: 3))),
         isSender: isSender,
         color: isSender
             ? MyColor.yellow.withOpacity(0.15)

@@ -8,27 +8,27 @@ import 'package:photo_view/photo_view_gallery.dart';
 import 'package:dio/dio.dart';
 import 'my_color.dart';
 
-Widget imageGrid(String _contentUrl, List _imgs,Color color) {
-  if (_imgs.length == 1) {
+Widget imageGrid(String contentUrl, List imgs, Color color) {
+  if (imgs.length == 1) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GestureDetector(
         onTap: () {
           Get.to(() => ImageShowList(
-            contentUrl: _contentUrl,
-            imgs: _imgs,
-            initialIndex: 0,
-            color: color,
-          ));
+                contentUrl: contentUrl,
+                imgs: imgs,
+                initialIndex: 0,
+                color: color,
+              ));
         },
         child: Hero(
-          tag: _imgs[0],
+          tag: imgs[0],
           child: CachedNetworkImage(
-            imageUrl: _contentUrl + _imgs[0],
-            placeholder: (context, url) => Row(
+            imageUrl: contentUrl + imgs[0],
+            placeholder: (context, url) => const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
+              children: [
                 CircularProgressIndicator(),
               ],
             ),
@@ -38,28 +38,28 @@ Widget imageGrid(String _contentUrl, List _imgs,Color color) {
         ),
       ),
     );
-  } else if (_imgs.length == 2) {
+  } else if (imgs.length == 2) {
     return Column(
       children: [
         GestureDetector(
           onTap: () {
             Get.to(() => ImageShowList(
-              contentUrl: _contentUrl,
-              imgs: _imgs,
-              initialIndex: 0,
-              color: color,
-            ));
+                  contentUrl: contentUrl,
+                  imgs: imgs,
+                  initialIndex: 0,
+                  color: color,
+                ));
           },
           child: Hero(
-            tag: _imgs[0],
+            tag: imgs[0],
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
-                imageUrl: _contentUrl + _imgs[0],
-                placeholder: (context, url) => Row(
+                imageUrl: contentUrl + imgs[0],
+                placeholder: (context, url) => const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
+                  children: [
                     CircularProgressIndicator(),
                   ],
                 ),
@@ -75,22 +75,22 @@ Widget imageGrid(String _contentUrl, List _imgs,Color color) {
         GestureDetector(
           onTap: () {
             Get.to(() => ImageShowList(
-              contentUrl: _contentUrl,
-              imgs: _imgs,
-              initialIndex: 1,
-              color: color,
-            ));
+                  contentUrl: contentUrl,
+                  imgs: imgs,
+                  initialIndex: 1,
+                  color: color,
+                ));
           },
           child: Hero(
-            tag: _imgs[1],
+            tag: imgs[1],
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
-                imageUrl: _contentUrl + _imgs[1],
-                placeholder: (context, url) => Row(
+                imageUrl: contentUrl + imgs[1],
+                placeholder: (context, url) => const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
+                  children: [
                     CircularProgressIndicator(),
                   ],
                 ),
@@ -102,9 +102,10 @@ Widget imageGrid(String _contentUrl, List _imgs,Color color) {
         )
       ],
     );
-  } else if (_imgs.length == 3 || _imgs.length == 4) {
+  } else if (imgs.length == 3 || imgs.length == 4) {
     return Container(
-      decoration: BoxDecoration(color: MyColor.white4, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+          color: MyColor.white4, borderRadius: BorderRadius.circular(10)),
       padding: const EdgeInsets.all(8),
       child: GridView.builder(
           shrinkWrap: true,
@@ -115,41 +116,43 @@ Widget imageGrid(String _contentUrl, List _imgs,Color color) {
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
           ),
-          itemCount: _imgs.length,
+          itemCount: imgs.length,
           itemBuilder: (BuildContext ctx, index) {
             return GestureDetector(
               onTap: () {
                 Get.to(() => ImageShowList(
-                  contentUrl: _contentUrl,
-                  imgs: _imgs,
-                  initialIndex: index,
-                  color: color,
-                ));
+                      contentUrl: contentUrl,
+                      imgs: imgs,
+                      initialIndex: index,
+                      color: color,
+                    ));
               },
               child: Hero(
-                tag: _imgs[index],
+                tag: imgs[index],
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: CachedNetworkImage(
-                    imageUrl: _contentUrl + _imgs[index],
-                    placeholder: (context, url) => Row(
+                    imageUrl: contentUrl + imgs[index],
+                    placeholder: (context, url) => const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
+                      children: [
                         CircularProgressIndicator(),
                       ],
                     ),
                     fit: BoxFit.cover,
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                 ),
               ),
             );
           }),
     );
-  } else if (_imgs.length >= 5) {
+  } else if (imgs.length >= 5) {
     return Container(
-      decoration: BoxDecoration(color: MyColor.white4, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+          color: MyColor.white4, borderRadius: BorderRadius.circular(10)),
       padding: const EdgeInsets.all(8),
       child: GridView.builder(
           shrinkWrap: true,
@@ -165,34 +168,41 @@ Widget imageGrid(String _contentUrl, List _imgs,Color color) {
             if (index == 3) {
               return GestureDetector(
                 onTap: () {
-                  Get.to(() => ImageShowList(contentUrl: _contentUrl, imgs: _imgs, initialIndex: index,color: color,));
+                  Get.to(() => ImageShowList(
+                        contentUrl: contentUrl,
+                        imgs: imgs,
+                        initialIndex: index,
+                        color: color,
+                      ));
                 },
                 child: Hero(
-                  tag: _imgs[index],
+                  tag: imgs[index],
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Stack(
                       children: [
                         Positioned.fill(
                           child: CachedNetworkImage(
-                            imageUrl: _contentUrl + _imgs[index],
-                            placeholder: (context, url) => Row(
+                            imageUrl: contentUrl + imgs[index],
+                            placeholder: (context, url) => const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children: const [
+                              children: [
                                 CircularProgressIndicator(),
                               ],
                             ),
                             fit: BoxFit.cover,
-                            errorWidget: (context, url, error) => const Icon(Icons.error),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
                           ),
                         ),
                         Container(
                           color: MyColor.grayDark.withOpacity(.8),
                           child: Center(
                             child: Text(
-                              "${_imgs.length - 3}+",
-                              style: const TextStyle(color: Colors.white, fontSize: 30),
+                              "${imgs.length - 3}+",
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 30),
                             ),
                           ),
                         )
@@ -204,23 +214,29 @@ Widget imageGrid(String _contentUrl, List _imgs,Color color) {
             }
             return GestureDetector(
               onTap: () {
-                Get.to(() => ImageShowList(contentUrl: _contentUrl, imgs: _imgs, initialIndex: index,color: color,));
+                Get.to(() => ImageShowList(
+                      contentUrl: contentUrl,
+                      imgs: imgs,
+                      initialIndex: index,
+                      color: color,
+                    ));
               },
               child: Hero(
-                tag: _imgs[index],
+                tag: imgs[index],
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: CachedNetworkImage(
-                    imageUrl: _contentUrl + _imgs[index],
-                    placeholder: (context, url) => Row(
+                    imageUrl: contentUrl + imgs[index],
+                    placeholder: (context, url) => const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
+                      children: [
                         CircularProgressIndicator(),
                       ],
                     ),
                     fit: BoxFit.cover,
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                 ),
               ),
@@ -232,27 +248,27 @@ Widget imageGrid(String _contentUrl, List _imgs,Color color) {
   }
 }
 
-Widget imageGridChat(String _contentUrl, List _imgs,Color color) {
-  if (_imgs.length == 1) {
+Widget imageGridChat(String contentUrl, List imgs, Color color) {
+  if (imgs.length == 1) {
     return ClipRRect(
       borderRadius: BorderRadius.circular(10),
       child: GestureDetector(
         onTap: () {
           Get.to(() => ImageShowList(
-            contentUrl: _contentUrl,
-            imgs: _imgs,
-            initialIndex: 0,
-            color: color,
-          ));
+                contentUrl: contentUrl,
+                imgs: imgs,
+                initialIndex: 0,
+                color: color,
+              ));
         },
         child: Hero(
-          tag: _imgs[0],
+          tag: imgs[0],
           child: CachedNetworkImage(
-            imageUrl: _contentUrl + _imgs[0],
-            placeholder: (context, url) => Row(
+            imageUrl: contentUrl + imgs[0],
+            placeholder: (context, url) => const Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
-              children: const [
+              children: [
                 CircularProgressIndicator(),
               ],
             ),
@@ -262,29 +278,28 @@ Widget imageGridChat(String _contentUrl, List _imgs,Color color) {
         ),
       ),
     );
-  } else if (_imgs.length == 2) {
+  } else if (imgs.length == 2) {
     return Column(
       children: [
         GestureDetector(
           onTap: () {
             Get.to(() => ImageShowList(
-              contentUrl: _contentUrl,
-              imgs: _imgs,
-              initialIndex: 0,
-              color: color,
-
-            ));
+                  contentUrl: contentUrl,
+                  imgs: imgs,
+                  initialIndex: 0,
+                  color: color,
+                ));
           },
           child: Hero(
-            tag: _imgs[0],
+            tag: imgs[0],
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
-                imageUrl: _contentUrl + _imgs[0],
-                placeholder: (context, url) => Row(
+                imageUrl: contentUrl + imgs[0],
+                placeholder: (context, url) => const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
+                  children: [
                     CircularProgressIndicator(),
                   ],
                 ),
@@ -300,22 +315,22 @@ Widget imageGridChat(String _contentUrl, List _imgs,Color color) {
         GestureDetector(
           onTap: () {
             Get.to(() => ImageShowList(
-              contentUrl: _contentUrl,
-              imgs: _imgs,
-              initialIndex: 1,
-              color: color,
-            ));
+                  contentUrl: contentUrl,
+                  imgs: imgs,
+                  initialIndex: 1,
+                  color: color,
+                ));
           },
           child: Hero(
-            tag: _imgs[1],
+            tag: imgs[1],
             child: ClipRRect(
               borderRadius: BorderRadius.circular(10),
               child: CachedNetworkImage(
-                imageUrl: _contentUrl + _imgs[1],
-                placeholder: (context, url) => Row(
+                imageUrl: contentUrl + imgs[1],
+                placeholder: (context, url) => const Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.center,
-                  children: const [
+                  children: [
                     CircularProgressIndicator(),
                   ],
                 ),
@@ -327,9 +342,10 @@ Widget imageGridChat(String _contentUrl, List _imgs,Color color) {
         )
       ],
     );
-  } else if (_imgs.length == 3 || _imgs.length == 4) {
+  } else if (imgs.length == 3 || imgs.length == 4) {
     return Container(
-      decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+          color: Colors.transparent, borderRadius: BorderRadius.circular(10)),
       padding: const EdgeInsets.all(8),
       child: GridView.builder(
           shrinkWrap: true,
@@ -340,37 +356,43 @@ Widget imageGridChat(String _contentUrl, List _imgs,Color color) {
             crossAxisSpacing: 10,
             mainAxisSpacing: 10,
           ),
-          itemCount: _imgs.length,
+          itemCount: imgs.length,
           itemBuilder: (BuildContext ctx, index) {
             return GestureDetector(
               onTap: () {
-                Get.to(() => ImageShowList(contentUrl: _contentUrl, imgs: _imgs, initialIndex: index,            color: color,
-                ));
+                Get.to(() => ImageShowList(
+                      contentUrl: contentUrl,
+                      imgs: imgs,
+                      initialIndex: index,
+                      color: color,
+                    ));
               },
               child: Hero(
-                tag: _imgs[index],
+                tag: imgs[index],
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: CachedNetworkImage(
-                    imageUrl: _contentUrl + _imgs[index],
-                    placeholder: (context, url) => Row(
+                    imageUrl: contentUrl + imgs[index],
+                    placeholder: (context, url) => const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
+                      children: [
                         CircularProgressIndicator(),
                       ],
                     ),
                     fit: BoxFit.cover,
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                 ),
               ),
             );
           }),
     );
-  } else if (_imgs.length >= 5) {
+  } else if (imgs.length >= 5) {
     return Container(
-      decoration: BoxDecoration(color: Colors.transparent, borderRadius: BorderRadius.circular(10)),
+      decoration: BoxDecoration(
+          color: Colors.transparent, borderRadius: BorderRadius.circular(10)),
       padding: const EdgeInsets.all(8),
       child: GridView.builder(
           shrinkWrap: true,
@@ -386,35 +408,41 @@ Widget imageGridChat(String _contentUrl, List _imgs,Color color) {
             if (index == 3) {
               return GestureDetector(
                 onTap: () {
-                  Get.to(() => ImageShowList(contentUrl: _contentUrl, imgs: _imgs, initialIndex: index,            color: color,
-                  ));
+                  Get.to(() => ImageShowList(
+                        contentUrl: contentUrl,
+                        imgs: imgs,
+                        initialIndex: index,
+                        color: color,
+                      ));
                 },
                 child: Hero(
-                  tag: _imgs[index],
+                  tag: imgs[index],
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10),
                     child: Stack(
                       children: [
                         Positioned.fill(
                           child: CachedNetworkImage(
-                            imageUrl: _contentUrl + _imgs[index],
-                            placeholder: (context, url) => Row(
+                            imageUrl: contentUrl + imgs[index],
+                            placeholder: (context, url) => const Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               crossAxisAlignment: CrossAxisAlignment.center,
-                              children: const [
+                              children: [
                                 CircularProgressIndicator(),
                               ],
                             ),
                             fit: BoxFit.cover,
-                            errorWidget: (context, url, error) => const Icon(Icons.error),
+                            errorWidget: (context, url, error) =>
+                                const Icon(Icons.error),
                           ),
                         ),
                         Container(
                           color: MyColor.grayDark.withOpacity(.8),
                           child: Center(
                             child: Text(
-                              "${_imgs.length - 3}+",
-                              style: const TextStyle(color: Colors.white, fontSize: 30),
+                              "${imgs.length - 3}+",
+                              style: const TextStyle(
+                                  color: Colors.white, fontSize: 30),
                             ),
                           ),
                         )
@@ -426,24 +454,29 @@ Widget imageGridChat(String _contentUrl, List _imgs,Color color) {
             }
             return GestureDetector(
               onTap: () {
-                Get.to(() => ImageShowList(contentUrl: _contentUrl, imgs: _imgs, initialIndex: index , color: color,
-                ));
+                Get.to(() => ImageShowList(
+                      contentUrl: contentUrl,
+                      imgs: imgs,
+                      initialIndex: index,
+                      color: color,
+                    ));
               },
               child: Hero(
-                tag: _imgs[index],
+                tag: imgs[index],
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
                   child: CachedNetworkImage(
-                    imageUrl: _contentUrl + _imgs[index],
-                    placeholder: (context, url) => Row(
+                    imageUrl: contentUrl + imgs[index],
+                    placeholder: (context, url) => const Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       crossAxisAlignment: CrossAxisAlignment.center,
-                      children: const [
+                      children: [
                         CircularProgressIndicator(),
                       ],
                     ),
                     fit: BoxFit.cover,
-                    errorWidget: (context, url, error) => const Icon(Icons.error),
+                    errorWidget: (context, url, error) =>
+                        const Icon(Icons.error),
                   ),
                 ),
               ),
@@ -455,23 +488,23 @@ Widget imageGridChat(String _contentUrl, List _imgs,Color color) {
   }
 }
 
-Widget singleImageShowAndSave(String _contentUrl, String _imgs,Color color) {
+Widget singleImageShowAndSave(String contentUrl, String imgs, Color color) {
   return GestureDetector(
       onTap: () {
         Get.to(() => ImageShowSingle(
-          contentUrl: _contentUrl,
-          imgs: _imgs,
-          color: color,
-        ));
+              contentUrl: contentUrl,
+              imgs: imgs,
+              color: color,
+            ));
       },
       child: Hero(
-        tag: _imgs,
+        tag: imgs,
         child: CachedNetworkImage(
-          imageUrl: _contentUrl + _imgs,
-          placeholder: (context, url) => Row(
+          imageUrl: contentUrl + imgs,
+          placeholder: (context, url) => const Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
-            children: const [
+            children: [
               CircularProgressIndicator(),
             ],
           ),
@@ -487,7 +520,12 @@ class ImageShowList extends StatefulWidget {
   final int initialIndex;
   final Color color;
 
-  const ImageShowList({Key? key, required this.contentUrl, required this.imgs, required this.initialIndex, required this.color}) : super(key: key);
+  const ImageShowList(
+      {super.key,
+      required this.contentUrl,
+      required this.imgs,
+      required this.initialIndex,
+      required this.color});
 
   @override
   State<ImageShowList> createState() => _ImageShowListState();
@@ -518,7 +556,8 @@ class _ImageShowListState extends State<ImageShowList> {
         scrollPhysics: const BouncingScrollPhysics(),
         builder: (BuildContext context, int index) {
           return PhotoViewGalleryPageOptions(
-            imageProvider: CachedNetworkImageProvider(widget.contentUrl + widget.imgs[index]),
+            imageProvider: CachedNetworkImageProvider(
+                widget.contentUrl + widget.imgs[index]),
             initialScale: PhotoViewComputedScale.contained * 0.8,
             heroAttributes: PhotoViewHeroAttributes(tag: widget.imgs[index]),
           );
@@ -529,7 +568,9 @@ class _ImageShowListState extends State<ImageShowList> {
             width: 20.0,
             height: 20.0,
             child: CircularProgressIndicator(
-              value: event == null ? 0 : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
+              value: event == null
+                  ? 0
+                  : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
             ),
           ),
         ),
@@ -553,7 +594,11 @@ class ImageShowSingle extends StatefulWidget {
   final String contentUrl;
   final String imgs;
   final Color color;
-  const ImageShowSingle({Key? key, required this.contentUrl, required this.imgs, required this.color}) : super(key: key);
+  const ImageShowSingle(
+      {super.key,
+      required this.contentUrl,
+      required this.imgs,
+      required this.color});
 
   @override
   State<ImageShowSingle> createState() => _ImageShowSingleState();
@@ -579,7 +624,8 @@ class _ImageShowSingleState extends State<ImageShowSingle> {
           ],
         ),
         body: PhotoView(
-          imageProvider: CachedNetworkImageProvider(widget.contentUrl + widget.imgs),
+          imageProvider:
+              CachedNetworkImageProvider(widget.contentUrl + widget.imgs),
           initialScale: PhotoViewComputedScale.contained * 0.8,
           heroAttributes: PhotoViewHeroAttributes(tag: widget.imgs),
           loadingBuilder: (context, event) => Center(
@@ -587,7 +633,9 @@ class _ImageShowSingleState extends State<ImageShowSingle> {
               width: 20.0,
               height: 20.0,
               child: CircularProgressIndicator(
-                value: event == null ? 0 : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
+                value: event == null
+                    ? 0
+                    : event.cumulativeBytesLoaded / event.expectedTotalBytes!,
               ),
             ),
           ),
@@ -614,10 +662,15 @@ class _ImageShowSingleState extends State<ImageShowSingle> {
 //   });
 // }
 _saveNetworkImage(String path) async {
-  var response = await Dio().get(path, options: Options(responseType: ResponseType.bytes));
-  final result = await ImageGallerySaver.saveImage(Uint8List.fromList(response.data), quality: 60, name: "hello");
+  var response =
+      await Dio().get(path, options: Options(responseType: ResponseType.bytes));
+  final result = await ImageGallerySaver.saveImage(
+      Uint8List.fromList(response.data),
+      quality: 60,
+      name: "hello");
 
-  Get.snackbar("نجاح", "تم حفظ الصورة بنجاح", backgroundColor: MyColor.green, colorText: MyColor.white0);
+  Get.snackbar("نجاح", "تم حفظ الصورة بنجاح",
+      backgroundColor: MyColor.green, colorText: MyColor.white0);
 
   print(result);
 }

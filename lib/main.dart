@@ -7,14 +7,14 @@ import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:secondhome2/screens/gard/gard_home.dart';
+import 'package:secondhome2/screens/kindergarten_teacher/teacher_kindergarten_home.dart';
+import 'package:secondhome2/screens/student/home_page_student.dart';
 import 'package:secondhome2/screens/update_files/my_splash.dart';
 import 'init_data.dart';
 import 'provider/auth_provider.dart';
 import 'screens/auth/login_page.dart';
 import 'screens/nursery/nursery_home.dart';
 import 'screens/nursery_teacher/teacher_nursery_home.dart';
-import 'screens/student/home_page_student.dart';
-import 'screens/kindergarten_teacher/teacher_kindergarten_home.dart';
 import 'static_files/my_color.dart';
 import 'static_files/my_firebase_notification.dart' show receivedMessages;
 import 'static_files/my_translations.dart';
@@ -76,19 +76,19 @@ class MyApp extends StatelessWidget {
 
 Widget _redirectToPage() {
   final box = GetStorage();
+
   Map? userData = box.read('_userData');
   Get.put(TokenProvider()).addToken(userData);
+
   if (userData == null) {
     return const LoginPage();
   } else if (userData["account_type"] == "student") {
-    Get.put(TokenProvider()).addToken(userData);
     if (userData["is_kindergarten"]) {
       return HomePageStudent(userData: userData);
     } else {
       return HomePageNursery(userData: userData);
     }
   } else if (userData["account_type"] == "teacher") {
-    Get.put(TokenProvider()).addToken(userData);
     if (userData["is_kindergarten"]) {
       return HomePageKindergartenTeacher(userData: userData);
     } else {

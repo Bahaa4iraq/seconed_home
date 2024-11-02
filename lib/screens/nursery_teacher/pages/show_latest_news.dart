@@ -12,49 +12,52 @@ import '../../../static_files/my_image_grid.dart';
 
 class ShowLatestNews extends StatefulWidget {
   final Map data;
-  const ShowLatestNews({Key? key, required this.data}) : super(key: key);
+  const ShowLatestNews({super.key, required this.data});
 
   @override
   _ShowLatestNewsState createState() => _ShowLatestNewsState();
 }
 
 class _ShowLatestNewsState extends State<ShowLatestNews> {
-  void _launchURL(_url) async => await canLaunch(_url)
-      ? await launch(_url)
+  void _launchURL(_url) async => await canLaunchUrl(Uri.parse(_url))
+      ? await launchUrl(Uri.parse(_url))
       : throw 'Could not launch $_url';
-
 
   void _launchSocial(String url, String fallbackUrl) async {
     try {
-      bool launched =
-      await launch(url, forceSafariVC: false, forceWebView: false);
+      bool launched = await canLaunchUrl(Uri.parse(url));
       if (!launched) {
-        await launch(fallbackUrl, forceSafariVC: false, forceWebView: false);
+        await launchUrl(Uri.parse(url));
       }
     } catch (e) {
       Logger().i("error");
-      await launch(fallbackUrl, forceSafariVC: false, forceWebView: false);
+      await launchUrl(Uri.parse(fallbackUrl));
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MyColor.pink,
+        title: const Text(
+          'اخر الاخبار',
+          style: TextStyle(
+              color: MyColor.white0, fontSize: 20, fontWeight: FontWeight.bold),
+        ),
         elevation: 0,
       ),
       body: ListView(
         children: [
           singleImageShowAndSave(Get.put(LatestNewsProvider()).contentUrl,
-              widget.data['latest_news_img'].toString(),MyColor.pink),
+              widget.data['latest_news_img'].toString(), MyColor.pink),
           const Divider(),
           if (widget.data['latest_news_link'] != null &&
               widget.data['latest_news_link'] != "")
             InkWell(
-              onTap: () => _launchSocial(widget.data['latest_news_link'],'www.google.com'),
-             // onTap: () => _launchURL(widget.data['latest_news_link']),
+              onTap: () => _launchSocial(
+                  widget.data['latest_news_link'], 'www.google.com'),
+              // onTap: () => _launchURL(widget.data['latest_news_link']),
               child: Container(
                 margin: const EdgeInsets.only(right: 20, left: 20),
                 padding: const EdgeInsets.all(5),
@@ -64,29 +67,31 @@ class _ShowLatestNewsState extends State<ShowLatestNews> {
                 child: Center(
                   child: Text(
                     widget.data['latest_news_link'].toString(),
-                    style:
-                        const TextStyle(fontSize: 18, color: MyColor.pink),
+                    style: const TextStyle(fontSize: 18, color: MyColor.pink),
                   ),
                 ),
               ),
             ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Text(
               widget.data['latest_news_title'].toString(),
-              style: const TextStyle(fontSize: 18, color: MyColor.black,fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                  fontSize: 18,
+                  color: MyColor.black,
+                  fontWeight: FontWeight.w600),
             ),
           ),
           if (widget.data['latest_news_description'] != null)
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Text(
                 widget.data['latest_news_description'].toString(),
                 style: const TextStyle(fontSize: 18, color: MyColor.grayDark),
               ),
             ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             child: Text(toDateTime(widget.data['createdAt'])),
           ),
         ],

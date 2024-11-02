@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-
 class StudentDashboardProvider extends GetxController {
   //TokenProvider
   int selectedIndex = 0;
   List<Widget>? widgetOptions;
-  void initWidget(List<Widget> _data){
-    widgetOptions = _data;
+  void initWidget(List<Widget> data) {
+    widgetOptions = data;
     update();
   }
-  void changeIndex(int index){
-    selectedIndex=index;
+
+  void changeIndex(int index) {
+    selectedIndex = index;
     update();
   }
   // void addData(List _data) {

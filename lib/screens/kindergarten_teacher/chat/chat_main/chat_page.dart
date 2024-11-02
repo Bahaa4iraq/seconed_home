@@ -39,8 +39,6 @@ class _ChatPageState extends State<ChatPage> {
     EasyLoading.show(status: "جار جلب البيانات");
     Map data = {"page": page + 1, "chat_receiver": widget.userInfo['_id']};
     ChatStudentListAPI().getChatOfStudent(data).then((res) {
-      print('++++++++++++++++++');
-      print(res);
       EasyLoading.dismiss();
       if (!res['error']) {
         Get.put(ChatMessageProvider()).addListChat(res["results"]);
@@ -72,8 +70,6 @@ class _ChatPageState extends State<ChatPage> {
       _getChatOfStudent();
 
       _scrollController.addListener(() {
-        print('in');
-
         if (_scrollController.position.pixels ==
             _scrollController.position.maxScrollExtent) {
           page++;

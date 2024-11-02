@@ -31,7 +31,7 @@ class _ChatStudentListState extends State<ChatStudentList> {
 
   int page = 0;
   List classesId = [];
-  late var studyYear;
+  late String studyYear;
 
   search() {
     page = 0;
@@ -136,13 +136,13 @@ class _ChatStudentListState extends State<ChatStudentList> {
     });
   }
 
-  _student(Map _data, String _contentUrl) {
+  _student(Map dataCome, String contentUrlCome) {
     return ListTile(
       title: Text(
-        _data['account_name'].toString(),
+        dataCome['account_name'].toString(),
         style: const TextStyle(fontSize: 14),
       ),
-      subtitle: _data['chats']['data'].length == 0
+      subtitle: dataCome['chats']['data'].length == 0
           ? null
           : Row(
               mainAxisSize: MainAxisSize.min,
@@ -150,7 +150,7 @@ class _ChatStudentListState extends State<ChatStudentList> {
                 Flexible(
                   child: Container(
                     padding: const EdgeInsets.fromLTRB(4, 4, 4, 4),
-                    decoration: _data['chats']['data'][0]
+                    decoration: dataCome['chats']['data'][0]
                             ['chat_message_is_deleted']
                         ? BoxDecoration(
                             borderRadius: BorderRadius.circular(10),
@@ -161,13 +161,13 @@ class _ChatStudentListState extends State<ChatStudentList> {
                           )
                         : null,
                     child: Text(
-                        _data['chats']['data'][0]['chat_message_is_deleted']
+                        dataCome['chats']['data'][0]['chat_message_is_deleted']
                             ? "تم مسح الرسالة"
-                            : _data['chats']['data'][0]['chat_message'] ??
+                            : dataCome['chats']['data'][0]['chat_message'] ??
                                 "تم ارسال ملف",
                         style: TextStyle(
                             fontSize: 12,
-                            fontWeight: _data['chats']['data'][0]
+                            fontWeight: dataCome['chats']['data'][0]
                                     ['chat_message_isRead']
                                 ? FontWeight.normal
                                 : FontWeight.bold),
@@ -177,29 +177,32 @@ class _ChatStudentListState extends State<ChatStudentList> {
                 ),
               ],
             ),
-      leading: profileImg(_contentUrl, _data['account_img']),
+      leading: profileImg(contentUrlCome, dataCome['account_img']),
       trailing: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
-          if (_data['chats']['data'].isNotEmpty)
-            _timeText(_data['chats']['data'][0]['createdAt']),
-          if (_data['chats']['countUnRead'] > 0)
-            _messageUnRead(_data['chats']['countUnRead']),
+          if (dataCome['chats']['data'].isNotEmpty)
+            _timeText(dataCome['chats']['data'][0]['createdAt']),
+          if (dataCome['chats']['countUnRead'] > 0)
+            _messageUnRead(dataCome['chats']['countUnRead']),
         ],
       ),
       onTap: () async {
         searchController.clear();
         Get.put(ChatMessageProvider()).clear();
-        Get.put(ChatMessageProvider()).addListChat(_data['chats']['data']);
-        await Get.to(() => ChatPage(userInfo: _data, contentUrl: _contentUrl));
-        Get.put(ChatSocketProvider()).socket.emit('readMessage', _data['_id']);
+        Get.put(ChatMessageProvider()).addListChat(dataCome['chats']['data']);
+        await Get.to(
+            () => ChatPage(userInfo: dataCome, contentUrl: contentUrlCome));
+        Get.put(ChatSocketProvider())
+            .socket
+            .emit('readMessage', dataCome['_id']);
         Get.put(ChatMessageProvider()).isShow(false);
         page = 0;
         _getStudentList();
       },
       onLongPress: () {
-        Get.bottomSheet(_bottomSheet(_data));
+        Get.bottomSheet(_bottomSheet(dataCome));
       },
     );
   }

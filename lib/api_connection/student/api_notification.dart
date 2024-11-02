@@ -60,6 +60,8 @@ class NotificationsAPI extends GetConnect {
         return {"error": true};
       }
     } catch (e) {
+      EasyLoading.dismiss();
+      Get.put(NotificationProvider()).changeLoading(false);
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }
@@ -127,12 +129,10 @@ class NotificationsAPI extends GetConnect {
     try {
       final response =
           await put('${mainApi}student/notification', data, headers: headers);
-      print(response);
 
       if (response.statusCode == 401) {
         Auth().redirect();
       } else if (!response.body["error"]) {
-        print(response);
         Get.put(NotificationProvider()).editReadMap(id);
       }
     } catch (e) {
@@ -150,7 +150,6 @@ class NotificationsAPI extends GetConnect {
       if (response.statusCode == 401) {
         Auth().redirect();
       } else if (!response.body["error"]) {
-        print(response);
         Get.put(NotificationProviderHomeWork()).editReadMap(id);
       }
     } catch (e) {
@@ -168,7 +167,6 @@ class NotificationsAPI extends GetConnect {
       if (response.statusCode == 401) {
         Auth().redirect();
       } else if (!response.body["error"]) {
-        print(response);
         Get.put(NotificationProviderE()).editReadMap(id);
       }
     } catch (e) {
@@ -250,7 +248,6 @@ class NotificationsAPI extends GetConnect {
       if (response.statusCode == 401) {
         Auth().redirect();
       } else if (!response.body["error"]) {
-        print(response);
         Get.put(MonthlyMessageNotificationProvider()).editReadMap(id);
       }
     } catch (e) {
@@ -299,7 +296,6 @@ class NotificationsAPI extends GetConnect {
         Logger().i("redirect");
         Auth().redirect();
       } else if (!response.body["error"]) {
-        print(response);
         Get.put(ClothesNotificationProvider()).editReadMap(id);
       }
     } catch (e) {
@@ -348,7 +344,6 @@ class NotificationsAPI extends GetConnect {
         Logger().i("redirect");
         Auth().redirect();
       } else if (!response.body["error"]) {
-        print(response);
         Get.put(FoodNotificationProvider()).editReadMap(id);
       }
     } catch (e) {
@@ -394,7 +389,6 @@ class NotificationsAPI extends GetConnect {
       final response =
           await put('${mainApi}student/notification', data, headers: headers);
       if (response.statusCode == 401) {
-        Logger().i("redirect");
         Auth().redirect();
       } else if (!response.body["error"]) {
         Get.put(SleepNotificationProvider()).editReadMap(id);
@@ -411,7 +405,6 @@ class NotificationsAPI extends GetConnect {
     try {
       final response =
           await post('${mainApi}student/notification', data, headers: headers);
-      print(response.body);
       if (response.statusCode == 401) {
         Auth().redirect();
         //NotificationProviderE
@@ -443,7 +436,6 @@ class NotificationsAPI extends GetConnect {
       final response =
           await put('${mainApi}student/notification', data, headers: headers);
       if (response.statusCode == 401) {
-        Logger().i("redirect");
         Auth().redirect();
       } else if (!response.body["error"]) {
         Get.put(NappyNotificationProvider()).editReadMap(id);
@@ -493,10 +485,8 @@ class NotificationsAPI extends GetConnect {
       final response =
           await put('${mainApi}student/notification', data, headers: headers);
       if (response.statusCode == 401) {
-        Logger().i("redirect");
         Auth().redirect();
       } else if (!response.body["error"]) {
-        print(response);
         Get.put(TrainingNotificationProvider()).editReadMap(id);
       }
     } catch (e) {

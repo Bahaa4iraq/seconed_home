@@ -34,7 +34,7 @@ class _ChatPageState extends State<ChatPage> {
   final player = AudioPlayer();
   final Map? dataProvider = Get.put(TokenProvider()).userData;
 
-  int page = 0;
+  int page = 1;
   _getChatOfStudent() {
     EasyLoading.show(status: "جار جلب البيانات");
     Map data = {"page": page, "chat_receiver": widget.userInfo['_id']};
@@ -59,6 +59,8 @@ class _ChatPageState extends State<ChatPage> {
     Get.put(ChatMessageProvider()).currentChatReciver = widget.userInfo['_id'];
     Get.put(ChatMessageProvider()).currentChatSender = dataProvider!['_id'];
     _checkUserOnline();
+    _getChatOfStudent();
+
     _scrollController.addListener(() {
       if (_scrollController.position.pixels ==
           _scrollController.position.maxScrollExtent) {

@@ -12,7 +12,7 @@ import '../../../static_files/my_image_grid.dart';
 
 class ShowLatestNews extends StatefulWidget {
   final Map data;
-  const ShowLatestNews({Key? key, required this.data}) : super(key: key);
+  const ShowLatestNews({super.key, required this.data});
 
   @override
   _ShowLatestNewsState createState() => _ShowLatestNewsState();
@@ -23,11 +23,10 @@ class _ShowLatestNewsState extends State<ShowLatestNews> {
       ? await launch(_url)
       : throw 'Could not launch $_url';
 
-
   void _launchSocial(String url, String fallbackUrl) async {
     try {
       bool launched =
-      await launch(url, forceSafariVC: false, forceWebView: false);
+          await launch(url, forceSafariVC: false, forceWebView: false);
       if (!launched) {
         await launch(fallbackUrl, forceSafariVC: false, forceWebView: false);
       }
@@ -37,24 +36,25 @@ class _ShowLatestNewsState extends State<ShowLatestNews> {
     }
   }
 
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: MyColor.turquoise,
+        title: const Text('اخر الاخبار'),
         elevation: 0,
       ),
       body: ListView(
         children: [
           singleImageShowAndSave(Get.put(LatestNewsProvider()).contentUrl,
-              widget.data['latest_news_img'].toString(),MyColor.turquoise),
+              widget.data['latest_news_img'].toString(), MyColor.turquoise),
           const Divider(),
           if (widget.data['latest_news_link'] != null &&
               widget.data['latest_news_link'] != "")
             InkWell(
-              onTap: () => _launchSocial(widget.data['latest_news_link'],'www.google.com'),
-             // onTap: () => _launchURL(widget.data['latest_news_link']),
+              onTap: () => _launchSocial(
+                  widget.data['latest_news_link'], 'www.google.com'),
+              // onTap: () => _launchURL(widget.data['latest_news_link']),
               child: Container(
                 margin: const EdgeInsets.only(right: 20, left: 20),
                 padding: const EdgeInsets.all(5),
@@ -71,22 +71,25 @@ class _ShowLatestNewsState extends State<ShowLatestNews> {
               ),
             ),
           Container(
-            margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+            margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
             child: Text(
               widget.data['latest_news_title'].toString(),
-              style: const TextStyle(fontSize: 18, color: MyColor.black,fontWeight: FontWeight.w600),
+              style: const TextStyle(
+                  fontSize: 18,
+                  color: MyColor.black,
+                  fontWeight: FontWeight.w600),
             ),
           ),
           if (widget.data['latest_news_description'] != null)
             Container(
-              margin: const EdgeInsets.symmetric(horizontal: 20,vertical: 10),
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               child: Text(
                 widget.data['latest_news_description'].toString(),
                 style: const TextStyle(fontSize: 18, color: MyColor.grayDark),
               ),
             ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 8),
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
             child: Text(toDateTime(widget.data['createdAt'])),
           ),
         ],

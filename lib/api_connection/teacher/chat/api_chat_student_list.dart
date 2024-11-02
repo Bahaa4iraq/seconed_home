@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 
 import '../../../provider/auth_provider.dart';
 import '../../../static_files/my_color.dart';
@@ -29,7 +30,8 @@ class ChatStudentListAPI extends GetConnect {
     try {
       final response =
           await post('${mainApi}teacher/chat', data, headers: headers);
-      print(headers);
+
+      Logger().i(response.body);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else {

@@ -23,7 +23,6 @@ followTopics() async {
 
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     await messaging.subscribeToTopic('school_$id');
-    print('school_$id');
 
     if (type == 'student') {
       await messaging.subscribeToTopic('all_students_$id');

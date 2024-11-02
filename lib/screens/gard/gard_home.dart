@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
@@ -9,7 +8,6 @@ import 'package:secondhome2/screens/gard/enter_student.dart';
 import 'package:secondhome2/screens/gard/gard_controller.dart';
 import 'package:secondhome2/screens/gard/report_gard_screen.dart';
 import 'package:secondhome2/static_files/my_color.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 class GardHome extends StatefulWidget {
   const GardHome({super.key, required this.userData});
@@ -22,19 +20,15 @@ class GardHome extends StatefulWidget {
 class _GardHomeState extends State<GardHome> {
   final AccountProvider accountProvider = Get.put(AccountProvider());
   GardController controller = Get.put(GardController());
-  followTopics() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String? schoolId = prefs.getString('school_id');
-    await messaging.subscribeToTopic('school_$schoolId');
+  initUserData() async {
+    await Auth().getStudentInfo();
   }
 
   @override
   void initState() {
-    followTopics();
-    controller.getStudentNames();
-    controller.getStudentReport();
+    initUserData();
+    controller.getStudentNames(widget.userData['token']);
+    controller.getStudentReport(widget.userData['token']);
 
     super.initState();
   }
@@ -70,8 +64,8 @@ class _GardHomeState extends State<GardHome> {
               actions: [
                 IconButton(
                     onPressed: () {
-                      controller.getStudentNames();
-                      controller.getStudentReport();
+                      controller.getStudentNames(widget.userData['token']);
+                      controller.getStudentReport(widget.userData['token']);
                     },
                     icon: const Icon(Icons.refresh))
               ],
@@ -117,9 +111,11 @@ class _GardHomeState extends State<GardHome> {
                     color: Colors.white,
                   )),
             ),
-            body: const TabBarView(children: [
-              EnterStudent(),
-              ReportGardScreen(),
+            body: TabBarView(children: [
+              EnterStudent(
+                token: widget.userData['token'],
+              ),
+              const ReportGardScreen(),
             ])),
       ),
     );

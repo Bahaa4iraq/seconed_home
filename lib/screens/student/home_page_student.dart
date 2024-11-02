@@ -32,13 +32,7 @@ class HomePageStudent extends StatefulWidget {
 
 class _HomePageStudentState extends State<HomePageStudent>
     with AutomaticKeepAliveClientMixin {
-  followTopics() async {
-    FirebaseMessaging messaging = FirebaseMessaging.instance;
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String? schoolId = prefs.getString('school_id');
-    await messaging.subscribeToTopic('school_$schoolId');
-  }
+ 
 
   final LatestNewsProvider latestNewsProvider = Get.put(LatestNewsProvider());
   final StudentDashboardProvider studentDashboardProvider =
@@ -85,7 +79,6 @@ class _HomePageStudentState extends State<HomePageStudent>
   @override
   void initState() {
     initUserData();
-    followTopics();
     super.initState();
   }
 

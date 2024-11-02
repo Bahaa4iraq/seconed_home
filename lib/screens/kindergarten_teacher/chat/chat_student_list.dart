@@ -207,7 +207,8 @@ class _ChatStudentListState extends State<ChatStudentList> {
 
 Text _timeText(time) {
   return Text(
-    DateFormat('yyyy-MM-dd hh:mm aa').format(DateTime.parse(time)),
+    DateFormat('yyyy-MM-dd hh:mm aa')
+        .format(DateTime.parse(time).add(const Duration(hours: 3))),
     style: const TextStyle(fontSize: 10),
   );
 }

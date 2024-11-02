@@ -38,26 +38,39 @@ class _NotificationTeacherAllState extends State<NotificationTeacherAll> {
   int page = 0;
   String? type;
   List typeList = [
-    "دروس",
+    "يومياتي",
+    'تبليغات',
+    'ملخص الدروس اليومية',
+    'واجب اسبوعي',
     "اقساط",
-    // "الحضور",
+    "الحضور",
     "تبليغ",
     "تدريب",
     "هل تعلم",
     "الميلاد",
-    // 'امتحان يومي',
-    // 'ملخص',
-    // 'واجب بيتي'
+    'امتحان يومي',
   ];
   initFunction() {
     Map _data = {
       "study_year": _mainDataGetProvider.mainData['setting'][0]['setting_year'],
       "page": page,
       "class_school": accountDivisionList,
-      "type": type,
+      "type": typeConverter(type),
       "isRead": _notificationProvider.isRead
     };
     NotificationsAPI().getNotifications(_data);
+  }
+
+  String? typeConverter(String? dataCome) {
+    return dataCome == 'تبليغات'
+        ? 'رسالة'
+        : dataCome == 'يومياتي'
+            ? 'دروس'
+            : dataCome == 'ملخص الدروس اليومية'
+                ? 'ملخص'
+                : dataCome == 'واجب اسبوعي'
+                    ? 'واجب بيتي'
+                    : dataCome;
   }
 
   final options = const LiveOptions(

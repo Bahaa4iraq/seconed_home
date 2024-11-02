@@ -53,7 +53,6 @@ class NotificationsAPI extends GetConnect {
     try {
       final response =
           await put('${mainApi}teacher/notification', data, headers: headers);
-      print(response);
       if (response.statusCode == 401) {
         Auth().redirect();
       } else if (!response.body["error"]) {
@@ -179,7 +178,6 @@ class NotificationsAPI extends GetConnect {
         Logger().i("redirect");
         Auth().redirect();
       } else if (!response.body["error"]) {
-        print(response);
         Get.put(NotificationProviderIntimation()).editReadMap(id);
       }
     } catch (e) {

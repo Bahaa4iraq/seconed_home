@@ -30,8 +30,9 @@ import 'student_salary/student_salary.dart';
 import '../review/review_date.dart';
 
 class Dashboard extends StatefulWidget {
-  final Map userData;
   const Dashboard({super.key, required this.userData});
+  final Map userData;
+
   @override
   _DashboardState createState() => _DashboardState();
 }

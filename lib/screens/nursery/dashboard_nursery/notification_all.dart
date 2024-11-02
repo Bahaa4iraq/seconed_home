@@ -40,6 +40,8 @@ class _NotificationAllState extends State<NotificationAll> {
   String? typeSelected;
   List typeList = [
     "تبليغات",
+    'الدروس اليومية',
+    'واجب اسبوعي',
     "ملابس",
     "غذاء",
     "يوميات",
@@ -51,8 +53,6 @@ class _NotificationAllState extends State<NotificationAll> {
     "الميلاد"
   ];
   String? getType() {
-    Logger().i(typeSelected);
-
     if (typeSelected == "هل تعلم") {
       return "تقرير";
     } else if (typeSelected == "يوميات") {
@@ -61,6 +61,10 @@ class _NotificationAllState extends State<NotificationAll> {
       return "الحفاض";
     } else if (typeSelected == "تبليغات") {
       return "رسالة";
+    } else if (typeSelected == "واجب اسبوعي") {
+      return "واجب بيتي";
+    } else if (typeSelected == "الدروس اليومية") {
+      return "ملخص";
     } else {
       return typeSelected;
     }
@@ -75,8 +79,7 @@ class _NotificationAllState extends State<NotificationAll> {
       "type": getType(),
       "isRead": _notificationProvider.isRead
     };
-    Logger().i(data);
-
+    Logger().d(data);
     NotificationsAPI().getNotifications(data);
   }
 

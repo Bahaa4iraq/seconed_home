@@ -1,7 +1,8 @@
+import 'dart:async';
+
 import 'package:flutter_easyloading/flutter_easyloading.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:logger/logger.dart';
 import '../provider/auth_provider.dart';
 import '../screens/auth/login_page.dart';
 import '../static_files/my_color.dart';
@@ -36,19 +37,18 @@ class Auth extends GetConnect {
         Auth().redirect();
       } else {
         if (response.body['error'] == false) {
-          Logger().i(response.body['results']);
           Get.put(MainDataGetProvider())
               .changeContentUrl(response.body['content_url']);
-          Get.put(MainDataGetProvider()).addData(response.body['results']);
-          followTopics();
-          //todo subscribe To Topic firebase
-          //await FirebaseMessaging.instance.subscribeToTopic("school_${response.body['results']['account_school']}");
+          await Get.put(MainDataGetProvider())
+              .addData(response.body['results'])
+              .then((val) => followTopics());
+          Timer(const Duration(seconds: 1), () {});
           return response.body['results'];
         }
       }
     } catch (e) {
       EasyLoading.dismiss();
-      
+
       Get.snackbar("خطأ", 'الرجاء التاكد من اتصالك في الانترنت',
           colorText: MyColor.white0, backgroundColor: MyColor.red);
     }

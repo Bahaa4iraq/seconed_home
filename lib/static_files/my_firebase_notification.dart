@@ -48,12 +48,6 @@ class NotificationFirebase {
     );
     final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
         FlutterLocalNotificationsPlugin();
-    // SharedPreferences prefs = await SharedPreferences.getInstance();
-    // await messaging.subscribeToTopic('mmbb');
-    // await messaging.getToken().then((tok) {
-    //   print(tok);
-    // });
-    // print('Subscribed to test topic');
 
     // String? schoolId = prefs.getString('school_id');
     // await messaging.subscribeToTopic('school_$schoolId');

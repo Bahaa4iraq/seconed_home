@@ -57,8 +57,7 @@ String secondToTime(int second) {
 }
 
 String fromISOToDate(String date) {
-  DateTime now = DateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(date);
-  String formattedDate = DateFormat('yyyy-MM-dd').format(now);
+  String formattedDate = DateFormat('yyyy-MM-dd').format(DateTime.parse(date));
   return formattedDate;
 }
 

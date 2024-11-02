@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:logger/logger.dart';
 import 'package:path_provider/path_provider.dart';
 
 import 'chat_socket.dart';
@@ -48,7 +47,6 @@ class ChatMessageProvider extends GetxController {
   }
 
   void deleteMessageById(String id) {
-    Logger().i('kddddddddd');
     final singleChat = chat.firstWhere((item) => item['_id'] == id);
     singleChat['chat_message_is_deleted'] = true;
     update();
@@ -62,7 +60,6 @@ class ChatMessageProvider extends GetxController {
         update();
       });
     }
-    print(data);
     update();
   }
 
@@ -136,7 +133,6 @@ class ChatMessageGroupProvider extends GetxController {
         update();
       });
     }
-    print(data);
     update();
   }
 
@@ -215,15 +211,13 @@ class ChatMessageBottomBarProvider extends GetxController {
     ampTimer =
         Timer.periodic(const Duration(milliseconds: 200), (Timer t) async {
       amplitude = await record.getAmplitude();
-      print(amplitude!.current);
-      print(recordDuration);
+
       update();
     });
   }
 
   Future<String?> recordSoundStop() async {
     final path = await record.stop();
-    print(path);
     timer?.cancel();
     ampTimer?.cancel();
     isRecording = await record.isRecording();
