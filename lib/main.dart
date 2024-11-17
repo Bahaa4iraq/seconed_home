@@ -68,8 +68,8 @@ class MyApp extends StatelessWidget {
           },
         ),
         home: Builder(builder: (context) {
-          return const SplashScreenWellcome();
-          // return _redirectToPage();
+          // return const SplashScreenWellcome();
+          return _redirectToPage();
         }));
   }
 }

@@ -50,7 +50,7 @@ class NotificationFirebase {
         FlutterLocalNotificationsPlugin();
 
     // String? schoolId = prefs.getString('school_id');
-    // await messaging.subscribeToTopic('school_$schoolId');
+    // await messaging.subscribeToTopic('bahaa');
 
     await flutterLocalNotificationsPlugin
         .resolvePlatformSpecificImplementation<

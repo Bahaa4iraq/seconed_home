@@ -82,7 +82,6 @@ class _NotificationAllState extends State<NotificationAll> {
       "type": getType(),
       "isRead": _notificationProvider.isRead
     };
-    Logger().i(_data);
     NotificationsAPI().getNotifications(_data);
   }
 
